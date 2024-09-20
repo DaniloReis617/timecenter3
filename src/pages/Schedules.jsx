@@ -7,10 +7,12 @@ import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import PaintingServiceForm from '@/components/schedules/PaintingServiceForm';
+import ActivityExecutionForm from '@/components/schedules/ActivityExecutionForm';
 
 const Schedules = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showPaintingForm, setShowPaintingForm] = useState(false);
+  const [showActivityExecutionForm, setShowActivityExecutionForm] = useState(false);
 
   useEffect(() => {
     const storedProject = localStorage.getItem('selectedProject');
@@ -41,7 +43,16 @@ const Schedules = () => {
         <img src={image} alt={title} className="w-full h-48 object-cover mb-4 rounded-md" />
         <CardTitle className="text-xl font-bold mb-2 text-center">{title}</CardTitle>
         <p className="text-center text-sm mb-4">{description}</p>
-        <Button className="w-full" onClick={() => title === "Serviço de Pintura" && setShowPaintingForm(true)}>
+        <Button 
+          className="w-full" 
+          onClick={() => {
+            if (title === "Serviço de Pintura") {
+              setShowPaintingForm(true);
+            } else if (title === "Execução de Atividades") {
+              setShowActivityExecutionForm(true);
+            }
+          }}
+        >
           Selecionar
         </Button>
       </CardContent>
@@ -108,6 +119,14 @@ const Schedules = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-screen overflow-y-auto">
             <PaintingServiceForm onClose={() => setShowPaintingForm(false)} />
+          </div>
+        </div>
+      )}
+
+      {showActivityExecutionForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-screen overflow-y-auto">
+            <ActivityExecutionForm onClose={() => setShowActivityExecutionForm(false)} />
           </div>
         </div>
       )}
