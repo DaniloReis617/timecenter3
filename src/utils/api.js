@@ -15,12 +15,11 @@ const mockUsers = [
 // Mock API functions
 export const login = async (username) => {
   console.log('Attempting login with username:', username);
-  const user = mockUsers.find(u => u.username === username);
-  if (user) {
-    console.log('Login successful:', user);
-    return user;
+  if (username === 'danilo.reis@timenow.com.br') {
+    console.log('Login successful');
+    return { id: 1, username: username, name: "Danilo Reis", role: "Manager" };
   }
-  throw new Error('Invalid username');
+  throw new Error('Invalid email');
 };
 
 export const getAllProjects = async () => {

@@ -20,22 +20,13 @@ const Login = ({ onLogin }) => {
     },
     onError: (error) => {
       console.error('Login error:', error);
-      toast.error(error.message || "Erro ao tentar autenticar. Por favor, tente novamente mais tarde.");
+      toast.error(error.message || "Erro ao tentar autenticar. Por favor, tente novamente.");
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateEmail(username)) {
-      toast.error("Por favor, insira um email válido com o domínio @timenow.com.br.");
-      return;
-    }
     loginMutation.mutate(username);
-  };
-
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@timenow\.com\.br$/;
-    return re.test(String(email).toLowerCase());
   };
 
   return (
