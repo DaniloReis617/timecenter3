@@ -6,7 +6,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
 
 const Schedules = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -37,7 +36,7 @@ const Schedules = () => {
   const ServiceCard = ({ title, image, description }) => (
     <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
       <CardContent className="flex flex-col items-center">
-        <Image src={image} alt={title} className="w-full h-48 object-cover mb-4" />
+        <img src={image} alt={title} className="w-full h-48 object-cover mb-4" />
         <CardTitle className="text-xl font-bold mb-2">{title}</CardTitle>
         <p className="text-center text-sm">{description}</p>
         <Button className="mt-4">Selecionar</Button>
