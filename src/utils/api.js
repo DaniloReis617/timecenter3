@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
@@ -22,10 +23,13 @@ api.interceptors.response.use(
     if (error.response) {
       console.error('Error data:', error.response.data);
       console.error('Error status:', error.response.status);
+      toast.error(`Error ${error.response.status}: ${error.response.data.message || 'An error occurred'}`);
     } else if (error.request) {
       console.error('No response received:', error.request);
+      toast.error('Network error: Unable to connect to the server. Please check your internet connection.');
     } else {
       console.error('Error message:', error.message);
+      toast.error('An unexpected error occurred. Please try again later.');
     }
     return Promise.reject(error);
   }
