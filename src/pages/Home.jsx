@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getProjects } from '@/utils/api';
+import { getAllProjects } from '@/utils/api';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -11,7 +11,7 @@ const Home = () => {
     queryKey: ['projects'],
     queryFn: () => {
       console.log('Fetching projects...');
-      return getProjects().catch(err => {
+      return getAllProjects().catch(err => {
         console.error('Error fetching projects:', err);
         throw err;
       });

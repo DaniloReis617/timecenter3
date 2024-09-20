@@ -57,7 +57,9 @@ api.interceptors.response.use(
 
 export const login = async (username) => {
   try {
+    console.log('Attempting login with username:', username);
     const response = await api.post('/login', { username });
+    console.log('Login response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
@@ -67,7 +69,9 @@ export const login = async (username) => {
 
 export const getProjects = async (userId) => {
   try {
+    console.log('Fetching projects for userId:', userId);
     const response = await api.get(`/projects/${userId}`);
+    console.log('Projects response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -77,7 +81,9 @@ export const getProjects = async (userId) => {
 
 export const getAllProjects = async () => {
   try {
+    console.log('Fetching all projects');
     const response = await api.get('/projects');
+    console.log('All projects response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching all projects:', error);
@@ -87,7 +93,9 @@ export const getAllProjects = async () => {
 
 export const getUsers = async () => {
   try {
+    console.log('Fetching users');
     const response = await api.get('/users');
+    console.log('Users response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -97,7 +105,9 @@ export const getUsers = async () => {
 
 export const getProjectDetails = async (projectId) => {
   try {
+    console.log('Fetching project details for projectId:', projectId);
     const response = await api.get(`/projects/${projectId}/details`);
+    console.log('Project details response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching project details:', error);
@@ -107,7 +117,9 @@ export const getProjectDetails = async (projectId) => {
 
 export const createProject = async (projectData) => {
   try {
+    console.log('Creating project with data:', projectData);
     const response = await api.post('/projects', projectData);
+    console.log('Create project response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error creating project:', error);
@@ -117,7 +129,9 @@ export const createProject = async (projectData) => {
 
 export const updateProject = async (projectId, projectData) => {
   try {
+    console.log('Updating project:', projectId, 'with data:', projectData);
     const response = await api.put(`/projects/${projectId}`, projectData);
+    console.log('Update project response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error updating project:', error);
@@ -127,7 +141,9 @@ export const updateProject = async (projectId, projectData) => {
 
 export const deleteProject = async (projectId) => {
   try {
+    console.log('Deleting project:', projectId);
     const response = await api.delete(`/projects/${projectId}`);
+    console.log('Delete project response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error deleting project:', error);
