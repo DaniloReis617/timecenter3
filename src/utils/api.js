@@ -26,7 +26,7 @@ api.interceptors.response.use(
       toast.error(`Error ${error.response.status}: ${error.response.data.message || 'An error occurred'}`);
     } else if (error.request) {
       console.error('No response received:', error.request);
-      toast.error('Network error: Unable to connect to the server. Please check your internet connection.');
+      toast.error('Network error: Unable to connect to the server. Please check your internet connection and try again.');
     } else {
       console.error('Error message:', error.message);
       toast.error('An unexpected error occurred. Please try again later.');
@@ -41,6 +41,9 @@ export const login = async (username) => {
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
+    if (error.code === 'ECONNABORTED') {
+      toast.error('The request timed out. Please check your internet connection and try again.');
+    }
     throw error;
   }
 };
