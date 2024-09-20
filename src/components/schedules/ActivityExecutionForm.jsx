@@ -48,7 +48,7 @@ const ActivityExecutionForm = ({ onClose }) => {
       case 1:
         return (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <Label htmlFor="activity">Atividade</Label>
                 <Select onValueChange={(value) => handleSelectChange('activity', value)}>
@@ -74,7 +74,7 @@ const ActivityExecutionForm = ({ onClose }) => {
                 </Select>
               </div>
             </div>
-            <div>
+            <div className="mb-4">
               <Label htmlFor="diameter">Diâmetro Ex.</Label>
               <Select onValueChange={(value) => handleSelectChange('diameter', value)}>
                 <SelectTrigger>
@@ -86,17 +86,19 @@ const ActivityExecutionForm = ({ onClose }) => {
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="duration">Duração (hs)</Label>
-              <Input id="duration" name="duration" value={formData.duration || ''} onChange={handleInputChange} readOnly />
-            </div>
-            <div>
-              <Label htmlFor="quantity">Qt Rec. (Ca)</Label>
-              <Input id="quantity" name="quantity" value={formData.quantity || ''} onChange={handleInputChange} readOnly />
-            </div>
-            <div>
-              <Label htmlFor="hh">Hh</Label>
-              <Input id="hh" name="hh" value={formData.hh || ''} onChange={handleInputChange} readOnly />
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div>
+                <Label htmlFor="duration">Duração (hs)</Label>
+                <Input id="duration" name="duration" value={formData.duration || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="quantity">Qt Rec. (Ca)</Label>
+                <Input id="quantity" name="quantity" value={formData.quantity || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="hh">Hh</Label>
+                <Input id="hh" name="hh" value={formData.hh || ''} onChange={handleInputChange} readOnly />
+              </div>
             </div>
           </>
         );
@@ -112,20 +114,22 @@ const ActivityExecutionForm = ({ onClose }) => {
         <CardTitle>Execução de Atividades</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-1 border-r pr-4">
+        <div className="flex space-x-4">
+          <div className="w-1/3 border-r pr-4">
             <h3 className="text-lg font-semibold mb-4">Atividades</h3>
-            {activities.map((activity) => (
-              <Button
-                key={activity.id}
-                onClick={() => handleActivitySelect(activity.id)}
-                className={`w-full mb-2 text-left justify-start ${selectedActivity?.id === activity.id ? 'bg-primary text-white' : 'bg-secondary hover:bg-primary/90 hover:text-white'}`}
-              >
-                {activity.name}
-              </Button>
-            ))}
+            <div className="space-y-2">
+              {activities.map((activity) => (
+                <Button
+                  key={activity.id}
+                  onClick={() => handleActivitySelect(activity.id)}
+                  className={`w-full justify-start ${selectedActivity?.id === activity.id ? 'bg-primary text-white' : 'bg-secondary hover:bg-primary/90 hover:text-white'}`}
+                >
+                  {activity.name}
+                </Button>
+              ))}
+            </div>
           </div>
-          <div className="col-span-2">
+          <div className="w-2/3">
             <form className="space-y-4">
               {renderForm()}
               {selectedActivity && (
@@ -134,7 +138,7 @@ const ActivityExecutionForm = ({ onClose }) => {
                     <Label htmlFor="estimatedTime">Tempo Estimado</Label>
                     <Input id="estimatedTime" value={result ? `${result} (Hrs)` : ''} readOnly className="bg-primary text-white font-semibold" />
                   </div>
-                  <div className="flex justify-end space-x-2">
+                  <div className="flex justify-end space-x-4 mt-6">
                     <Button type="button" onClick={() => setFormData({})} variant="outline">Limpar</Button>
                     <Button type="button" onClick={handleCalculate}>Calcular</Button>
                     <Button type="button" onClick={onClose} variant="secondary">Voltar</Button>
