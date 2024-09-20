@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 second
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   timeout: 30000, // 30 seconds timeout
@@ -15,10 +18,23 @@ export const dbConfig = {
   password: "$3nh@ES#2022"
 };
 
+const retryRequest = (error, retryCount = 0) => {
+  const { config } = error;
+  if (retryCount < MAX_RETRIES) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log(`Retrying request (${retryCount + 1}/${MAX_RETRIES})...`);
+        resolve(api(config));
+      }, RETRY_DELAY);
+    });
+  }
+  return Promise.reject(error);
+};
+
 // Interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     console.error('API Error:', error);
     if (error.response) {
       console.error('Error data:', error.response.data);
@@ -26,6 +42,10 @@ api.interceptors.response.use(
       toast.error(`Error ${error.response.status}: ${error.response.data.message || 'An error occurred'}`);
     } else if (error.request) {
       console.error('No response received:', error.request);
+      if (error.code === 'ECONNABORTED') {
+        toast.error('The request timed out. Retrying...');
+        return retryRequest(error);
+      }
       toast.error('Network error: Unable to connect to the server. Please check your internet connection and try again.');
     } else {
       console.error('Error message:', error.message);
@@ -41,9 +61,6 @@ export const login = async (username) => {
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
-    if (error.code === 'ECONNABORTED') {
-      toast.error('The request timed out. Please check your internet connection and try again.');
-    }
     throw error;
   }
 };
