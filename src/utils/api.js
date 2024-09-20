@@ -88,7 +88,26 @@ const simulateApiCall = async (func) => {
 };
 
 // Wrap all exported functions with error handling
-Object.keys(exports).forEach(key => {
-  const originalFunc = exports[key];
-  exports[key] = (...args) => simulateApiCall(() => originalFunc(...args));
+const apiFunctions = {
+  login,
+  getAllProjects,
+  getUsers,
+  getProjectDetails,
+  createProject,
+  updateProject,
+  deleteProject
+};
+
+Object.keys(apiFunctions).forEach(key => {
+  const originalFunc = apiFunctions[key];
+  apiFunctions[key] = (...args) => simulateApiCall(() => originalFunc(...args));
 });
+
+export const {
+  getAllProjects: wrappedGetAllProjects,
+  getUsers: wrappedGetUsers,
+  getProjectDetails: wrappedGetProjectDetails,
+  createProject: wrappedCreateProject,
+  updateProject: wrappedUpdateProject,
+  deleteProject: wrappedDeleteProject
+} = apiFunctions;
