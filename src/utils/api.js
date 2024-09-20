@@ -1,154 +1,95 @@
-import axios from 'axios';
 import { toast } from 'sonner';
 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // 1 second
+// Mock data
+const mockProjects = [
+  { id: 1, name: "Project Alpha", description: "A groundbreaking software development project", status: "In Progress" },
+  { id: 2, name: "Project Beta", description: "An innovative marketing campaign", status: "Planning" },
+  { id: 3, name: "Project Gamma", description: "A cutting-edge research initiative", status: "Completed" },
+];
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-  timeout: 30000, // 30 seconds timeout
-});
+const mockUsers = [
+  { id: 1, username: "john.doe@example.com", name: "John Doe", role: "Manager" },
+  { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer" },
+];
 
-// Database configuration (to be used by backend)
-export const dbConfig = {
-  driver: "ODBC Driver 17 for SQL Server",
-  server: "tcp:easysolutions-prd.database.windows.net",
-  database: "easysolutions",
-  username: "easysolutions",
-  password: "$3nh@ES#2022"
-};
-
-const retryRequest = (error, retryCount = 0) => {
-  const { config } = error;
-  if (retryCount < MAX_RETRIES) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`Retrying request (${retryCount + 1}/${MAX_RETRIES})...`);
-        resolve(api(config));
-      }, RETRY_DELAY);
-    });
-  }
-  return Promise.reject(error);
-};
-
-// Interceptor to handle errors
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    console.error('API Error:', error);
-    if (error.response) {
-      console.error('Error data:', error.response.data);
-      console.error('Error status:', error.response.status);
-      toast.error(`Error ${error.response.status}: ${error.response.data.message || 'An error occurred'}`);
-    } else if (error.request) {
-      console.error('No response received:', error.request);
-      if (error.code === 'ECONNABORTED') {
-        toast.error('The request timed out. Retrying...');
-        return retryRequest(error);
-      }
-      toast.error('Network error: Unable to connect to the server. Please check your internet connection and try again.');
-    } else {
-      console.error('Error message:', error.message);
-      toast.error('An unexpected error occurred. Please try again later.');
-    }
-    return Promise.reject(error);
-  }
-);
-
+// Mock API functions
 export const login = async (username) => {
-  try {
-    console.log('Attempting login with username:', username);
-    const response = await api.post('/login', { username });
-    console.log('Login response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Login error:', error);
-    throw error;
+  console.log('Attempting login with username:', username);
+  const user = mockUsers.find(u => u.username === username);
+  if (user) {
+    console.log('Login successful:', user);
+    return user;
   }
-};
-
-export const getProjects = async (userId) => {
-  try {
-    console.log('Fetching projects for userId:', userId);
-    const response = await api.get(`/projects/${userId}`);
-    console.log('Projects response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching projects:', error);
-    throw error;
-  }
+  throw new Error('Invalid username');
 };
 
 export const getAllProjects = async () => {
-  try {
-    console.log('Fetching all projects');
-    const response = await api.get('/projects');
-    console.log('All projects response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching all projects:', error);
-    throw error;
-  }
+  console.log('Fetching all projects');
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+  console.log('Projects fetched:', mockProjects);
+  return mockProjects;
 };
 
 export const getUsers = async () => {
-  try {
-    console.log('Fetching users');
-    const response = await api.get('/users');
-    console.log('Users response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error;
-  }
+  console.log('Fetching users');
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+  console.log('Users fetched:', mockUsers);
+  return mockUsers;
 };
 
 export const getProjectDetails = async (projectId) => {
-  try {
-    console.log('Fetching project details for projectId:', projectId);
-    const response = await api.get(`/projects/${projectId}/details`);
-    console.log('Project details response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching project details:', error);
-    throw error;
+  console.log('Fetching project details for projectId:', projectId);
+  const project = mockProjects.find(p => p.id === projectId);
+  if (project) {
+    console.log('Project details:', project);
+    return project;
   }
+  throw new Error('Project not found');
 };
 
 export const createProject = async (projectData) => {
-  try {
-    console.log('Creating project with data:', projectData);
-    const response = await api.post('/projects', projectData);
-    console.log('Create project response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating project:', error);
-    throw error;
-  }
+  console.log('Creating project with data:', projectData);
+  const newProject = { id: mockProjects.length + 1, ...projectData };
+  mockProjects.push(newProject);
+  console.log('New project created:', newProject);
+  return newProject;
 };
 
 export const updateProject = async (projectId, projectData) => {
-  try {
-    console.log('Updating project:', projectId, 'with data:', projectData);
-    const response = await api.put(`/projects/${projectId}`, projectData);
-    console.log('Update project response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating project:', error);
-    throw error;
+  console.log('Updating project:', projectId, 'with data:', projectData);
+  const index = mockProjects.findIndex(p => p.id === projectId);
+  if (index !== -1) {
+    mockProjects[index] = { ...mockProjects[index], ...projectData };
+    console.log('Project updated:', mockProjects[index]);
+    return mockProjects[index];
   }
+  throw new Error('Project not found');
 };
 
 export const deleteProject = async (projectId) => {
+  console.log('Deleting project:', projectId);
+  const index = mockProjects.findIndex(p => p.id === projectId);
+  if (index !== -1) {
+    const deletedProject = mockProjects.splice(index, 1)[0];
+    console.log('Project deleted:', deletedProject);
+    return { message: 'Project deleted successfully' };
+  }
+  throw new Error('Project not found');
+};
+
+// Simulated API error handling
+const simulateApiCall = async (func) => {
   try {
-    console.log('Deleting project:', projectId);
-    const response = await api.delete(`/projects/${projectId}`);
-    console.log('Delete project response:', response.data);
-    return response.data;
+    return await func();
   } catch (error) {
-    console.error('Error deleting project:', error);
+    console.error('API Error:', error);
+    toast.error(error.message || 'An unexpected error occurred');
     throw error;
   }
 };
 
-export default api;
+// Wrap all exported functions with error handling
+Object.keys(exports).forEach(key => {
+  const originalFunc = exports[key];
+  exports[key] = (...args) => simulateApiCall(() => originalFunc(...args));
+});
