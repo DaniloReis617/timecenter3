@@ -1,26 +1,66 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { 
+  Home, Users, FileText, DollarSign, Briefcase, 
+  Award, Calendar, AlertTriangle, ShoppingCart, 
+  GitMerge, Settings, LogOut, Menu, ChevronLeft
+} from 'lucide-react';
 
 const Layout = ({ children }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleLogout = () => {
+    // Implement logout logic here
+    navigate('/login');
+  };
+
+  const navItems = [
+    { to: "/", icon: <Home />, title: "Home" },
+    { to: "/stakeholders", icon: <Users />, title: "Stakeholders" },
+    { to: "/scope", icon: <FileText />, title: "Scope" },
+    { to: "/costs", icon: <DollarSign />, title: "Costs" },
+    { to: "/resources", icon: <Briefcase />, title: "Resources" },
+    { to: "/quality", icon: <Award />, title: "Quality" },
+    { to: "/schedules", icon: <Calendar />, title: "Schedules" },
+    { to: "/risks", icon: <AlertTriangle />, title: "Risks" },
+    { to: "/acquisitions", icon: <ShoppingCart />, title: "Acquisitions" },
+    { to: "/integration", icon: <GitMerge />, title: "Integration" },
+    { to: "/admin", icon: <Settings />, title: "Admin" },
+  ];
+
   return (
     <div className="flex h-screen bg-gray-100">
-      <nav className="w-64 bg-white shadow-lg">
-        <div className="p-4">
-          <h1 className="text-2xl font-bold">TimeCenter</h1>
+      <nav className={`bg-white shadow-lg transition-all duration-300 ${isExpanded ? 'w-64' : 'w-20'}`}>
+        <div className="p-4 flex justify-between items-center">
+          {isExpanded && <h1 className="text-2xl font-bold">TimeCenter</h1>}
+          <button onClick={toggleSidebar} className="p-2 rounded-full hover:bg-gray-200">
+            {isExpanded ? <ChevronLeft /> : <Menu />}
+          </button>
         </div>
         <ul className="space-y-2 p-4">
-          <li><Link to="/" className="block py-2 px-4 hover:bg-gray-200">Home</Link></li>
-          <li><Link to="/stakeholders" className="block py-2 px-4 hover:bg-gray-200">Stakeholders</Link></li>
-          <li><Link to="/scope" className="block py-2 px-4 hover:bg-gray-200">Scope</Link></li>
-          <li><Link to="/costs" className="block py-2 px-4 hover:bg-gray-200">Costs</Link></li>
-          <li><Link to="/resources" className="block py-2 px-4 hover:bg-gray-200">Resources</Link></li>
-          <li><Link to="/quality" className="block py-2 px-4 hover:bg-gray-200">Quality</Link></li>
-          <li><Link to="/schedules" className="block py-2 px-4 hover:bg-gray-200">Schedules</Link></li>
-          <li><Link to="/risks" className="block py-2 px-4 hover:bg-gray-200">Risks</Link></li>
-          <li><Link to="/acquisitions" className="block py-2 px-4 hover:bg-gray-200">Acquisitions</Link></li>
-          <li><Link to="/integration" className="block py-2 px-4 hover:bg-gray-200">Integration</Link></li>
-          <li><Link to="/admin" className="block py-2 px-4 hover:bg-gray-200">Admin</Link></li>
+          {navItems.map((item) => (
+            <li key={item.to}>
+              <Link to={item.to} className="flex items-center py-2 px-4 hover:bg-gray-200 rounded">
+                {item.icon}
+                {isExpanded && <span className="ml-4">{item.title}</span>}
+              </Link>
+            </li>
+          ))}
         </ul>
+        <div className="absolute bottom-0 w-full p-4">
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            <LogOut />
+            {isExpanded && <span className="ml-2">Logout</span>}
+          </button>
+        </div>
       </nav>
       <main className="flex-1 p-8 overflow-y-auto">
         {children}
