@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, Users, FileText, DollarSign, Briefcase, 
   Award, Calendar, AlertTriangle, ShoppingCart, 
   GitMerge, Settings, LogOut, Menu, ChevronLeft
 } from 'lucide-react';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, onLogout }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
   };
 
   const handleLogout = () => {
-    // Implement logout logic here
+    onLogout();
     navigate('/login');
   };
 
@@ -45,7 +46,10 @@ const Layout = ({ children }) => {
         <ul className="space-y-2 p-4">
           {navItems.map((item) => (
             <li key={item.to}>
-              <Link to={item.to} className="flex items-center py-2 px-4 hover:bg-gray-200 rounded">
+              <Link 
+                to={item.to} 
+                className={`flex items-center py-2 px-4 hover:bg-gray-200 rounded ${location.pathname === item.to ? 'bg-gray-200' : ''}`}
+              >
                 {item.icon}
                 {isExpanded && <span className="ml-4">{item.title}</span>}
               </Link>
