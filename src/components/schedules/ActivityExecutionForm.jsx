@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ActivityForm from './ActivityForm';
 
@@ -27,9 +24,19 @@ const ActivityExecutionForm = ({ onClose }) => {
   };
 
   const handleCalculate = (formData) => {
-    // Implement calculation logic based on the selected activity
     const calculatedResult = parseFloat(formData.quantity || 0) * parseFloat(formData.duration || 0);
     setResult(calculatedResult.toFixed(2));
+  };
+
+  const formatButtonText = (text) => {
+    return text.split(' ').reduce((acc, word, index, array) => {
+      if (index % 2 === 0 && index < array.length - 1) {
+        return [...acc, `${word} ${array[index + 1]}`];
+      } else if (index % 2 !== 0) {
+        return acc;
+      }
+      return [...acc, word];
+    }, []).join('\n');
   };
 
   return (
@@ -41,18 +48,18 @@ const ActivityExecutionForm = ({ onClose }) => {
         <div className="flex space-x-4">
           <div className="w-1/3 border-r pr-4">
             <h3 className="text-lg font-semibold mb-4">Atividades</h3>
-            <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
               {activities.map((activity) => (
                 <Button
                   key={activity.id}
                   onClick={() => handleActivitySelect(activity.id)}
-                  className={`w-full justify-start ${
+                  className={`h-auto py-2 px-3 text-xs whitespace-pre-wrap ${
                     selectedActivity?.id === activity.id 
                       ? 'bg-primary text-white' 
                       : 'bg-secondary hover:bg-primary/90 hover:text-white text-black'
                   }`}
                 >
-                  {activity.name}
+                  {formatButtonText(activity.name)}
                 </Button>
               ))}
             </div>
@@ -67,13 +74,7 @@ const ActivityExecutionForm = ({ onClose }) => {
             )}
             {result !== null && (
               <div className="mt-4">
-                <Label htmlFor="estimatedTime">Tempo Estimado</Label>
-                <Input
-                  id="estimatedTime"
-                  value={`${result} (Hrs)`}
-                  readOnly
-                  className="bg-primary text-white font-semibold"
-                />
+                <p className="font-semibold">Tempo Estimado: {result} (Hrs)</p>
               </div>
             )}
           </div>
