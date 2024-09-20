@@ -9,9 +9,10 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulating login logic
     let userData;
-    if (username.toLowerCase() === 'admin') {
+    if (username.toLowerCase() === 'danilo.reis@timenow.com.br') {
+      userData = { nome: 'Danilo Reis', perfil: 'Super Usuário' };
+    } else if (username.toLowerCase() === 'admin') {
       userData = { nome: 'Admin User', perfil: 'Administrador' };
     } else if (username.toLowerCase() === 'gestor') {
       userData = { nome: 'Gestor User', perfil: 'Gestor' };
@@ -35,7 +36,7 @@ const Login = ({ onLogin }) => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Nome de Usuário
+              Nome de Usuário ou E-mail
             </label>
             <Input
               id="username"
@@ -44,7 +45,7 @@ const Login = ({ onLogin }) => {
               autoComplete="username"
               required
               className="mt-1"
-              placeholder="Digite seu nome de usuário"
+              placeholder="Digite seu nome de usuário ou e-mail"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
