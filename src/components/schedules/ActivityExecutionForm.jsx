@@ -102,6 +102,214 @@ const ActivityExecutionForm = ({ onClose }) => {
             </div>
           </>
         );
+      case 2:
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label htmlFor="pressureClass">Classe de Pressão</Label>
+                <Select onValueChange={(value) => handleSelectChange('pressureClass', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Classe de Pressão" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="class1">Classe 1</SelectItem>
+                    <SelectItem value="class2">Classe 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="diameter">Diâmetro Ex.</Label>
+                <Select onValueChange={(value) => handleSelectChange('diameter', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Diâmetro" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="diameter1">Diâmetro 1</SelectItem>
+                    <SelectItem value="diameter2">Diâmetro 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div>
+                <Label htmlFor="duration">Duração</Label>
+                <Input id="duration" name="duration" value={formData.duration || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="quantity">QTD</Label>
+                <Input id="quantity" name="quantity" value={formData.quantity || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="hh">HH</Label>
+                <Input id="hh" name="hh" value={formData.hh || ''} onChange={handleInputChange} readOnly />
+              </div>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label htmlFor="activity">Atividade</Label>
+                <Select onValueChange={(value) => handleSelectChange('activity', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Atividade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="activity1">Atividade 1</SelectItem>
+                    <SelectItem value="activity2">Atividade 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="pressureClass">Classe de Pressão</Label>
+                <Select onValueChange={(value) => handleSelectChange('pressureClass', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Classe de Pressão" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="class1">Classe 1</SelectItem>
+                    <SelectItem value="class2">Classe 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label htmlFor="diameter">Diâmetro Ex.</Label>
+                <Select onValueChange={(value) => handleSelectChange('diameter', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Diâmetro" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="diameter1">Diâmetro 1</SelectItem>
+                    <SelectItem value="diameter2">Diâmetro 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="diameter">Diâmetro</Label>
+                <Input id="diameter" name="diameter" value={formData.diameter || ''} onChange={handleInputChange} placeholder="Preencha somente valores Par" />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div>
+                <Label htmlFor="duration">Duração (hs)</Label>
+                <Input id="duration" name="duration" value={formData.duration || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="quantity">Qt Rec. (Ca)</Label>
+                <Input id="quantity" name="quantity" value={formData.quantity || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="hh">Hh</Label>
+                <Input id="hh" name="hh" value={formData.hh || ''} onChange={handleInputChange} readOnly />
+              </div>
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label htmlFor="activity">Atividade</Label>
+                <Select onValueChange={(value) => handleSelectChange('activity', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Atividade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="activity1">Atividade 1</SelectItem>
+                    <SelectItem value="activity2">Atividade 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="duration">Duração</Label>
+                <Input id="duration" name="duration" value={formData.duration || ''} onChange={handleInputChange} readOnly />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div>
+                <Label htmlFor="quantity">QTD</Label>
+                <Input id="quantity" name="quantity" value={formData.quantity || ''} onChange={handleInputChange} />
+              </div>
+              <div>
+                <Label htmlFor="qtRec">Qt Rec. (Ca)</Label>
+                <Input id="qtRec" name="qtRec" value={formData.qtRec || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="hh">Hh</Label>
+                <Input id="hh" name="hh" value={formData.hh || ''} onChange={handleInputChange} readOnly />
+              </div>
+            </div>
+          </>
+        );
+      case 5:
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label htmlFor="activity">Atividade</Label>
+                <Select onValueChange={(value) => handleSelectChange('activity', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Atividade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="activity1">Atividade 1</SelectItem>
+                    <SelectItem value="activity2">Atividade 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="pressureClass">Classe de Pressão</Label>
+                <Select onValueChange={(value) => handleSelectChange('pressureClass', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Classe de Pressão" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="class1">Classe 1</SelectItem>
+                    <SelectItem value="class2">Classe 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label htmlFor="diameter">Diâmetro Ex.</Label>
+                <Select onValueChange={(value) => handleSelectChange('diameter', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecionar Diâmetro" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="diameter1">Diâmetro 1</SelectItem>
+                    <SelectItem value="diameter2">Diâmetro 2</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="diameter">Diâmetro</Label>
+                <Input id="diameter" name="diameter" value={formData.diameter || ''} onChange={handleInputChange} placeholder="Preencha somente valores Par" />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div>
+                <Label htmlFor="duration">Duração (hs)</Label>
+                <Input id="duration" name="duration" value={formData.duration || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="quantity">Qt Rec. (Ca)</Label>
+                <Input id="quantity" name="quantity" value={formData.quantity || ''} onChange={handleInputChange} readOnly />
+              </div>
+              <div>
+                <Label htmlFor="hh">Hh</Label>
+                <Input id="hh" name="hh" value={formData.hh || ''} onChange={handleInputChange} readOnly />
+              </div>
+            </div>
+          </>
+        );
       // Add cases for other activities...
       default:
         return <p>Selecione uma atividade para ver o formulário correspondente.</p>;
