@@ -2,25 +2,38 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useMutation } from '@tanstack/react-query';
+import { login } from '@/utils/api';
+import { toast } from 'sonner';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
 
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (userData) => {
+      onLogin(userData);
+      toast.success(`Login bem-sucedido! Bem-vindo, ${userData.nome}!`);
+      navigate('/');
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erro ao tentar autenticar. Por favor, tente novamente mais tarde.");
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    let userData;
-    if (username.toLowerCase() === 'danilo.reis@timenow.com.br') {
-      userData = { nome: 'Danilo Reis', perfil: 'Super Usuário' };
-    } else if (username.toLowerCase() === 'admin') {
-      userData = { nome: 'Admin User', perfil: 'Administrador' };
-    } else if (username.toLowerCase() === 'gestor') {
-      userData = { nome: 'Gestor User', perfil: 'Gestor' };
-    } else {
-      userData = { nome: 'Visualizador User', perfil: 'Visualizador' };
+    if (!validateEmail(username)) {
+      toast.error("Por favor, insira um email válido com o domínio @timenow.com.br.");
+      return;
     }
-    onLogin(userData);
-    navigate('/');
+    loginMutation.mutate(username);
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@timenow\.com\.br$/;
+    return re.test(String(email).toLowerCase());
   };
 
   return (
@@ -36,23 +49,27 @@ const Login = ({ onLogin }) => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Nome de Usuário ou E-mail
+              Email
             </label>
             <Input
               id="username"
               name="username"
-              type="text"
-              autoComplete="username"
+              type="email"
+              autoComplete="email"
               required
               className="mt-1"
-              placeholder="Digite seu nome de usuário ou e-mail"
+              placeholder="Digite seu email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div>
-            <Button type="submit" className="w-full">
-              Entrar
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={loginMutation.isPending}
+            >
+              {loginMutation.isPending ? 'Entrando...' : 'Entrar'}
             </Button>
           </div>
         </form>
