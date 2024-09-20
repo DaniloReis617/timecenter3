@@ -6,6 +6,9 @@ import {
   GitMerge, Settings, LogOut, Menu, ChevronLeft, User
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { Tooltip } from "@/components/ui/tooltip";
+import { TooltipContent } from "@/components/ui/tooltip";
+import { TooltipTrigger } from "@/components/ui/tooltip";
 
 const Layout = ({ children, user, onLogout }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -82,25 +85,27 @@ const Layout = ({ children, user, onLogout }) => {
         </ul>
       </nav>
       <main className="flex-1 flex flex-col">
-        <header className="bg-white shadow-md p-4 flex justify-between items-center">
-          <h2 className="text-2xl font-semibold">{navItems.find(item => item.to === location.pathname)?.title || 'Page'}</h2>
-          <div className="flex items-center space-x-4">
-            <div className="text-right">
-              <p className="font-semibold">{user?.nome || 'User'}</p>
-              <p className="text-sm text-gray-600">{user?.perfil || 'Role'}</p>
+        <header className="bg-white shadow-md p-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">{navItems.find(item => item.to === location.pathname)?.title || 'Page'}</h2>
+            <div className="flex items-center space-x-4">
+              <span className="font-semibold">{user?.nome || 'User'}</span>
+              <span className="text-sm text-gray-600">{user?.perfil || 'Role'}</span>
+              <span>{format(currentTime, 'dd/MM/yyyy HH:mm:ss')}</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={handleLogout}
+                    className="p-2 rounded-full hover:bg-gray-200"
+                  >
+                    <LogOut className="h-5 w-5 text-gray-600" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Logout</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
-            <User className="h-8 w-8 text-gray-600" />
-            <div className="text-right">
-              <p className="font-semibold">{format(currentTime, 'dd/MM/yyyy')}</p>
-              <p className="text-sm text-gray-600">{format(currentTime, 'HH:mm:ss')}</p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center justify-center py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              <LogOut className="mr-2" />
-              Sair
-            </button>
           </div>
         </header>
         <div className="flex-1 p-8 overflow-y-auto">
