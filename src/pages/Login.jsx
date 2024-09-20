@@ -13,11 +13,13 @@ const Login = ({ onLogin }) => {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (userData) => {
+      console.log('Login successful:', userData);
       onLogin(userData);
-      toast.success(`Login bem-sucedido! Bem-vindo, ${userData.nome}!`);
+      toast.success(`Login bem-sucedido! Bem-vindo, ${userData.name}!`);
       navigate('/');
     },
     onError: (error) => {
+      console.error('Login error:', error);
       toast.error(error.message || "Erro ao tentar autenticar. Por favor, tente novamente mais tarde.");
     },
   });
