@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/sonner";
@@ -21,13 +21,27 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const handleLogin = () => {
+  useEffect(() => {
+    // Check if user is already logged in (e.g., from localStorage)
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
     setIsAuthenticated(true);
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const handleLogout = () => {
+    setUser(null);
     setIsAuthenticated(false);
+    localStorage.removeItem('user');
   };
 
   return (
@@ -41,7 +55,7 @@ const App = () => {
               path="/*"
               element={
                 isAuthenticated ? (
-                  <Layout onLogout={handleLogout}>
+                  <Layout user={user} onLogout={handleLogout}>
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/stakeholders" element={<Stakeholders />} />

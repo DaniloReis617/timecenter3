@@ -5,12 +5,19 @@ import { Input } from "@/components/ui/input";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Implement login logic here
-    onLogin();
+    // For now, we'll just simulate a successful login
+    const userData = {
+      name: 'John Doe',
+      role: 'Project Manager',
+      email: email
+    };
+    onLogin(userData);
     navigate('/');
   };
 
@@ -39,6 +46,22 @@ const Login = ({ onLogin }) => {
               placeholder="Digite seu Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Senha
+            </label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              className="mt-1"
+              placeholder="Digite sua Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div>
