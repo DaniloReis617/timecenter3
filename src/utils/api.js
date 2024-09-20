@@ -17,7 +17,7 @@ export const login = async (username) => {
   console.log('Attempting login with username:', username);
   if (username === 'danilo.reis@timenow.com.br') {
     console.log('Login successful');
-    return { id: 1, username: username, name: "Danilo Reis", role: "Manager" };
+    return { id: 1, username: username, name: "Danilo Reis", perfil: "Super Usuário" };
   }
   throw new Error('Invalid email');
 };
