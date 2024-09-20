@@ -6,9 +6,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import PaintingServiceForm from '@/components/schedules/PaintingServiceForm';
 
 const Schedules = () => {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [showPaintingForm, setShowPaintingForm] = useState(false);
 
   useEffect(() => {
     const storedProject = localStorage.getItem('selectedProject');
@@ -39,7 +41,9 @@ const Schedules = () => {
         <img src={image} alt={title} className="w-full h-48 object-cover mb-4 rounded-md" />
         <CardTitle className="text-xl font-bold mb-2 text-center">{title}</CardTitle>
         <p className="text-center text-sm mb-4">{description}</p>
-        <Button className="w-full">Selecionar</Button>
+        <Button className="w-full" onClick={() => title === "Serviço de Pintura" && setShowPaintingForm(true)}>
+          Selecionar
+        </Button>
       </CardContent>
     </Card>
   );
@@ -99,6 +103,10 @@ const Schedules = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {showPaintingForm && (
+        <PaintingServiceForm onClose={() => setShowPaintingForm(false)} />
+      )}
     </div>
   );
 };
