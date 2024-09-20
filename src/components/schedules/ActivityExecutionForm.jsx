@@ -28,17 +28,6 @@ const ActivityExecutionForm = ({ onClose }) => {
     setResult(calculatedResult.toFixed(2));
   };
 
-  const formatButtonText = (text) => {
-    return text.split(' ').reduce((acc, word, index, array) => {
-      if (index % 2 === 0 && index < array.length - 1) {
-        return [...acc, `${word} ${array[index + 1]}`];
-      } else if (index % 2 !== 0) {
-        return acc;
-      }
-      return [...acc, word];
-    }, []).join('\n');
-  };
-
   return (
     <Card className="w-full max-w-4xl">
       <CardHeader>
@@ -53,13 +42,13 @@ const ActivityExecutionForm = ({ onClose }) => {
                 <Button
                   key={activity.id}
                   onClick={() => handleActivitySelect(activity.id)}
-                  className={`w-full h-auto py-2 px-3 text-xs whitespace-pre-wrap ${
+                  className={`w-full h-auto py-2 px-3 text-sm text-left whitespace-normal ${
                     selectedActivity?.id === activity.id 
                       ? 'bg-primary text-white' 
                       : 'bg-secondary hover:bg-primary/90 hover:text-white text-black'
                   }`}
                 >
-                  {formatButtonText(activity.name)}
+                  {activity.name}
                 </Button>
               ))}
             </div>
