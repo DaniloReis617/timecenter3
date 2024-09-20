@@ -1,48 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getAllProjects } from '@/utils/api';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, InfoIcon } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Home = () => {
+  const [selectedProject, setSelectedProject] = useState(null);
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const { data: projects, isLoading, error } = useQuery({
     queryKey: ['projects'],
-    queryFn: () => {
-      console.log('Fetching projects...');
-      return getAllProjects().catch(err => {
-        console.error('Error fetching projects:', err);
-        throw err;
-      });
-    },
-    onSuccess: (data) => {
-      console.log('Projects fetched successfully:', data);
-    },
-    onError: (err) => {
-      console.error('Query error:', err);
-    },
+    queryFn: getAllProjects,
   });
 
-  console.log('Render state:', { isLoading, error, projectsCount: projects?.length });
+  useEffect(() => {
+    if (selectedProject) {
+      localStorage.setItem('selectedProject', JSON.stringify(selectedProject));
+    }
+  }, [selectedProject]);
 
   if (isLoading) {
     return (
       <div className="space-y-4">
         <h1 className="text-3xl font-bold mb-4">Welcome to TimeCenter</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <Skeleton className="h-4 w-3/4" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-2/3" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-2/3" />
       </div>
     );
   }
@@ -64,28 +50,63 @@ const Home = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-3xl font-bold mb-4">Welcome to TimeCenter</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Welcome to TimeCenter</h1>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Instructions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Use the sidebar to navigate between sections.</li>
+            <li>Each section offers different functionalities related to project management.</li>
+            <li>Click on a section in the menu on the left to begin.</li>
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Alert>
+        <InfoIcon className="h-4 w-4" />
+        <AlertTitle>Tip</AlertTitle>
+        <AlertDescription>
+          Select a section in the menu to start exploring the application.
+        </AlertDescription>
+      </Alert>
+
       {projects && projects.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map((project) => (
-            <Card key={project.id}>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold">Select a Project</h2>
+          <Select onValueChange={(value) => setSelectedProject(JSON.parse(value))}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a project to filter information on other screens" />
+            </SelectTrigger>
+            <SelectContent>
+              {projects.map((project) => (
+                <SelectItem key={project.id} value={JSON.stringify(project)}>
+                  {project.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {selectedProject && (
+            <Card>
               <CardHeader>
-                <CardTitle>{project.name}</CardTitle>
+                <CardTitle>Selected Project: {selectedProject.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>{project.description}</p>
-                <p className="text-sm text-gray-500 mt-2">Status: {project.status}</p>
+                <p><strong>Description:</strong> {selectedProject.description}</p>
+                <p><strong>Status:</strong> {selectedProject.status}</p>
               </CardContent>
             </Card>
-          ))}
+          )}
         </div>
       ) : (
-        <Alert>
+        <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>No Projects</AlertTitle>
+          <AlertTitle>No Projects Available</AlertTitle>
           <AlertDescription>
-            There are currently no projects to display.
+            There are no active projects available for selection.
           </AlertDescription>
         </Alert>
       )}
