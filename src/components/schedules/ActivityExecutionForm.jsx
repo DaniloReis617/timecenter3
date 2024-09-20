@@ -48,12 +48,12 @@ const ActivityExecutionForm = ({ onClose }) => {
         <div className="flex space-x-4">
           <div className="w-1/3 border-r pr-4">
             <h3 className="text-lg font-semibold mb-4">Atividades</h3>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-2">
               {activities.map((activity) => (
                 <Button
                   key={activity.id}
                   onClick={() => handleActivitySelect(activity.id)}
-                  className={`h-auto py-2 px-3 text-xs whitespace-pre-wrap ${
+                  className={`w-full h-auto py-2 px-3 text-xs whitespace-pre-wrap ${
                     selectedActivity?.id === activity.id 
                       ? 'bg-primary text-white' 
                       : 'bg-secondary hover:bg-primary/90 hover:text-white text-black'
