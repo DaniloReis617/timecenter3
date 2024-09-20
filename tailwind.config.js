@@ -24,7 +24,7 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#4b6357",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -50,6 +50,12 @@ module.exports = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        custom: {
+          primary: "#4b6357",
+          background: "#ffffff",
+          secondaryBackground: "#f7f8fa",
+          text: "#000000",
         },
       },
       borderRadius: {
