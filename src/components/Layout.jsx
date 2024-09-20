@@ -32,19 +32,31 @@ const Layout = ({ children, user, onLogout }) => {
     navigate('/login');
   };
 
-  const navItems = [
-    { to: "/", icon: <Home />, title: "Home" },
-    { to: "/stakeholders", icon: <Users />, title: "Stakeholders" },
-    { to: "/scope", icon: <FileText />, title: "Scope" },
-    { to: "/costs", icon: <DollarSign />, title: "Costs" },
-    { to: "/resources", icon: <Briefcase />, title: "Resources" },
-    { to: "/quality", icon: <Award />, title: "Quality" },
-    { to: "/schedules", icon: <Calendar />, title: "Schedules" },
-    { to: "/risks", icon: <AlertTriangle />, title: "Risks" },
-    { to: "/acquisitions", icon: <ShoppingCart />, title: "Acquisitions" },
-    { to: "/integration", icon: <GitMerge />, title: "Integration" },
-    { to: "/admin", icon: <Settings />, title: "Admin" },
-  ];
+  const getAccessibleNavItems = (userProfile) => {
+    const allNavItems = [
+      { to: "/", icon: <Home />, title: "Home" },
+      { to: "/stakeholders", icon: <Users />, title: "Stakeholders" },
+      { to: "/scope", icon: <FileText />, title: "Escopo" },
+      { to: "/costs", icon: <DollarSign />, title: "Custos" },
+      { to: "/resources", icon: <Briefcase />, title: "Recursos" },
+      { to: "/quality", icon: <Award />, title: "Qualidade" },
+      { to: "/schedules", icon: <Calendar />, title: "Cronogramas" },
+      { to: "/risks", icon: <AlertTriangle />, title: "Riscos" },
+      { to: "/acquisitions", icon: <ShoppingCart />, title: "Aquisições" },
+      { to: "/integration", icon: <GitMerge />, title: "Integração" },
+      { to: "/admin", icon: <Settings />, title: "Administração" },
+    ];
+
+    if (userProfile === "Super Usuário" || userProfile === "Administrador") {
+      return allNavItems;
+    } else if (userProfile === "Gestor") {
+      return allNavItems.filter(item => !["quality", "risks", "acquisitions", "integration", "admin"].includes(item.to.slice(1)));
+    } else { // Visualizador
+      return allNavItems.filter(item => ["", "stakeholders"].includes(item.to.slice(1)));
+    }
+  };
+
+  const navItems = getAccessibleNavItems(user?.perfil);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -74,8 +86,8 @@ const Layout = ({ children, user, onLogout }) => {
           <h2 className="text-2xl font-semibold">{navItems.find(item => item.to === location.pathname)?.title || 'Page'}</h2>
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <p className="font-semibold">{user?.name || 'User'}</p>
-              <p className="text-sm text-gray-600">{user?.role || 'Role'}</p>
+              <p className="font-semibold">{user?.nome || 'User'}</p>
+              <p className="text-sm text-gray-600">{user?.perfil || 'Role'}</p>
             </div>
             <User className="h-8 w-8 text-gray-600" />
             <div className="text-right">
@@ -87,7 +99,7 @@ const Layout = ({ children, user, onLogout }) => {
               className="flex items-center justify-center py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600"
             >
               <LogOut className="mr-2" />
-              Logout
+              Sair
             </button>
           </div>
         </header>

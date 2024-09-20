@@ -24,7 +24,6 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check if user is already logged in (e.g., from localStorage)
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -44,6 +43,38 @@ const App = () => {
     localStorage.removeItem('user');
   };
 
+  const getAccessiblePages = (userProfile) => {
+    if (userProfile === "Super Usuário" || userProfile === "Administrador") {
+      return [
+        { path: "/", element: <Home /> },
+        { path: "/stakeholders", element: <Stakeholders /> },
+        { path: "/scope", element: <Scope /> },
+        { path: "/costs", element: <Costs /> },
+        { path: "/resources", element: <Resources /> },
+        { path: "/quality", element: <Quality /> },
+        { path: "/schedules", element: <Schedules /> },
+        { path: "/risks", element: <Risks /> },
+        { path: "/acquisitions", element: <Acquisitions /> },
+        { path: "/integration", element: <Integration /> },
+        { path: "/admin", element: <Admin /> },
+      ];
+    } else if (userProfile === "Gestor") {
+      return [
+        { path: "/", element: <Home /> },
+        { path: "/stakeholders", element: <Stakeholders /> },
+        { path: "/scope", element: <Scope /> },
+        { path: "/costs", element: <Costs /> },
+        { path: "/resources", element: <Resources /> },
+        { path: "/schedules", element: <Schedules /> },
+      ];
+    } else { // Visualizador
+      return [
+        { path: "/", element: <Home /> },
+        { path: "/stakeholders", element: <Stakeholders /> },
+      ];
+    }
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -57,17 +88,10 @@ const App = () => {
                 isAuthenticated ? (
                   <Layout user={user} onLogout={handleLogout}>
                     <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/stakeholders" element={<Stakeholders />} />
-                      <Route path="/scope" element={<Scope />} />
-                      <Route path="/costs" element={<Costs />} />
-                      <Route path="/resources" element={<Resources />} />
-                      <Route path="/quality" element={<Quality />} />
-                      <Route path="/schedules" element={<Schedules />} />
-                      <Route path="/risks" element={<Risks />} />
-                      <Route path="/acquisitions" element={<Acquisitions />} />
-                      <Route path="/integration" element={<Integration />} />
-                      <Route path="/admin" element={<Admin />} />
+                      {getAccessiblePages(user?.perfil).map((page) => (
+                        <Route key={page.path} path={page.path} element={page.element} />
+                      ))}
+                      <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </Layout>
                 ) : (

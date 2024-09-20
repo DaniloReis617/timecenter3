@@ -4,19 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement login logic here
-    // For now, we'll just simulate a successful login
-    const userData = {
-      name: 'John Doe',
-      role: 'Project Manager',
-      email: email
-    };
+    // Simulating login logic
+    let userData;
+    if (username.toLowerCase() === 'admin') {
+      userData = { nome: 'Admin User', perfil: 'Administrador' };
+    } else if (username.toLowerCase() === 'gestor') {
+      userData = { nome: 'Gestor User', perfil: 'Gestor' };
+    } else {
+      userData = { nome: 'Visualizador User', perfil: 'Visualizador' };
+    }
     onLogin(userData);
     navigate('/');
   };
@@ -33,35 +34,19 @@ const Login = ({ onLogin }) => {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Nome de Usuário
             </label>
             <Input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
+              id="username"
+              name="username"
+              type="text"
+              autoComplete="username"
               required
               className="mt-1"
-              placeholder="Digite seu Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Senha
-            </label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              className="mt-1"
-              placeholder="Digite sua Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Digite seu nome de usuário"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div>
