@@ -119,7 +119,7 @@ const ActivityExecutionForm = ({ onClose }) => {
               <Button
                 key={activity.id}
                 onClick={() => handleActivitySelect(activity.id)}
-                className={`w-full mb-2 ${selectedActivity?.id === activity.id ? 'bg-primary text-white' : 'bg-secondary'}`}
+                className={`w-full mb-2 text-left justify-start ${selectedActivity?.id === activity.id ? 'bg-primary text-white' : 'bg-secondary hover:bg-primary/90 hover:text-white'}`}
               >
                 {activity.name}
               </Button>
@@ -135,9 +135,9 @@ const ActivityExecutionForm = ({ onClose }) => {
                     <Input id="estimatedTime" value={result ? `${result} (Hrs)` : ''} readOnly className="bg-primary text-white font-semibold" />
                   </div>
                   <div className="flex justify-end space-x-2">
-                    <Button type="button" onClick={() => setFormData({})}>Limpar</Button>
+                    <Button type="button" onClick={() => setFormData({})} variant="outline">Limpar</Button>
                     <Button type="button" onClick={handleCalculate}>Calcular</Button>
-                    <Button type="button" onClick={onClose}>Voltar</Button>
+                    <Button type="button" onClick={onClose} variant="secondary">Voltar</Button>
                   </div>
                 </>
               )}
