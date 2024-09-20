@@ -34,12 +34,12 @@ const Schedules = () => {
   ];
 
   const ServiceCard = ({ title, image, description }) => (
-    <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-      <CardContent className="flex flex-col items-center">
-        <img src={image} alt={title} className="w-full h-48 object-cover mb-4" />
-        <CardTitle className="text-xl font-bold mb-2">{title}</CardTitle>
-        <p className="text-center text-sm">{description}</p>
-        <Button className="mt-4">Selecionar</Button>
+    <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-6 m-4">
+      <CardContent className="flex flex-col items-center space-y-4">
+        <img src={image} alt={title} className="w-full h-48 object-cover mb-4 rounded-md" />
+        <CardTitle className="text-xl font-bold mb-2 text-center">{title}</CardTitle>
+        <p className="text-center text-sm mb-4">{description}</p>
+        <Button className="w-full">Selecionar</Button>
       </CardContent>
     </Card>
   );
@@ -57,7 +57,7 @@ const Schedules = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <h1 className="text-3xl font-bold">Cronogramas</h1>
 
       {selectedProject ? (
@@ -77,21 +77,21 @@ const Schedules = () => {
           <TabsTrigger value="calculadora-metricas">Calculadora de Métricas</TabsTrigger>
         </TabsList>
         <TabsContent value="detalhamento-fts">
-          <div className="p-4 bg-white rounded shadow">
+          <div className="p-6 bg-white rounded shadow">
             <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Detalhamento das FT's</h2>
             {/* Add your content for Detalhamento das FT's here */}
           </div>
         </TabsContent>
         <TabsContent value="auditoria-cronogramas">
-          <div className="p-4 bg-white rounded shadow">
+          <div className="p-6 bg-white rounded shadow">
             <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Auditoria dos Cronogramas</h2>
             {/* Add your content for Auditoria dos Cronogramas here */}
           </div>
         </TabsContent>
         <TabsContent value="calculadora-metricas">
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Calculadora de Métricas</h2>
-            <div className="flex flex-wrap -mx-4">
+          <div className="bg-gray-100 p-8 rounded-lg">
+            <h2 className="text-2xl font-bold mb-6">Calculadora de Métricas</h2>
+            <div className="flex flex-wrap -mx-4 justify-center">
               {serviceCards.map((card, index) => (
                 <ServiceCard key={index} {...card} />
               ))}
