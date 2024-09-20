@@ -4,14 +4,12 @@ import { getAllProjects } from '@/utils/api';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Image } from "@/components/ui/image";
 
 const Schedules = () => {
   const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedActivity, setSelectedActivity] = useState('');
-  const [selectedResourceStage, setSelectedResourceStage] = useState('');
-  const [selectedDescription, setSelectedDescription] = useState('');
 
   useEffect(() => {
     const storedProject = localStorage.getItem('selectedProject');
@@ -25,39 +23,29 @@ const Schedules = () => {
     queryFn: getAllProjects,
   });
 
-  const executionActivities = [
-    { ID: 1, Atividades: "RAQUETEAMENTO / DESRAQ. DE UNIÕES FLANGEADAS" },
-    { ID: 2, Atividades: "FECHAM/TORQUE UNIÕES FLANGEADAS" },
-    { ID: 3, Atividades: "ABERTURA / FECHAMENTO DE BOCA DE VISITA" },
-    { ID: 4, Atividades: "BANDEJAMENTO" },
-    { ID: 5, Atividades: "REMOÇÃO / INSTALAÇÃO DE VÁLVULAS FLANGEADAS" },
-    { ID: 6, Atividades: "TROCADORES DE CALOR" },
-    { ID: 7, Atividades: "PADRÃO ENSAIOS NÃO DESTRUTIVOS (END's)" },
-    { ID: 8, Atividades: "SERVIÇO DE LIMPEZA COM HIDROJATO" }
+  const serviceCards = [
+    { title: "Serviço de Pintura", image: "pintura.jpg", description: "Descrição do serviço de pintura" },
+    { title: "Execução de Atividades", image: "execucao.jpg", description: "Descrição da execução de atividades" },
+    { title: "Serviço de Isolamento", image: "isolamento.jpg", description: "Descrição do serviço de isolamento" },
+    { title: "Serviço de Andaime", image: "andaime.jpg", description: "Descrição do serviço de andaime" },
+    { title: "Caldeiraria e Solda", image: "caldeiraria.jpg", description: "Descrição de caldeiraria e solda" },
+    { title: "Outro Serviço", image: "outro.jpg", description: "Descrição de outro serviço" },
+    { title: "Serviço Adicional 1", image: "adicional1.jpg", description: "Descrição do serviço adicional 1" },
+    { title: "Serviço Adicional 2", image: "adicional2.jpg", description: "Descrição do serviço adicional 2" },
   ];
 
-  const resourceStages = [
-    { Etapa: "Preparação de Superfície", Tipo: "Ferramenta manual", m2_dia: 6, Pintores: 1, Ajudante: null },
-    { Etapa: "Preparação de Superfície", Tipo: "Ferramenta mecânica", m2_dia: 10, Pintores: 1, Ajudante: null },
-    { Etapa: "Preparação de Superfície", Tipo: "Jateamento abrasivo (cabine de jato)", m2_dia: 30, Pintores: 2, Ajudante: 1 },
-    { Etapa: "Preparação de Superfície", Tipo: "Hidrojateamento (pistola)", m2_dia: 20, Pintores: 2, Ajudante: 1 },
-    { Etapa: "Preparação de Superfície", Tipo: "Hidrojateamento (robô)", m2_dia: 35, Pintores: 2, Ajudante: 1 },
-    { Etapa: "Método de Aplicação", Tipo: "Pistola convencional", m2_dia: 75, Pintores: 2, Ajudante: 1 },
-    { Etapa: "Método de Aplicação", Tipo: "Pistola airless", m2_dia: 160, Pintores: 2, Ajudante: 1 },
-    { Etapa: "Método de Aplicação", Tipo: "Rolo", m2_dia: 30, Pintores: 1, Ajudante: null },
-    { Etapa: "Método de Aplicação", Tipo: "Trincha (stripe coat)", m2_dia: 20, Pintores: 1, Ajudante: null }
-  ];
+  const ServiceCard = ({ title, image, description }) => (
+    <Card className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
+      <CardContent className="flex flex-col items-center">
+        <Image src={image} alt={title} className="w-full h-48 object-cover mb-4" />
+        <CardTitle className="text-xl font-bold mb-2">{title}</CardTitle>
+        <p className="text-center text-sm">{description}</p>
+        <Button className="mt-4">Selecionar</Button>
+      </CardContent>
+    </Card>
+  );
 
-  const descriptionQuantities = [
-    { Descricao: "Silicato de Cálcio", Tipo: "Tubulação até 4\"", Quant_ml: 18, Qt_Rec_Is_Fu: 2 },
-    { Descricao: "Silicato de Cálcio", Tipo: "Tubulação de 5\" a 8\"", Quant_ml: 15, Qt_Rec_Is_Fu: 2 },
-    { Descricao: "Silicato de Cálcio", Tipo: "Tubulação de 10\" até 16\"", Quant_ml: 12, Qt_Rec_Is_Fu: 2 },
-    { Descricao: "Manta de Fibra Cerâmica", Tipo: "Tubulação até 4\"", Quant_ml: 40, Qt_Rec_Is_Fu: 2 }
-  ];
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
 
   if (error) {
     return (
@@ -102,95 +90,13 @@ const Schedules = () => {
           </div>
         </TabsContent>
         <TabsContent value="calculadora-metricas">
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Atividades de Execução</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Select onValueChange={setSelectedActivity}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma Atividade" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {executionActivities.map((activity) => (
-                      <SelectItem key={activity.ID} value={activity.Atividades}>
-                        {activity.Atividades}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {selectedActivity && (
-                  <p className="mt-2">Atividade Selecionada: {selectedActivity}</p>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Etapas de Recursos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Select onValueChange={setSelectedResourceStage}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma Etapa de Recursos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[...new Set(resourceStages.map(stage => stage.Etapa))].map((etapa) => (
-                      <SelectItem key={etapa} value={etapa}>
-                        {etapa}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {selectedResourceStage && (
-                  <div className="mt-2">
-                    <p>Etapa Selecionada: {selectedResourceStage}</p>
-                    {resourceStages
-                      .filter(stage => stage.Etapa === selectedResourceStage)
-                      .map((stage, index) => (
-                        <p key={index}>
-                          Tipo: {stage.Tipo}, m²/dia: {stage.m2_dia}, Pintores: {stage.Pintores}, 
-                          Ajudante: {stage.Ajudante !== null ? stage.Ajudante : 'N/A'}
-                        </p>
-                      ))
-                    }
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Descrição e Quantidades</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Select onValueChange={setSelectedDescription}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma Descrição" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[...new Set(descriptionQuantities.map(item => item.Descricao))].map((descricao) => (
-                      <SelectItem key={descricao} value={descricao}>
-                        {descricao}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {selectedDescription && (
-                  <div className="mt-2">
-                    {descriptionQuantities
-                      .filter(item => item.Descricao === selectedDescription)
-                      .map((item, index) => (
-                        <p key={index}>
-                          Tipo: {item.Tipo}, Quantidade (ml): {item.Quant_ml}, Qt_Rec_Is_Fu: {item.Qt_Rec_Is_Fu}
-                        </p>
-                      ))
-                    }
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <h2 className="text-2xl font-bold mb-4">Calculadora de Métricas</h2>
+            <div className="flex flex-wrap -mx-4">
+              {serviceCards.map((card, index) => (
+                <ServiceCard key={index} {...card} />
+              ))}
+            </div>
           </div>
         </TabsContent>
       </Tabs>
