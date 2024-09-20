@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,7 +54,7 @@ const PaintingServiceForm = ({ onClose }) => {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Serviço de Pintura Industrial</CardTitle>
       </CardHeader>
@@ -91,17 +91,17 @@ const PaintingServiceForm = ({ onClose }) => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="m2Dia">M² Dia:</Label>
-              <Input id="m2Dia" name="m2Dia" value={formData.m2Dia} onChange={handleInputChange} />
+              <Input id="m2Dia" name="m2Dia" value={formData.m2Dia} onChange={handleInputChange} readOnly />
             </div>
             <div>
               <Label htmlFor="pintor">Pintor:</Label>
-              <Input id="pintor" name="pintor" value={formData.pintor} onChange={handleInputChange} />
+              <Input id="pintor" name="pintor" value={formData.pintor} onChange={handleInputChange} readOnly />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="ajudantes">Ajudantes:</Label>
-              <Input id="ajudantes" name="ajudantes" value={formData.ajudantes} onChange={handleInputChange} />
+              <Input id="ajudantes" name="ajudantes" value={formData.ajudantes} onChange={handleInputChange} readOnly />
             </div>
             <div>
               <Label htmlFor="qtdM2">QTD M²:</Label>
