@@ -3,9 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllProjects } from '@/utils/api';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, InfoIcon } from "lucide-react";
+import { AlertCircle, InfoIcon, Plus, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MaintenanceNoteForm from '@/components/MaintenanceNoteForm';
 import MaintenanceNoteTable from '@/components/scope/MaintenanceNoteTable';
 
@@ -14,6 +16,8 @@ const Scope = () => {
   const [showMaintenanceNoteForm, setShowMaintenanceNoteForm] = useState(false);
   const [maintenanceNotes, setMaintenanceNotes] = useState([]);
   const [editingNote, setEditingNote] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
     const storedProject = localStorage.getItem('selectedProject');
@@ -24,6 +28,8 @@ const Scope = () => {
     setMaintenanceNotes([
       { id: 1, note: "NM001", order: "ORD001", tag: "TAG001", equipmentFamily: "Pump", requester: "John Doe", totalHH: 10, totalCost: 1000, scopeType: "Preventive", status: "Pending" },
       { id: 2, note: "NM002", order: "ORD002", tag: "TAG002", equipmentFamily: "Valve", requester: "Jane Smith", totalHH: 15, totalCost: 1500, scopeType: "Corrective", status: "Approved" },
+      { id: 3, note: "NM003", order: "ORD003", tag: "TAG003", equipmentFamily: "Motor", requester: "Bob Johnson", totalHH: 8, totalCost: 800, scopeType: "Preventive", status: "Completed" },
+      { id: 4, note: "NM004", order: "ORD004", tag: "TAG004", equipmentFamily: "Sensor", requester: "Alice Brown", totalHH: 5, totalCost: 500, scopeType: "Corrective", status: "Pending" },
     ]);
   }, []);
 
@@ -45,6 +51,14 @@ const Scope = () => {
     setShowMaintenanceNoteForm(false);
     setEditingNote(null);
   };
+
+  const filteredNotes = maintenanceNotes.filter(note => 
+    note.note.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (statusFilter === 'all' || note.status === statusFilter)
+  );
+
+  const totalHH = filteredNotes.reduce((sum, note) => sum + note.totalHH, 0);
+  const totalCost = filteredNotes.reduce((sum, note) => sum + note.totalCost, 0);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -79,34 +93,76 @@ const Scope = () => {
         </TabsList>
         <TabsContent value="gestao-notas-ordens">
           <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Resumo do Projeto</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div>
-                    <h3 className="text-sm font-medium">Total de Notas</h3>
-                    <p className="text-2xl font-bold">{maintenanceNotes.length}</p>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-semibold">Gestão das Notas e Ordens</h2>
+              <Button onClick={() => setShowMaintenanceNoteForm(true)}>
+                <Plus className="mr-2 h-4 w-4" /> Nova Nota de Manutenção
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total de Notas</CardTitle>
+                  <InfoIcon className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{filteredNotes.length}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total de HH</CardTitle>
+                  <InfoIcon className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{totalHH}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Custo Total</CardTitle>
+                  <InfoIcon className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">R$ {totalCost.toFixed(2)}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Status</CardTitle>
+                  <InfoIcon className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {filteredNotes.filter(note => note.status === 'Pending').length} Pendentes
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium">Total de Ordens</h3>
-                    <p className="text-2xl font-bold">{maintenanceNotes.length}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium">Total de HH</h3>
-                    <p className="text-2xl font-bold">{maintenanceNotes.reduce((sum, note) => sum + note.totalHH, 0)}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium">Custo Total</h3>
-                    <p className="text-2xl font-bold">R$ {maintenanceNotes.reduce((sum, note) => sum + note.totalCost, 0).toFixed(2)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Button onClick={() => setShowMaintenanceNoteForm(true)}>Cadastrar Nova Nota de Manutenção</Button>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Pesquisar notas..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full"
+                  icon={<Search className="h-4 w-4" />}
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filtrar por status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os status</SelectItem>
+                  <SelectItem value="Pending">Pendente</SelectItem>
+                  <SelectItem value="Approved">Aprovado</SelectItem>
+                  <SelectItem value="Completed">Concluído</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <MaintenanceNoteTable
-              notes={maintenanceNotes}
+              notes={filteredNotes}
               onEdit={handleEdit}
               onDelete={handleDelete}
             />
