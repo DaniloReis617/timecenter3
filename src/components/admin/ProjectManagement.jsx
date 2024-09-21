@@ -3,13 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2, Plus, Settings } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ProjectForm from './ProjectForm';
+import ProjectConfigForm from './ProjectConfigForm';
 
 const ProjectManagement = ({ projects }) => {
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
+  const [isConfigDialogOpen, setIsConfigDialogOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+  const [configuringProject, setConfiguringProject] = useState(null);
 
   const handleAddProject = () => {
     setEditingProject(null);
@@ -21,13 +24,20 @@ const ProjectManagement = ({ projects }) => {
     setIsNewProjectDialogOpen(true);
   };
 
+  const handleConfigProject = (project) => {
+    setConfiguringProject(project);
+    setIsConfigDialogOpen(true);
+  };
+
   const handleDeleteProject = (projectId) => {
     console.log('Delete project clicked for project ID:', projectId);
   };
 
   const handleCloseDialog = () => {
     setIsNewProjectDialogOpen(false);
+    setIsConfigDialogOpen(false);
     setEditingProject(null);
+    setConfiguringProject(null);
   };
 
   return (
@@ -75,6 +85,14 @@ const ProjectManagement = ({ projects }) => {
                   <Button
                     variant="ghost"
                     size="icon"
+                    onClick={() => handleConfigProject(project)}
+                    className="mr-2 hover:bg-yellow-100"
+                  >
+                    <Settings className="h-4 w-4 text-yellow-500" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => handleDeleteProject(project.id)}
                     className="hover:bg-red-100"
                   >
@@ -93,6 +111,15 @@ const ProjectManagement = ({ projects }) => {
             <DialogTitle>{editingProject ? 'Editar Projeto' : 'Novo Projeto'}</DialogTitle>
           </DialogHeader>
           <ProjectForm project={editingProject} onClose={handleCloseDialog} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isConfigDialogOpen} onOpenChange={setIsConfigDialogOpen}>
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Configuração do Projeto</DialogTitle>
+          </DialogHeader>
+          <ProjectConfigForm project={configuringProject} onClose={handleCloseDialog} />
         </DialogContent>
       </Dialog>
     </Card>
