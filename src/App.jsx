@@ -16,6 +16,7 @@ import Risks from './pages/Risks';
 import Acquisitions from './pages/Acquisitions';
 import Integration from './pages/Integration';
 import Admin from './pages/Admin';
+import UserSettings from './pages/UserSettings';
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => {
         { path: "/acquisitions", element: <Acquisitions /> },
         { path: "/integration", element: <Integration /> },
         { path: "/admin", element: <Admin /> },
+        { path: "/user-settings", element: <UserSettings /> },
       ];
     } else if (userProfile === "Gestor") {
       return [
@@ -66,11 +68,13 @@ const App = () => {
         { path: "/costs", element: <Costs /> },
         { path: "/resources", element: <Resources /> },
         { path: "/schedules", element: <Schedules /> },
+        { path: "/user-settings", element: <UserSettings /> },
       ];
     } else { // Visualizador
       return [
         { path: "/", element: <Home /> },
         { path: "/stakeholders", element: <Stakeholders /> },
+        { path: "/user-settings", element: <UserSettings /> },
       ];
     }
   };

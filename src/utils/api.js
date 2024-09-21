@@ -8,8 +8,8 @@ const mockProjects = [
 ];
 
 const mockUsers = [
-  { id: 1, username: "john.doe@example.com", name: "John Doe", role: "Manager" },
-  { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer" },
+  { id: 1, username: "john.doe@example.com", name: "John Doe", role: "Manager", avatarUrl: "https://example.com/avatar1.jpg" },
+  { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer", avatarUrl: "https://example.com/avatar2.jpg" },
 ];
 
 // Mock API functions
@@ -17,7 +17,7 @@ export const login = async (username) => {
   console.log('Attempting login with username:', username);
   if (username === 'danilo.reis@timenow.com.br') {
     console.log('Login successful');
-    return { id: 1, username: username, name: "Danilo Reis", perfil: "Super Usuário" };
+    return { id: 1, username: username, name: "Danilo Reis", perfil: "Super Usuário", avatarUrl: "https://example.com/danilo.jpg" };
   }
   throw new Error('Invalid email');
 };
@@ -76,6 +76,23 @@ export const deleteProject = async (projectId) => {
   throw new Error('Project not found');
 };
 
+export const getUserProfile = async () => {
+  console.log('Fetching user profile');
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+  const user = mockUsers[0]; // For demonstration, always return the first user
+  console.log('User profile fetched:', user);
+  return user;
+};
+
+export const updateUserProfile = async (userData) => {
+  console.log('Updating user profile with data:', userData);
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+  const updatedUser = { ...mockUsers[0], ...userData };
+  mockUsers[0] = updatedUser;
+  console.log('User profile updated:', updatedUser);
+  return updatedUser;
+};
+
 // Simulated API error handling
 const simulateApiCall = async (func) => {
   try {
@@ -95,7 +112,9 @@ const apiFunctions = {
   getProjectDetails,
   createProject,
   updateProject,
-  deleteProject
+  deleteProject,
+  getUserProfile,
+  updateUserProfile
 };
 
 Object.keys(apiFunctions).forEach(key => {
@@ -109,5 +128,7 @@ export const {
   getProjectDetails: wrappedGetProjectDetails,
   createProject: wrappedCreateProject,
   updateProject: wrappedUpdateProject,
-  deleteProject: wrappedDeleteProject
+  deleteProject: wrappedDeleteProject,
+  getUserProfile: wrappedGetUserProfile,
+  updateUserProfile: wrappedUpdateUserProfile
 } = apiFunctions;

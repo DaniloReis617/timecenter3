@@ -48,6 +48,7 @@ const Layout = ({ children, user, onLogout }) => {
       { to: "/acquisitions", icon: <ShoppingCart size={20} />, title: "Aquisições" },
       { to: "/integration", icon: <GitMerge size={20} />, title: "Integração" },
       { to: "/admin", icon: <Settings size={20} />, title: "Administração" },
+      { to: "/user-settings", icon: <User size={20} />, title: "User Settings" },
     ];
 
     if (userProfile === "Super Usuário" || userProfile === "Administrador") {
@@ -55,7 +56,7 @@ const Layout = ({ children, user, onLogout }) => {
     } else if (userProfile === "Gestor") {
       return allNavItems.filter(item => !["quality", "risks", "acquisitions", "integration", "admin"].includes(item.to.slice(1)));
     } else { // Visualizador
-      return allNavItems.filter(item => ["", "stakeholders"].includes(item.to.slice(1)));
+      return allNavItems.filter(item => ["", "stakeholders", "user-settings"].includes(item.to.slice(1)));
     }
   };
 
