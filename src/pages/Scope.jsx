@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import MaintenanceNoteForm from '@/components/MaintenanceNoteForm';
 import MaintenanceNoteTable from '@/components/scope/MaintenanceNoteTable';
 import FilterBar from '@/components/scope/FilterBar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Scope = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -120,40 +121,12 @@ const Scope = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <Card>
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-sm font-medium">Total de Notas</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{totalNotes}</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-sm font-medium">Total de Ordens</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{totalOrders}</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-sm font-medium">Total de HH</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{totalHH.toFixed(2)}</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-sm font-medium">Custo Total</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">R$ {totalCost.toFixed(2)}</div>
-                  </CardContent>
-                </Card>
-              </div>
+              <ScopeMetrics
+                totalNotes={totalNotes}
+                totalOrders={totalOrders}
+                totalHH={totalHH}
+                totalCost={totalCost}
+              />
               <FilterBar filters={filters} onFilterChange={handleFilterChange} notes={maintenanceNotes} />
               <div className="mb-4">
                 <Input
@@ -173,36 +146,67 @@ const Scope = () => {
           </Card>
         </TabsContent>
         <TabsContent value="desafio-escopo">
-          <div className="p-4 bg-white rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Desafio do Escopo</h2>
-            {/* Add your content for Desafio do Escopo here */}
-          </div>
+          <Card>
+            <CardContent>
+              <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Desafio do Escopo</h2>
+              {/* Add your content for Desafio do Escopo here */}
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="declaracao-escopo">
-          <div className="p-4 bg-white rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Declaração do Escopo</h2>
-            {/* Add your content for Declaração do Escopo here */}
-          </div>
+          <Card>
+            <CardContent>
+              <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Declaração do Escopo</h2>
+              {/* Add your content for Declaração do Escopo here */}
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="gestao-alteracoes">
-          <div className="p-4 bg-white rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Gestão das Alterações do Escopo</h2>
-            {/* Add your content for Gestão das Alterações do Escopo here */}
-          </div>
+          <Card>
+            <CardContent>
+              <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Gestão das Alterações do Escopo</h2>
+              {/* Add your content for Gestão das Alterações do Escopo here */}
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
-      {showMaintenanceNoteForm && (
-        <MaintenanceNoteForm
-          initialData={editingNote}
-          onClose={handleCloseForm}
-          onSubmit={() => {
-            // Handle form submission
-            handleCloseForm();
-          }}
-        />
-      )}
+      <Dialog open={showMaintenanceNoteForm} onOpenChange={setShowMaintenanceNoteForm}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{editingNote ? 'Editar Nota de Manutenção' : 'Nova Nota de Manutenção'}</DialogTitle>
+          </DialogHeader>
+          <MaintenanceNoteForm
+            initialData={editingNote}
+            onClose={handleCloseForm}
+            onSubmit={() => {
+              // Handle form submission
+              handleCloseForm();
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+
+const ScopeMetrics = ({ totalNotes, totalOrders, totalHH, totalCost }) => (
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <MetricCard title="Total de Notas" value={totalNotes} />
+    <MetricCard title="Total de Ordens" value={totalOrders} />
+    <MetricCard title="Total de HH" value={totalHH.toFixed(2)} />
+    <MetricCard title="Custo Total" value={`R$ ${totalCost.toFixed(2)}`} />
+  </div>
+);
+
+const MetricCard = ({ title, value }) => (
+  <Card>
+    <CardHeader className="p-4">
+      <CardTitle className="text-sm font-medium">{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">{value}</div>
+    </CardContent>
+  </Card>
+);
 
 export default Scope;
