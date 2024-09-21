@@ -8,6 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from 'sonner';
 import { useForm, Controller } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Edit, Trash2, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const ProjectManagement = ({ projects }) => {
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
@@ -35,8 +38,14 @@ const ProjectManagement = ({ projects }) => {
     setIsNewProjectDialogOpen(true);
   };
 
-  const handleEditProject = () => {
-    console.log('Edit project clicked');
+  const handleEditProject = (projectId) => {
+    console.log('Edit project clicked for project ID:', projectId);
+    // Implement edit functionality here
+  };
+
+  const handleDeleteProject = (projectId) => {
+    console.log('Delete project clicked for project ID:', projectId);
+    // Implement delete functionality here
   };
 
   const onSubmit = (data) => {
@@ -46,36 +55,61 @@ const ProjectManagement = ({ projects }) => {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Gestão de Projetos</h2>
-        <div className="space-x-2">
-          <Button onClick={handleAddProject}>➕ Novo</Button>
-          <Button onClick={handleEditProject}>✏️ Editar</Button>
-        </div>
-      </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Descrição</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Data de Início</TableHead>
-            <TableHead>Data de Término</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {projects.map((project) => (
-            <TableRow key={project.id}>
-              <TableCell>{project.id}</TableCell>
-              <TableCell>{project.name}</TableCell>
-              <TableCell>{project.status}</TableCell>
-              <TableCell>{project.startDate}</TableCell>
-              <TableCell>{project.endDate}</TableCell>
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-2xl font-bold">Gestão de Projetos</CardTitle>
+        <Button onClick={handleAddProject} className="bg-green-500 hover:bg-green-600">
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Projeto
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">ID</TableHead>
+              <TableHead>Descrição</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Data de Início</TableHead>
+              <TableHead>Data de Término</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {projects.map((project) => (
+              <TableRow key={project.id} className="hover:bg-gray-50">
+                <TableCell className="font-medium">{project.id}</TableCell>
+                <TableCell>{project.name}</TableCell>
+                <TableCell>
+                  <Badge variant={project.status === 'In Progress' ? 'default' : project.status === 'Completed' ? 'success' : 'secondary'}>
+                    {project.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>{project.startDate}</TableCell>
+                <TableCell>{project.endDate}</TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEditProject(project.id)}
+                    className="mr-2 hover:bg-blue-100"
+                  >
+                    <Edit className="h-4 w-4 text-blue-500" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDeleteProject(project.id)}
+                    className="hover:bg-red-100"
+                  >
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
 
       <Dialog open={isNewProjectDialogOpen} onOpenChange={setIsNewProjectDialogOpen}>
         <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
@@ -142,7 +176,7 @@ const ProjectManagement = ({ projects }) => {
           </form>
         </DialogContent>
       </Dialog>
-    </div>
+    </Card>
   );
 };
 
