@@ -12,6 +12,8 @@ import { toast } from 'sonner';
 
 const UserDashboard = ({ users }) => {
   const [showUserForm, setShowUserForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
     GID: '',
     TX_LOGIN: '',
@@ -20,11 +22,24 @@ const UserDashboard = ({ users }) => {
   });
 
   const handleAddUser = () => {
+    setFormData({
+      GID: '',
+      TX_LOGIN: '',
+      NR_NIVEL: '',
+      FL_STATUS: ''
+    });
     setShowUserForm(true);
   };
 
-  const handleEditUser = (userId) => {
-    console.log('Edit user clicked for user ID:', userId);
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    setFormData({
+      GID: user.id,
+      TX_LOGIN: user.username,
+      NR_NIVEL: user.role === 'Manager' ? '1' : '2',
+      FL_STATUS: user.status === 'Active' ? 'A' : 'I'
+    });
+    setShowEditForm(true);
   };
 
   const handleDeleteUser = (userId) => {
@@ -45,6 +60,7 @@ const UserDashboard = ({ users }) => {
     console.log('Form submitted:', formData);
     toast.success('Usuário adicionado com sucesso!');
     setShowUserForm(false);
+    setShowEditForm(false);
     setFormData({
       GID: '',
       TX_LOGIN: '',
@@ -52,6 +68,66 @@ const UserDashboard = ({ users }) => {
       FL_STATUS: ''
     });
   };
+
+  const renderForm = () => (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="GID">GID</Label>
+        <Input
+          id="GID"
+          name="GID"
+          value={formData.GID}
+          onChange={handleInputChange}
+          required
+          readOnly={showEditForm}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="TX_LOGIN">Login</Label>
+        <Input
+          id="TX_LOGIN"
+          name="TX_LOGIN"
+          value={formData.TX_LOGIN}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="NR_NIVEL">Nível Permissão</Label>
+        <Select
+          onValueChange={(value) => handleSelectChange('NR_NIVEL', value)}
+          value={formData.NR_NIVEL}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione o nível" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">Nível 1</SelectItem>
+            <SelectItem value="2">Nível 2</SelectItem>
+            <SelectItem value="3">Nível 3</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="FL_STATUS">Status</Label>
+        <Select
+          onValueChange={(value) => handleSelectChange('FL_STATUS', value)}
+          value={formData.FL_STATUS}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione o status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="A">Ativo</SelectItem>
+            <SelectItem value="I">Inativo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <Button type="submit" className="w-full">
+        {showEditForm ? 'Atualizar Usuário' : 'Adicionar Usuário'}
+      </Button>
+    </form>
+  );
 
   return (
     <Card className="w-full">
@@ -88,7 +164,7 @@ const UserDashboard = ({ users }) => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleEditUser(user.id)}
+                    onClick={() => handleEditUser(user)}
                     className="mr-2 hover:bg-blue-100"
                   >
                     <Edit className="h-4 w-4 text-blue-500" />
@@ -113,60 +189,16 @@ const UserDashboard = ({ users }) => {
           <DialogHeader>
             <DialogTitle>Adicionar Novo Usuário</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="GID">GID</Label>
-              <Input
-                id="GID"
-                name="GID"
-                value={formData.GID}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="TX_LOGIN">Login</Label>
-              <Input
-                id="TX_LOGIN"
-                name="TX_LOGIN"
-                value={formData.TX_LOGIN}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="NR_NIVEL">Nível Permissão</Label>
-              <Select
-                onValueChange={(value) => handleSelectChange('NR_NIVEL', value)}
-                value={formData.NR_NIVEL}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o nível" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Nível 1</SelectItem>
-                  <SelectItem value="2">Nível 2</SelectItem>
-                  <SelectItem value="3">Nível 3</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="FL_STATUS">Status</Label>
-              <Select
-                onValueChange={(value) => handleSelectChange('FL_STATUS', value)}
-                value={formData.FL_STATUS}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="A">Ativo</SelectItem>
-                  <SelectItem value="I">Inativo</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button type="submit" className="w-full">Adicionar Usuário</Button>
-          </form>
+          {renderForm()}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Editar Usuário</DialogTitle>
+          </DialogHeader>
+          {renderForm()}
         </DialogContent>
       </Dialog>
     </Card>
