@@ -11,6 +11,7 @@ import MaintenanceNoteForm from '@/components/MaintenanceNoteForm';
 import MaintenanceNoteTable from '@/components/scope/MaintenanceNoteTable';
 import ScopeFilters from '@/components/scope/ScopeFilters';
 import ScopeSummary from '@/components/scope/ScopeSummary';
+import * as XLSX from 'xlsx';
 
 const Scope = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -60,14 +61,10 @@ const Scope = () => {
   );
 
   const handleDownload = () => {
-    const dataStr = JSON.stringify(filteredNotes, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'maintenance_notes.json';
-
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
+    const worksheet = XLSX.utils.json_to_sheet(filteredNotes);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Maintenance Notes");
+    XLSX.writeFile(workbook, "maintenance_notes.xlsx");
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -111,7 +108,7 @@ const Scope = () => {
                 <Button onClick={() => setShowMaintenanceNoteForm(true)}>Cadastrar Nova Nota</Button>
                 <Button onClick={handleDownload} variant="outline">
                   <Download className="h-4 w-4 mr-2" />
-                  Download
+                  Download XLSX
                 </Button>
               </div>
             </div>
