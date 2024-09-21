@@ -12,21 +12,12 @@ const mockUsers = [
   { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer", avatarUrl: "https://example.com/avatar2.jpg" },
 ];
 
-let appSettings = {
-  logo: '',
-  theme: 'light',
-  primaryColor: '#4b6357',
-  secondaryColor: '#f7f8fa',
-  loginImage: '',
-  homeImage: '',
-};
-
 // Mock API functions
 export const login = async (username) => {
   console.log('Attempting login with username:', username);
-  if (username === 'danilo.reis@timenow.com') {
+  if (username === 'danilo.reis@timenow.com.br') {
     console.log('Login successful');
-    return { id: 1, username: username, name: "Danilo Reis", perfil: "Desenvolvedor", email: "danilo.reis@timenow.com", avatarUrl: "https://example.com/danilo.jpg" };
+    return { id: 1, username: username, name: "Danilo Reis", perfil: "Super Usuário", avatarUrl: "https://example.com/danilo.jpg" };
   }
   throw new Error('Invalid email');
 };
@@ -102,21 +93,6 @@ export const updateUserProfile = async (userData) => {
   return updatedUser;
 };
 
-export const updateAppSettings = async (newSettings) => {
-  console.log('Updating app settings with data:', newSettings);
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  appSettings = { ...appSettings, ...newSettings };
-  console.log('App settings updated:', appSettings);
-  return appSettings;
-};
-
-export const getAppSettings = async () => {
-  console.log('Fetching app settings');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  console.log('App settings fetched:', appSettings);
-  return appSettings;
-};
-
 // Simulated API error handling
 const simulateApiCall = async (func) => {
   try {
@@ -138,9 +114,7 @@ const apiFunctions = {
   updateProject,
   deleteProject,
   getUserProfile,
-  updateUserProfile,
-  updateAppSettings,
-  getAppSettings
+  updateUserProfile
 };
 
 Object.keys(apiFunctions).forEach(key => {
@@ -156,7 +130,5 @@ export const {
   updateProject: wrappedUpdateProject,
   deleteProject: wrappedDeleteProject,
   getUserProfile: wrappedGetUserProfile,
-  updateUserProfile: wrappedUpdateUserProfile,
-  updateAppSettings: wrappedUpdateAppSettings,
-  getAppSettings: wrappedGetAppSettings
+  updateUserProfile: wrappedUpdateUserProfile
 } = apiFunctions;
