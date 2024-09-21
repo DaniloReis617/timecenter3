@@ -3,37 +3,30 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllProjects } from '@/utils/api';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Filter } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import MaintenanceNoteForm from '@/components/MaintenanceNoteForm';
 import MaintenanceNoteTable from '@/components/scope/MaintenanceNoteTable';
+import ScopeFilters from '@/components/scope/ScopeFilters';
+import ScopeSummary from '@/components/scope/ScopeSummary';
 
 const Scope = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showMaintenanceNoteForm, setShowMaintenanceNoteForm] = useState(false);
-  const [maintenanceNotes, setMaintenanceNotes] = useState([]);
+  const [maintenanceNotes, setMaintenanceNotes] = useState([
+    { id: 1, note: "NM001", order: "ORD001", tag: "TAG001", equipmentFamily: "Pump", requester: "John Doe", totalHH: 10, totalCost: 1000, scopeType: "Preventive", status: "Pending" },
+    { id: 2, note: "NM002", order: "ORD002", tag: "TAG002", equipmentFamily: "Valve", requester: "Jane Smith", totalHH: 15, totalCost: 1500, scopeType: "Corrective", status: "Approved" },
+  ]);
   const [editingNote, setEditingNote] = useState(null);
-  const [filters, setFilters] = useState({
-    nota: '',
-    ordem: '',
-    tag: '',
-    situacao: ''
-  });
+  const [filters, setFilters] = useState({ nota: '', ordem: '', tag: '', situacao: '' });
 
   useEffect(() => {
     const storedProject = localStorage.getItem('selectedProject');
     if (storedProject) {
       setSelectedProject(JSON.parse(storedProject));
     }
-    // Mock data for maintenance notes
-    setMaintenanceNotes([
-      { id: 1, note: "NM001", order: "ORD001", tag: "TAG001", equipmentFamily: "Pump", requester: "John Doe", totalHH: 10, totalCost: 1000, scopeType: "Preventive", status: "Pending" },
-      { id: 2, note: "NM002", order: "ORD002", tag: "TAG002", equipmentFamily: "Valve", requester: "Jane Smith", totalHH: 15, totalCost: 1500, scopeType: "Corrective", status: "Approved" },
-    ]);
   }, []);
 
   const { data: projects, isLoading, error } = useQuery({
@@ -55,16 +48,15 @@ const Scope = () => {
     setEditingNote(null);
   };
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
   };
 
   const filteredNotes = maintenanceNotes.filter(note => 
-    (filters.nota === '' || note.note.includes(filters.nota)) &&
-    (filters.ordem === '' || note.order.includes(filters.ordem)) &&
-    (filters.tag === '' || note.tag.includes(filters.tag)) &&
-    (filters.situacao === '' || note.status.toLowerCase().includes(filters.situacao.toLowerCase()))
+    (filters.nota === '' || note.note === filters.nota) &&
+    (filters.ordem === '' || note.order === filters.ordem) &&
+    (filters.tag === '' || note.tag === filters.tag) &&
+    (filters.situacao === '' || note.status === filters.situacao)
   );
 
   if (isLoading) return <div>Loading...</div>;
@@ -100,59 +92,8 @@ const Scope = () => {
         </TabsList>
         <TabsContent value="gestao-notas-ordens">
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Resumo do Projeto</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-gray-100 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">Total de Notas</h3>
-                    <p className="text-2xl font-bold">{maintenanceNotes.length}</p>
-                  </div>
-                  <div className="bg-gray-100 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">Total de Ordens</h3>
-                    <p className="text-2xl font-bold">{maintenanceNotes.length}</p>
-                  </div>
-                  <div className="bg-gray-100 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">Total de HH</h3>
-                    <p className="text-2xl font-bold">{maintenanceNotes.reduce((sum, note) => sum + note.totalHH, 0)}</p>
-                  </div>
-                  <div className="bg-gray-100 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-500">Custo Total</h3>
-                    <p className="text-2xl font-bold">R$ {maintenanceNotes.reduce((sum, note) => sum + note.totalCost, 0).toFixed(2)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Filter className="mr-2" />
-                  Filtros
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <Label htmlFor="nota">ID Nota</Label>
-                    <Input id="nota" name="nota" value={filters.nota} onChange={handleFilterChange} placeholder="Filtrar por ID da Nota" />
-                  </div>
-                  <div>
-                    <Label htmlFor="ordem">Ordem</Label>
-                    <Input id="ordem" name="ordem" value={filters.ordem} onChange={handleFilterChange} placeholder="Filtrar por Ordem" />
-                  </div>
-                  <div>
-                    <Label htmlFor="tag">Tag</Label>
-                    <Input id="tag" name="tag" value={filters.tag} onChange={handleFilterChange} placeholder="Filtrar por Tag" />
-                  </div>
-                  <div>
-                    <Label htmlFor="situacao">Situação</Label>
-                    <Input id="situacao" name="situacao" value={filters.situacao} onChange={handleFilterChange} placeholder="Filtrar por Situação" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ScopeSummary maintenanceNotes={maintenanceNotes} />
+            <ScopeFilters filters={filters} onFilterChange={handleFilterChange} />
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-semibold">Notas de Manutenção</h2>
               <Button onClick={() => setShowMaintenanceNoteForm(true)}>Cadastrar Nova Nota</Button>
