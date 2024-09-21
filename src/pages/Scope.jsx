@@ -116,7 +116,6 @@ const Scope = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <ScopeMetrics notes={filteredNotes} />
               <FilterBar filters={filters} onFilterChange={handleFilterChange} notes={maintenanceNotes} />
               <div className="mb-4">
                 <Input
@@ -179,32 +178,5 @@ const Scope = () => {
     </div>
   );
 };
-
-const ScopeMetrics = ({ notes }) => {
-  const totalNotes = notes.length;
-  const totalOrders = new Set(notes.map(note => note.tx_ordem)).size;
-  const totalHH = notes.reduce((sum, note) => sum + (note.vl_hh_total || 0), 0);
-  const totalCost = notes.reduce((sum, note) => sum + (note.vl_custo_total || 0), 0);
-
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-      <MetricCard title="Total de Notas" value={totalNotes} />
-      <MetricCard title="Total de Ordens" value={totalOrders} />
-      <MetricCard title="Total de HH" value={totalHH.toFixed(2)} />
-      <MetricCard title="Custo Total" value={`R$ ${totalCost.toFixed(2)}`} />
-    </div>
-  );
-};
-
-const MetricCard = ({ title, value }) => (
-  <Card>
-    <CardHeader className="p-4">
-      <CardTitle className="text-sm font-medium">{title}</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="text-2xl font-bold">{value}</div>
-    </CardContent>
-  </Card>
-);
 
 export default Scope;
