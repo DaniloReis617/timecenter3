@@ -3,30 +3,31 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, Plus, Settings } from "lucide-react";
+import { Edit, Trash2, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import ProjectConfigForm from './ProjectConfigForm';
+import ProjectForm from './ProjectForm';
 
 const ProjectManagement = ({ projects }) => {
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
-  const [showConfigForm, setShowConfigForm] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [editingProject, setEditingProject] = useState(null);
 
   const handleAddProject = () => {
+    setEditingProject(null);
     setIsNewProjectDialogOpen(true);
   };
 
-  const handleEditProject = (projectId) => {
-    console.log('Edit project clicked for project ID:', projectId);
+  const handleEditProject = (project) => {
+    setEditingProject(project);
+    setIsNewProjectDialogOpen(true);
   };
 
   const handleDeleteProject = (projectId) => {
     console.log('Delete project clicked for project ID:', projectId);
   };
 
-  const handleSettingsProject = (project) => {
-    setSelectedProject(project);
-    setShowConfigForm(true);
+  const handleCloseDialog = () => {
+    setIsNewProjectDialogOpen(false);
+    setEditingProject(null);
   };
 
   return (
@@ -56,7 +57,7 @@ const ProjectManagement = ({ projects }) => {
                 <TableCell className="font-medium">{project.id}</TableCell>
                 <TableCell>{project.name}</TableCell>
                 <TableCell>
-                  <Badge variant={project.status === 'In Progress' ? 'default' : project.status === 'Completed' ? 'success' : 'secondary'}>
+                  <Badge variant={project.status === 'Active' ? 'success' : 'secondary'}>
                     {project.status}
                   </Badge>
                 </TableCell>
@@ -66,15 +67,7 @@ const ProjectManagement = ({ projects }) => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleSettingsProject(project)}
-                    className="mr-2 hover:bg-gray-100"
-                  >
-                    <Settings className="h-4 w-4 text-gray-500" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEditProject(project.id)}
+                    onClick={() => handleEditProject(project)}
                     className="mr-2 hover:bg-blue-100"
                   >
                     <Edit className="h-4 w-4 text-blue-500" />
@@ -94,16 +87,14 @@ const ProjectManagement = ({ projects }) => {
         </Table>
       </CardContent>
 
-      {showConfigForm && (
-        <Dialog open={showConfigForm} onOpenChange={setShowConfigForm}>
-          <DialogContent className="sm:max-w-[800px]">
-            <DialogHeader>
-              <DialogTitle>Configuração do Projeto</DialogTitle>
-            </DialogHeader>
-            <ProjectConfigForm project={selectedProject} onClose={() => setShowConfigForm(false)} />
-          </DialogContent>
-        </Dialog>
-      )}
+      <Dialog open={isNewProjectDialogOpen} onOpenChange={setIsNewProjectDialogOpen}>
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>{editingProject ? 'Editar Projeto' : 'Novo Projeto'}</DialogTitle>
+          </DialogHeader>
+          <ProjectForm project={editingProject} onClose={handleCloseDialog} />
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
