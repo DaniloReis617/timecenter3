@@ -3,14 +3,24 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, UserPlus, UserCog } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Edit, Trash2, UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { toast } from 'sonner';
 
 const ProjectsPerUser = ({ users, projects }) => {
   const [selectedUser, setSelectedUser] = useState('all');
+  const [showAddUserProjectForm, setShowAddUserProjectForm] = useState(false);
+  const [formData, setFormData] = useState({
+    GID: '',
+    CD_USUARIO: '',
+    CD_PROJETO: ''
+  });
 
   const handleAddUserProject = () => {
-    console.log('Add user to project clicked');
+    setShowAddUserProjectForm(true);
   };
 
   const handleEditUserProject = (projectId) => {
@@ -19,6 +29,23 @@ const ProjectsPerUser = ({ users, projects }) => {
 
   const handleDeleteUserProject = (projectId) => {
     console.log('Delete user project clicked for project ID:', projectId);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name, value) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    toast.success('Usuário adicionado ao projeto com sucesso!');
+    setShowAddUserProjectForm(false);
+    setFormData({ GID: '', CD_USUARIO: '', CD_PROJETO: '' });
   };
 
   const filteredProjects = selectedUser === 'all'
@@ -92,6 +119,49 @@ const ProjectsPerUser = ({ users, projects }) => {
           </TableBody>
         </Table>
       </CardContent>
+
+      <Dialog open={showAddUserProjectForm} onOpenChange={setShowAddUserProjectForm}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Adicionar Usuário ao Projeto</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="CD_USUARIO">Usuário</Label>
+              <Select onValueChange={(value) => handleSelectChange('CD_USUARIO', value)} value={formData.CD_USUARIO}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um usuário" />
+                </SelectTrigger>
+                <SelectContent>
+                  {users.map((user) => (
+                    <SelectItem key={user.id} value={user.id.toString()}>
+                      {user.username}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="CD_PROJETO">Projeto</Label>
+              <Select onValueChange={(value) => handleSelectChange('CD_PROJETO', value)} value={formData.CD_PROJETO}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um projeto" />
+                </SelectTrigger>
+                <SelectContent>
+                  {projects.map((project) => (
+                    <SelectItem key={project.id} value={project.id.toString()}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" className="w-full">
+              Adicionar Usuário ao Projeto
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
