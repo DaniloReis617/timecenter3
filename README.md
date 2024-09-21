@@ -1,8 +1,8 @@
-# Welcome to your GPT Engineer project
+# Welcome to TimeCenter - Streamlined Stakeholder Management
 
-## Project info
+## Project Overview
 
-**URL**: https://run.gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve
+TimeCenter is a comprehensive project management application designed to streamline stakeholder management and project oversight. It provides a centralized platform for managing various aspects of projects, including stakeholder communication, scope definition, resource allocation, cost tracking, and quality control.
 
 ## Project Structure
 
@@ -10,111 +10,114 @@
 src/
 ├── assets/
 │   └── images/
-│       └── logo.png
+│       └── logo.png                 # Application logo
 ├── components/
 │   ├── admin/
-│   │   ├── ProjectConfigForm.jsx
-│   │   ├── ProjectForm.jsx
-│   │   ├── ProjectManagement.jsx
-│   │   ├── ProjectsPerUser.jsx
-│   │   └── UserDashboard.jsx
+│   │   ├── ProjectConfigForm.jsx    # Form for project configuration
+│   │   ├── ProjectForm.jsx          # Form for creating/editing projects
+│   │   ├── ProjectManagement.jsx    # Project management dashboard
+│   │   ├── ProjectsPerUser.jsx      # User-project association management
+│   │   └── UserDashboard.jsx        # User management dashboard
 │   ├── schedules/
-│   │   ├── ActivityExecutionForm.jsx
-│   │   ├── ActivityForm.jsx
-│   │   └── PaintingServiceForm.jsx
+│   │   ├── ActivityExecutionForm.jsx # Form for activity execution
+│   │   ├── ActivityForm.jsx         # Form for creating/editing activities
+│   │   └── PaintingServiceForm.jsx  # Form for painting service details
 │   ├── scope/
-│   │   ├── MaintenanceNoteTable.jsx
-│   │   ├── ScopeFilters.jsx
-│   │   └── ScopeSummary.jsx
+│   │   ├── MaintenanceNoteTable.jsx # Table for maintenance notes
+│   │   ├── ScopeFilters.jsx         # Filters for scope management
+│   │   └── ScopeSummary.jsx         # Summary of project scope
 │   ├── ui/
-│   │   └── [various UI components]
-│   ├── Layout.jsx
-│   └── MaintenanceNoteForm.jsx
+│   │   └── [various UI components]  # Reusable UI components
+│   ├── Layout.jsx                   # Main layout component
+│   └── MaintenanceNoteForm.jsx      # Form for maintenance notes
 ├── lib/
-│   └── utils.js
+│   └── utils.js                     # Utility functions
 ├── pages/
-│   ├── Acquisitions.jsx
-│   ├── Admin.jsx
-│   ├── Costs.jsx
-│   ├── Home.jsx
-│   ├── Index.jsx
-│   ├── Integration.jsx
-│   ├── Login.jsx
-│   ├── Quality.jsx
-│   ├── Resources.jsx
-│   ├── Risks.jsx
-│   ├── Schedules.jsx
-│   ├── Scope.jsx
-│   ├── Stakeholders.jsx
-│   └── UserSettings.jsx
+│   ├── Acquisitions.jsx             # Acquisitions management page
+│   ├── Admin.jsx                    # Admin dashboard page
+│   ├── Costs.jsx                    # Cost management page
+│   ├── Home.jsx                     # Home page
+│   ├── Index.jsx                    # Main entry point
+│   ├── Integration.jsx              # Integration management page
+│   ├── Login.jsx                    # Login page
+│   ├── Quality.jsx                  # Quality management page
+│   ├── Resources.jsx                # Resource management page
+│   ├── Risks.jsx                    # Risk management page
+│   ├── Schedules.jsx                # Schedules management page
+│   ├── Scope.jsx                    # Scope management page
+│   ├── Stakeholders.jsx             # Stakeholder management page
+│   └── UserSettings.jsx             # User settings page
 ├── utils/
-│   └── api.js
-├── App.jsx
-├── index.css
-└── main.jsx
+│   └── api.js                       # API utility functions
+├── App.jsx                          # Main application component
+├── index.css                        # Global styles
+└── main.jsx                         # Application entry point
 ```
 
-## How can I edit this code?
+## Key Features
 
-There are several ways of editing your application.
+- User Authentication and Authorization
+- Project Management Dashboard
+- Stakeholder Communication Tools
+- Scope Definition and Management
+- Resource Allocation and Tracking
+- Cost Management and Budgeting
+- Quality Control Measures
+- Risk Assessment and Mitigation
+- Schedule Management
+- Integration with External Systems
 
-**Use GPT Engineer**
+## How to Edit This Code
 
-Simply visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve) and start prompting.
+There are several ways to edit your application:
 
-Changes made via gptengineer.app will be committed automatically to this repo.
+### Use GPT Engineer
 
-**Use your preferred IDE**
+Visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve) and start prompting. Changes made via gptengineer.app will be committed automatically to this repo.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in the GPT Engineer UI.
+### Use Your Preferred IDE
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+To work locally using your own IDE:
 
-Follow these steps:
+1. Clone the repository:
+   ```sh
+   git clone <YOUR_GIT_URL>
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd <YOUR_PROJECT_NAME>
+   ```
+3. Install dependencies:
+   ```sh
+   npm i
+   ```
+4. Start the development server:
+   ```sh
+   npm run dev
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Edit Directly in GitHub
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Navigate to the desired file(s), click the "Edit" button, make your changes, and commit them.
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Use GitHub Codespaces
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+1. Go to the main page of your repository.
+2. Click on the "Code" button and select the "Codespaces" tab.
+3. Click on "New codespace" to launch a new Codespace environment.
+4. Edit files and commit your changes.
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
+## Technologies Used
 
 - Vite
 - React
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Deployment
 
-All GPT Engineer projects can be deployed directly via the GPT Engineer app.
+All GPT Engineer projects can be deployed directly via the GPT Engineer app. Visit your project at [GPT Engineer](https://gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve) and click on Share -> Publish.
 
-Simply visit your project at [GPT Engineer](https://gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve) and click on Share -> Publish.
+## Custom Domains
 
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+Custom domains are not directly supported. For custom domain deployment, we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
