@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useMutation } from '@tanstack/react-query';
 import { login } from '@/utils/api';
 import { toast } from 'sonner';
+import logo from '@/assets/images/logo.png';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -34,7 +35,7 @@ const Login = ({ onLogin }) => {
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="text-center">
           <img 
-            src="/timenow-logo.png" 
+            src={logo}
             alt="Timenow Logo" 
             className="mx-auto w-24 h-24 object-contain"
           />
