@@ -17,6 +17,7 @@ import Acquisitions from './pages/Acquisitions';
 import Integration from './pages/Integration';
 import Admin from './pages/Admin';
 import UserSettings from './pages/UserSettings';
+import GeneralSettings from './pages/GeneralSettings';
 
 const queryClient = new QueryClient();
 
@@ -45,30 +46,31 @@ const App = () => {
   };
 
   const getAccessiblePages = (userProfile) => {
+    const commonPages = [
+      { path: "/", element: <Home /> },
+      { path: "/stakeholders", element: <Stakeholders /> },
+      { path: "/scope", element: <Scope /> },
+      { path: "/costs", element: <Costs /> },
+      { path: "/resources", element: <Resources /> },
+      { path: "/schedules", element: <Schedules /> },
+      { path: "/user-settings", element: <UserSettings /> },
+    ];
+
     if (userProfile === "Super Usuário" || userProfile === "Administrador") {
       return [
-        { path: "/", element: <Home /> },
-        { path: "/stakeholders", element: <Stakeholders /> },
-        { path: "/scope", element: <Scope /> },
-        { path: "/costs", element: <Costs /> },
-        { path: "/resources", element: <Resources /> },
+        ...commonPages,
         { path: "/quality", element: <Quality /> },
-        { path: "/schedules", element: <Schedules /> },
         { path: "/risks", element: <Risks /> },
         { path: "/acquisitions", element: <Acquisitions /> },
         { path: "/integration", element: <Integration /> },
         { path: "/admin", element: <Admin /> },
-        { path: "/user-settings", element: <UserSettings /> },
       ];
     } else if (userProfile === "Gestor") {
+      return commonPages;
+    } else if (userProfile === "Desenvolvedor" || user?.email === "danilo.reis@timenow.com") {
       return [
-        { path: "/", element: <Home /> },
-        { path: "/stakeholders", element: <Stakeholders /> },
-        { path: "/scope", element: <Scope /> },
-        { path: "/costs", element: <Costs /> },
-        { path: "/resources", element: <Resources /> },
-        { path: "/schedules", element: <Schedules /> },
-        { path: "/user-settings", element: <UserSettings /> },
+        ...commonPages,
+        { path: "/general-settings", element: <GeneralSettings /> },
       ];
     } else { // Visualizador
       return [

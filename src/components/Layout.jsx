@@ -55,6 +55,11 @@ const Layout = ({ children, user, onLogout }) => {
       return allNavItems;
     } else if (userProfile === "Gestor") {
       return allNavItems.filter(item => !["quality", "risks", "acquisitions", "integration", "admin"].includes(item.to.slice(1)));
+    } else if (userProfile === "Desenvolvedor" || user?.email === "danilo.reis@timenow.com") {
+      return [
+        ...allNavItems.filter(item => !["admin"].includes(item.to.slice(1))),
+        { to: "/general-settings", icon: <Settings size={20} />, title: "Configurações Gerais" },
+      ];
     } else { // Visualizador
       return allNavItems.filter(item => ["", "stakeholders", "user-settings"].includes(item.to.slice(1)));
     }
