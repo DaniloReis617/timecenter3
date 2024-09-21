@@ -12,14 +12,6 @@ const mockUsers = [
   { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer", avatarUrl: "https://example.com/avatar2.jpg" },
 ];
 
-// New mock data for maintenance notes
-const mockMaintenanceNotes = [
-  { id: 1, id_nota_manutencao: 'NM001', tx_ordem: 'ORD001', tx_tag: 'TAG001', tx_situacao: 'Pendente' },
-  { id: 2, id_nota_manutencao: 'NM002', tx_ordem: 'ORD002', tx_tag: 'TAG002', tx_situacao: 'Aprovado' },
-  { id: 3, id_nota_manutencao: 'NM003', tx_ordem: 'ORD003', tx_tag: 'TAG003', tx_situacao: 'Concluído' },
-  { id: 4, id_nota_manutencao: 'NM004', tx_ordem: 'ORD004', tx_tag: 'TAG004', tx_situacao: 'Pendente' },
-];
-
 // Mock API functions
 export const login = async (username) => {
   console.log('Attempting login with username:', username);
@@ -101,14 +93,6 @@ export const updateUserProfile = async (userData) => {
   return updatedUser;
 };
 
-// New function to get maintenance notes
-export const getMaintenanceNotes = async (projectId) => {
-  console.log('Fetching maintenance notes for projectId:', projectId);
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  console.log('Maintenance notes fetched:', mockMaintenanceNotes);
-  return mockMaintenanceNotes;
-};
-
 // Simulated API error handling
 const simulateApiCall = async (func) => {
   try {
@@ -130,8 +114,7 @@ const apiFunctions = {
   updateProject,
   deleteProject,
   getUserProfile,
-  updateUserProfile,
-  getMaintenanceNotes
+  updateUserProfile
 };
 
 Object.keys(apiFunctions).forEach(key => {
@@ -147,6 +130,5 @@ export const {
   updateProject: wrappedUpdateProject,
   deleteProject: wrappedDeleteProject,
   getUserProfile: wrappedGetUserProfile,
-  updateUserProfile: wrappedUpdateUserProfile,
-  getMaintenanceNotes: wrappedGetMaintenanceNotes,
+  updateUserProfile: wrappedUpdateUserProfile
 } = apiFunctions;
