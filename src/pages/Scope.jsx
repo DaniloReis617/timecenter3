@@ -7,10 +7,10 @@ import { AlertCircle, InfoIcon, Plus, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MaintenanceNoteForm from '@/components/MaintenanceNoteForm';
 import MaintenanceNoteTable from '@/components/scope/MaintenanceNoteTable';
 import FilterBar from '@/components/scope/FilterBar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Scope = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -86,11 +86,6 @@ const Scope = () => {
     );
   }
 
-  const totalNotes = filteredNotes.length;
-  const totalOrders = new Set(filteredNotes.map(note => note.tx_ordem)).size;
-  const totalHH = filteredNotes.reduce((sum, note) => sum + (note.vl_hh_total || 0), 0);
-  const totalCost = filteredNotes.reduce((sum, note) => sum + (note.vl_custo_total || 0), 0);
-
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Escopo</h1>
@@ -121,12 +116,7 @@ const Scope = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <ScopeMetrics
-                totalNotes={totalNotes}
-                totalOrders={totalOrders}
-                totalHH={totalHH}
-                totalCost={totalCost}
-              />
+              <ScopeMetrics notes={filteredNotes} />
               <FilterBar filters={filters} onFilterChange={handleFilterChange} notes={maintenanceNotes} />
               <div className="mb-4">
                 <Input
@@ -171,15 +161,16 @@ const Scope = () => {
         </TabsContent>
       </Tabs>
       <Dialog open={showMaintenanceNoteForm} onOpenChange={setShowMaintenanceNoteForm}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>{editingNote ? 'Editar Nota de Manutenção' : 'Nova Nota de Manutenção'}</DialogTitle>
           </DialogHeader>
           <MaintenanceNoteForm
             initialData={editingNote}
             onClose={handleCloseForm}
-            onSubmit={() => {
+            onSubmit={(data) => {
               // Handle form submission
+              console.log('Form submitted:', data);
               handleCloseForm();
             }}
           />
@@ -189,14 +180,21 @@ const Scope = () => {
   );
 };
 
-const ScopeMetrics = ({ totalNotes, totalOrders, totalHH, totalCost }) => (
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-    <MetricCard title="Total de Notas" value={totalNotes} />
-    <MetricCard title="Total de Ordens" value={totalOrders} />
-    <MetricCard title="Total de HH" value={totalHH.toFixed(2)} />
-    <MetricCard title="Custo Total" value={`R$ ${totalCost.toFixed(2)}`} />
-  </div>
-);
+const ScopeMetrics = ({ notes }) => {
+  const totalNotes = notes.length;
+  const totalOrders = new Set(notes.map(note => note.tx_ordem)).size;
+  const totalHH = notes.reduce((sum, note) => sum + (note.vl_hh_total || 0), 0);
+  const totalCost = notes.reduce((sum, note) => sum + (note.vl_custo_total || 0), 0);
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <MetricCard title="Total de Notas" value={totalNotes} />
+      <MetricCard title="Total de Ordens" value={totalOrders} />
+      <MetricCard title="Total de HH" value={totalHH.toFixed(2)} />
+      <MetricCard title="Custo Total" value={`R$ ${totalCost.toFixed(2)}`} />
+    </div>
+  );
+};
 
 const MetricCard = ({ title, value }) => (
   <Card>
