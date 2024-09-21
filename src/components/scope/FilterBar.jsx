@@ -2,7 +2,11 @@ import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
-const FilterBar = ({ filters, onFilterChange }) => {
+const FilterBar = ({ filters, onFilterChange, notes }) => {
+  const getUniqueOptions = (field) => {
+    return ['all', ...new Set(notes.map(note => note[field]))].filter(Boolean);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <div>
@@ -17,7 +21,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            {filters.notaOptions.map((option) => (
+            {getUniqueOptions('id_nota_manutencao').map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
           </SelectContent>
@@ -35,7 +39,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            {filters.ordemOptions.map((option) => (
+            {getUniqueOptions('tx_ordem').map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
           </SelectContent>
@@ -53,7 +57,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            {filters.tagOptions.map((option) => (
+            {getUniqueOptions('tx_tag').map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
           </SelectContent>
@@ -71,7 +75,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            {filters.situacaoOptions.map((option) => (
+            {getUniqueOptions('tx_situacao').map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
           </SelectContent>

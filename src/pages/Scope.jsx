@@ -17,14 +17,10 @@ const Scope = () => {
   const [editingNote, setEditingNote] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
-    nota: '',
-    ordem: '',
-    tag: '',
-    situacao: '',
-    notaOptions: [],
-    ordemOptions: [],
-    tagOptions: [],
-    situacaoOptions: []
+    nota: 'all',
+    ordem: 'all',
+    tag: 'all',
+    situacao: 'all',
   });
 
   useEffect(() => {
@@ -45,18 +41,6 @@ const Scope = () => {
     enabled: !!selectedProject,
   });
 
-  useEffect(() => {
-    if (maintenanceNotes) {
-      setFilters(prev => ({
-        ...prev,
-        notaOptions: [...new Set(maintenanceNotes.map(note => note.id_nota_manutencao))],
-        ordemOptions: [...new Set(maintenanceNotes.map(note => note.tx_ordem))],
-        tagOptions: [...new Set(maintenanceNotes.map(note => note.tx_tag))],
-        situacaoOptions: [...new Set(maintenanceNotes.map(note => note.tx_situacao))]
-      }));
-    }
-  }, [maintenanceNotes]);
-
   const handleEdit = (note) => {
     setEditingNote(note);
     setShowMaintenanceNoteForm(true);
@@ -64,6 +48,7 @@ const Scope = () => {
 
   const handleDelete = (id) => {
     // Implement delete functionality
+    console.log('Delete note with id:', id);
   };
 
   const handleCloseForm = () => {
@@ -76,10 +61,10 @@ const Scope = () => {
   };
 
   const filteredNotes = maintenanceNotes?.filter(note =>
-    (filters.nota ? note.id_nota_manutencao === filters.nota : true) &&
-    (filters.ordem ? note.tx_ordem === filters.ordem : true) &&
-    (filters.tag ? note.tx_tag === filters.tag : true) &&
-    (filters.situacao ? note.tx_situacao === filters.situacao : true) &&
+    (filters.nota === 'all' || note.id_nota_manutencao === filters.nota) &&
+    (filters.ordem === 'all' || note.tx_ordem === filters.ordem) &&
+    (filters.tag === 'all' || note.tx_tag === filters.tag) &&
+    (filters.situacao === 'all' || note.tx_situacao === filters.situacao) &&
     Object.values(note).some(value => 
       value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -99,6 +84,11 @@ const Scope = () => {
       </Alert>
     );
   }
+
+  const totalNotes = filteredNotes.length;
+  const totalOrders = new Set(filteredNotes.map(note => note.tx_ordem)).size;
+  const totalHH = filteredNotes.reduce((sum, note) => sum + (note.vl_hh_total || 0), 0);
+  const totalCost = filteredNotes.reduce((sum, note) => sum + (note.vl_custo_total || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -130,7 +120,41 @@ const Scope = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <FilterBar filters={filters} onFilterChange={handleFilterChange} />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <Card>
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-sm font-medium">Total de Notas</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{totalNotes}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-sm font-medium">Total de Ordens</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{totalOrders}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-sm font-medium">Total de HH</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{totalHH.toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-sm font-medium">Custo Total</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">R$ {totalCost.toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+              </div>
+              <FilterBar filters={filters} onFilterChange={handleFilterChange} notes={maintenanceNotes} />
               <div className="mb-4">
                 <Input
                   placeholder="Pesquisar notas..."
