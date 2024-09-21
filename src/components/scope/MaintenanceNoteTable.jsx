@@ -1,11 +1,11 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Eye } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-const MaintenanceNoteTable = ({ notes, onEdit, onDelete, onView }) => (
+const MaintenanceNoteTable = ({ notes, onEdit, onDelete }) => (
   <div className="overflow-x-auto bg-white rounded-lg shadow">
     <Table>
       <TableHeader>
@@ -46,16 +46,6 @@ const MaintenanceNoteTable = ({ notes, onEdit, onDelete, onView }) => (
             </TableCell>
             <TableCell className="text-right">
               <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" onClick={() => onView(note)}>
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>View Details</p>
-                  </TooltipContent>
-                </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon" onClick={() => onEdit(note)}>
