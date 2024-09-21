@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit, Trash2, UserPlus, UserCog } from "lucide-react";
+import { Edit, Trash2, UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from 'sonner';
 
 const UserDashboard = ({ users }) => {
+  const [showUserForm, setShowUserForm] = useState(false);
+  const [formData, setFormData] = useState({
+    GID: '',
+    TX_LOGIN: '',
+    NR_NIVEL: '',
+    FL_STATUS: ''
+  });
+
   const handleAddUser = () => {
-    console.log('Add user clicked');
+    setShowUserForm(true);
   };
 
   const handleEditUser = (userId) => {
@@ -16,6 +29,28 @@ const UserDashboard = ({ users }) => {
 
   const handleDeleteUser = (userId) => {
     console.log('Delete user clicked for user ID:', userId);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name, value) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    toast.success('Usuário adicionado com sucesso!');
+    setShowUserForm(false);
+    setFormData({
+      GID: '',
+      TX_LOGIN: '',
+      NR_NIVEL: '',
+      FL_STATUS: ''
+    });
   };
 
   return (
@@ -72,6 +107,68 @@ const UserDashboard = ({ users }) => {
           </TableBody>
         </Table>
       </CardContent>
+
+      <Dialog open={showUserForm} onOpenChange={setShowUserForm}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Adicionar Novo Usuário</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="GID">GID</Label>
+              <Input
+                id="GID"
+                name="GID"
+                value={formData.GID}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="TX_LOGIN">Login</Label>
+              <Input
+                id="TX_LOGIN"
+                name="TX_LOGIN"
+                value={formData.TX_LOGIN}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="NR_NIVEL">Nível Permissão</Label>
+              <Select
+                onValueChange={(value) => handleSelectChange('NR_NIVEL', value)}
+                value={formData.NR_NIVEL}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o nível" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Nível 1</SelectItem>
+                  <SelectItem value="2">Nível 2</SelectItem>
+                  <SelectItem value="3">Nível 3</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="FL_STATUS">Status</Label>
+              <Select
+                onValueChange={(value) => handleSelectChange('FL_STATUS', value)}
+                value={formData.FL_STATUS}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="A">Ativo</SelectItem>
+                  <SelectItem value="I">Inativo</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" className="w-full">Adicionar Usuário</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
