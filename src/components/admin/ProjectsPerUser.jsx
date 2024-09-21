@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit, Trash2, UserPlus } from "lucide-react";
+import { Trash2, UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from 'sonner';
 
@@ -14,7 +14,6 @@ const ProjectsPerUser = ({ users, projects }) => {
   const [selectedUser, setSelectedUser] = useState('all');
   const [showAddUserProjectForm, setShowAddUserProjectForm] = useState(false);
   const [formData, setFormData] = useState({
-    GID: '',
     CD_USUARIO: '',
     CD_PROJETO: ''
   });
@@ -23,12 +22,10 @@ const ProjectsPerUser = ({ users, projects }) => {
     setShowAddUserProjectForm(true);
   };
 
-  const handleEditUserProject = (projectId) => {
-    console.log('Edit user project clicked for project ID:', projectId);
-  };
-
   const handleDeleteUserProject = (projectId) => {
     console.log('Delete user project clicked for project ID:', projectId);
+    // Implement delete functionality here
+    toast.success('User removed from project successfully');
   };
 
   const handleInputChange = (e) => {
@@ -43,9 +40,9 @@ const ProjectsPerUser = ({ users, projects }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    toast.success('Usuário adicionado ao projeto com sucesso!');
+    toast.success('User added to project successfully!');
     setShowAddUserProjectForm(false);
-    setFormData({ GID: '', CD_USUARIO: '', CD_PROJETO: '' });
+    setFormData({ CD_USUARIO: '', CD_PROJETO: '' });
   };
 
   const filteredProjects = selectedUser === 'all'
@@ -97,14 +94,6 @@ const ProjectsPerUser = ({ users, projects }) => {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEditUserProject(project.id)}
-                    className="mr-2 hover:bg-blue-100"
-                  >
-                    <Edit className="h-4 w-4 text-blue-500" />
-                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"
