@@ -33,7 +33,7 @@ const Login = ({ onLogin }) => {
     <div className="flex items-center justify-center h-screen bg-custom-background">
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="text-center">
-          <img src="/assets/timenow-logo.png" alt="Timenow Logo" className="mx-auto w-24 h-24" />
+          <img src="/timenow-logo.png" alt="Timenow Logo" className="mx-auto w-24 h-24" />
           <h2 className="mt-6 text-3xl font-extrabold text-custom-primary">Timenow</h2>
           <p className="mt-2 text-sm text-custom-text">
             Bem-vindo ao Time Center, por favor realize o seu login!
