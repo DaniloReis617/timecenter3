@@ -7,7 +7,6 @@ import { AlertCircle, InfoIcon, Plus, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MaintenanceNoteForm from '@/components/MaintenanceNoteForm';
 import MaintenanceNoteTable from '@/components/scope/MaintenanceNoteTable';
 import FilterBar from '@/components/scope/FilterBar';
@@ -18,10 +17,14 @@ const Scope = () => {
   const [editingNote, setEditingNote] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
-    nota: 'all',
-    ordem: 'all',
-    tag: 'all',
-    situacao: 'all',
+    nota: '',
+    ordem: '',
+    tag: '',
+    situacao: '',
+    notaOptions: [],
+    ordemOptions: [],
+    tagOptions: [],
+    situacaoOptions: []
   });
 
   useEffect(() => {
@@ -42,6 +45,18 @@ const Scope = () => {
     enabled: !!selectedProject,
   });
 
+  useEffect(() => {
+    if (maintenanceNotes) {
+      setFilters(prev => ({
+        ...prev,
+        notaOptions: [...new Set(maintenanceNotes.map(note => note.id_nota_manutencao))],
+        ordemOptions: [...new Set(maintenanceNotes.map(note => note.tx_ordem))],
+        tagOptions: [...new Set(maintenanceNotes.map(note => note.tx_tag))],
+        situacaoOptions: [...new Set(maintenanceNotes.map(note => note.tx_situacao))]
+      }));
+    }
+  }, [maintenanceNotes]);
+
   const handleEdit = (note) => {
     setEditingNote(note);
     setShowMaintenanceNoteForm(true);
@@ -49,7 +64,6 @@ const Scope = () => {
 
   const handleDelete = (id) => {
     // Implement delete functionality
-    console.log('Delete note with id:', id);
   };
 
   const handleCloseForm = () => {
@@ -62,10 +76,10 @@ const Scope = () => {
   };
 
   const filteredNotes = maintenanceNotes?.filter(note =>
-    (filters.nota === 'all' || note.id_nota_manutencao === filters.nota) &&
-    (filters.ordem === 'all' || note.tx_ordem === filters.ordem) &&
-    (filters.tag === 'all' || note.tx_tag === filters.tag) &&
-    (filters.situacao === 'all' || note.tx_situacao === filters.situacao) &&
+    (filters.nota ? note.id_nota_manutencao === filters.nota : true) &&
+    (filters.ordem ? note.tx_ordem === filters.ordem : true) &&
+    (filters.tag ? note.tx_tag === filters.tag : true) &&
+    (filters.situacao ? note.tx_situacao === filters.situacao : true) &&
     Object.values(note).some(value => 
       value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -116,7 +130,7 @@ const Scope = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <FilterBar filters={filters} onFilterChange={handleFilterChange} notes={maintenanceNotes} />
+              <FilterBar filters={filters} onFilterChange={handleFilterChange} />
               <div className="mb-4">
                 <Input
                   placeholder="Pesquisar notas..."
@@ -135,46 +149,34 @@ const Scope = () => {
           </Card>
         </TabsContent>
         <TabsContent value="desafio-escopo">
-          <Card>
-            <CardContent>
-              <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Desafio do Escopo</h2>
-              {/* Add your content for Desafio do Escopo here */}
-            </CardContent>
-          </Card>
+          <div className="p-4 bg-white rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Desafio do Escopo</h2>
+            {/* Add your content for Desafio do Escopo here */}
+          </div>
         </TabsContent>
         <TabsContent value="declaracao-escopo">
-          <Card>
-            <CardContent>
-              <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Declaração do Escopo</h2>
-              {/* Add your content for Declaração do Escopo here */}
-            </CardContent>
-          </Card>
+          <div className="p-4 bg-white rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Declaração do Escopo</h2>
+            {/* Add your content for Declaração do Escopo here */}
+          </div>
         </TabsContent>
         <TabsContent value="gestao-alteracoes">
-          <Card>
-            <CardContent>
-              <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Gestão das Alterações do Escopo</h2>
-              {/* Add your content for Gestão das Alterações do Escopo here */}
-            </CardContent>
-          </Card>
+          <div className="p-4 bg-white rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Gestão das Alterações do Escopo</h2>
+            {/* Add your content for Gestão das Alterações do Escopo here */}
+          </div>
         </TabsContent>
       </Tabs>
-      <Dialog open={showMaintenanceNoteForm} onOpenChange={setShowMaintenanceNoteForm}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>{editingNote ? 'Editar Nota de Manutenção' : 'Nova Nota de Manutenção'}</DialogTitle>
-          </DialogHeader>
-          <MaintenanceNoteForm
-            initialData={editingNote}
-            onClose={handleCloseForm}
-            onSubmit={(data) => {
-              // Handle form submission
-              console.log('Form submitted:', data);
-              handleCloseForm();
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+      {showMaintenanceNoteForm && (
+        <MaintenanceNoteForm
+          initialData={editingNote}
+          onClose={handleCloseForm}
+          onSubmit={() => {
+            // Handle form submission
+            handleCloseForm();
+          }}
+        />
+      )}
     </div>
   );
 };
