@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,10 @@ import logo from '@/assets/images/logo.png';
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('Logo path:', logo);
+  }, []);
 
   const loginMutation = useMutation({
     mutationFn: login,
@@ -34,11 +38,21 @@ const Login = ({ onLogin }) => {
     <div className="flex items-center justify-center h-screen bg-custom-background">
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="text-center">
-          <img 
-            src={logo}
-            alt="Timenow Logo" 
-            className="mx-auto w-24 h-24 object-contain"
-          />
+          {logo ? (
+            <img 
+              src={logo}
+              alt="Timenow Logo" 
+              className="mx-auto w-24 h-24 object-contain"
+              onError={(e) => {
+                console.error('Error loading logo:', e);
+                e.target.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="mx-auto w-24 h-24 bg-gray-200 flex items-center justify-center text-gray-500">
+              Logo not found
+            </div>
+          )}
           <h2 className="mt-6 text-3xl font-extrabold text-custom-primary">Timenow</h2>
           <p className="mt-2 text-sm text-custom-text">
             Bem-vindo ao Time Center, por favor realize o seu login!
