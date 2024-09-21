@@ -4,6 +4,56 @@
 
 **URL**: https://run.gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve
 
+## Project Structure
+
+```
+src/
+├── assets/
+│   └── images/
+│       └── logo.png
+├── components/
+│   ├── admin/
+│   │   ├── ProjectConfigForm.jsx
+│   │   ├── ProjectForm.jsx
+│   │   ├── ProjectManagement.jsx
+│   │   ├── ProjectsPerUser.jsx
+│   │   └── UserDashboard.jsx
+│   ├── schedules/
+│   │   ├── ActivityExecutionForm.jsx
+│   │   ├── ActivityForm.jsx
+│   │   └── PaintingServiceForm.jsx
+│   ├── scope/
+│   │   ├── MaintenanceNoteTable.jsx
+│   │   ├── ScopeFilters.jsx
+│   │   └── ScopeSummary.jsx
+│   ├── ui/
+│   │   └── [various UI components]
+│   ├── Layout.jsx
+│   └── MaintenanceNoteForm.jsx
+├── lib/
+│   └── utils.js
+├── pages/
+│   ├── Acquisitions.jsx
+│   ├── Admin.jsx
+│   ├── Costs.jsx
+│   ├── Home.jsx
+│   ├── Index.jsx
+│   ├── Integration.jsx
+│   ├── Login.jsx
+│   ├── Quality.jsx
+│   ├── Resources.jsx
+│   ├── Risks.jsx
+│   ├── Schedules.jsx
+│   ├── Scope.jsx
+│   ├── Stakeholders.jsx
+│   └── UserSettings.jsx
+├── utils/
+│   └── api.js
+├── App.jsx
+├── index.css
+└── main.jsx
+```
+
 ## How can I edit this code?
 
 There are several ways of editing your application.
@@ -52,7 +102,7 @@ npm run dev
 
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - React
