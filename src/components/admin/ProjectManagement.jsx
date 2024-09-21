@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getAllProjects, getUsers } from '@/utils/api';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -11,10 +13,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Edit, Trash2, Plus, Settings } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import ProjectConfigForm from './ProjectConfigForm';
 
 const ProjectManagement = ({ projects }) => {
   const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false);
   const [columnCount, setColumnCount] = useState(1);
+  const [showConfigForm, setShowConfigForm] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
   const { register, handleSubmit, control, formState: { errors } } = useForm();
 
   useEffect(() => {
@@ -48,9 +53,9 @@ const ProjectManagement = ({ projects }) => {
     // Implement delete functionality here
   };
 
-  const handleSettingsProject = (projectId) => {
-    console.log('Settings clicked for project ID:', projectId);
-    // Implement settings functionality here
+  const handleSettingsProject = (project) => {
+    setSelectedProject(project);
+    setShowConfigForm(true);
   };
 
   const onSubmit = (data) => {
@@ -96,7 +101,7 @@ const ProjectManagement = ({ projects }) => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleSettingsProject(project.id)}
+                    onClick={() => handleSettingsProject(project)}
                     className="mr-2 hover:bg-gray-100"
                   >
                     <Settings className="h-4 w-4 text-gray-500" />
@@ -189,6 +194,17 @@ const ProjectManagement = ({ projects }) => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {showConfigForm && (
+        <Dialog open={showConfigForm} onOpenChange={setShowConfigForm}>
+          <DialogContent className="sm:max-w-[800px]">
+            <DialogHeader>
+              <DialogTitle>Configuração do Projeto</DialogTitle>
+            </DialogHeader>
+            <ProjectConfigForm project={selectedProject} onClose={() => setShowConfigForm(false)} />
+          </DialogContent>
+        </Dialog>
+      )}
     </Card>
   );
 };
