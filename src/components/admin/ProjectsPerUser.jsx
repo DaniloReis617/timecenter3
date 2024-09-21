@@ -22,7 +22,7 @@ const ProjectsPerUser = ({ users, projects }) => {
   };
 
   const filteredProjects = selectedUser
-    ? projects.filter(project => project.users.includes(selectedUser))
+    ? projects.filter(project => project.users && project.users.includes(selectedUser))
     : projects;
 
   return (
@@ -41,7 +41,7 @@ const ProjectsPerUser = ({ users, projects }) => {
               <SelectValue placeholder="Selecione um usuário" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos os usuários</SelectItem>
+              <SelectItem value="">Todos os usuários</SelectItem>
               {users.map((user) => (
                 <SelectItem key={user.id} value={user.username}>
                   {user.username}
