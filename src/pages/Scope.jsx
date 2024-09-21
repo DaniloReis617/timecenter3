@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllProjects } from '@/utils/api';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, InfoIcon } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MaintenanceNoteForm from '@/components/MaintenanceNoteForm';
 import MaintenanceNoteTable from '@/components/scope/MaintenanceNoteTable';
 
@@ -71,40 +72,43 @@ const Scope = () => {
         </Alert>
       )}
       <Tabs defaultValue="gestao-notas-ordens">
-        <TabsList>
+        <TabsList className="mb-4">
           <TabsTrigger value="gestao-notas-ordens">Gestão das Notas e Ordens</TabsTrigger>
           <TabsTrigger value="desafio-escopo">Desafio do Escopo</TabsTrigger>
           <TabsTrigger value="declaracao-escopo">Declaração do Escopo</TabsTrigger>
           <TabsTrigger value="gestao-alteracoes">Gestão das Alterações do Escopo</TabsTrigger>
         </TabsList>
         <TabsContent value="gestao-notas-ordens">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Resumo do Projeto</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div>
-                    <h3 className="text-sm font-medium">Total de Notas</h3>
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-sm font-medium text-gray-500">Total de Notas</h3>
                     <p className="text-2xl font-bold">{maintenanceNotes.length}</p>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium">Total de Ordens</h3>
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-sm font-medium text-gray-500">Total de Ordens</h3>
                     <p className="text-2xl font-bold">{maintenanceNotes.length}</p>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium">Total de HH</h3>
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-sm font-medium text-gray-500">Total de HH</h3>
                     <p className="text-2xl font-bold">{maintenanceNotes.reduce((sum, note) => sum + note.totalHH, 0)}</p>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium">Custo Total</h3>
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-sm font-medium text-gray-500">Custo Total</h3>
                     <p className="text-2xl font-bold">R$ {maintenanceNotes.reduce((sum, note) => sum + note.totalCost, 0).toFixed(2)}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Button onClick={() => setShowMaintenanceNoteForm(true)}>Cadastrar Nova Nota de Manutenção</Button>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-semibold">Notas de Manutenção</h2>
+              <Button onClick={() => setShowMaintenanceNoteForm(true)}>Cadastrar Nova Nota</Button>
+            </div>
             <MaintenanceNoteTable
               notes={maintenanceNotes}
               onEdit={handleEdit}
@@ -113,35 +117,46 @@ const Scope = () => {
           </div>
         </TabsContent>
         <TabsContent value="desafio-escopo">
-          <div className="p-4 bg-white rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Desafio do Escopo</h2>
-            {/* Add your content for Desafio do Escopo here */}
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Desafio do Escopo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Conteúdo da aba Desafio do Escopo será implementado aqui.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="declaracao-escopo">
-          <div className="p-4 bg-white rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Declaração do Escopo</h2>
-            {/* Add your content for Declaração do Escopo here */}
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Declaração do Escopo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Conteúdo da aba Declaração do Escopo será implementado aqui.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="gestao-alteracoes">
-          <div className="p-4 bg-white rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Conteúdo da aba Gestão das Alterações do Escopo</h2>
-            {/* Add your content for Gestão das Alterações do Escopo here */}
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Gestão das Alterações do Escopo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Conteúdo da aba Gestão das Alterações do Escopo será implementado aqui.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
-      {showMaintenanceNoteForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-screen overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">
+      <Dialog open={showMaintenanceNoteForm} onOpenChange={setShowMaintenanceNoteForm}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
               {editingNote ? 'Editar Nota de Manutenção' : 'Cadastrar Nova Nota de Manutenção'}
-            </h2>
-            <MaintenanceNoteForm initialData={editingNote} />
-            <Button onClick={handleCloseForm} className="mt-4">Fechar</Button>
-          </div>
-        </div>
-      )}
+            </DialogTitle>
+          </DialogHeader>
+          <MaintenanceNoteForm initialData={editingNote} onClose={handleCloseForm} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
