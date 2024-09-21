@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -44,13 +44,13 @@ const ProjectConfigForm = ({ project, onClose }) => {
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <Select.Trigger>
-                    <Select.Value placeholder="Selecione uma opção" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    <Select.Item value="S">Sim</Select.Item>
-                    <Select.Item value="N">Não</Select.Item>
-                  </Select.Content>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma opção" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="S">Sim</SelectItem>
+                    <SelectItem value="N">Não</SelectItem>
+                  </SelectContent>
                 </Select>
               )}
             />
@@ -62,13 +62,13 @@ const ProjectConfigForm = ({ project, onClose }) => {
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <Select.Trigger>
-                    <Select.Value placeholder="Selecione uma opção" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    <Select.Item value="S">Sim</Select.Item>
-                    <Select.Item value="N">Não</Select.Item>
-                  </Select.Content>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma opção" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="S">Sim</SelectItem>
+                    <SelectItem value="N">Não</SelectItem>
+                  </SelectContent>
                 </Select>
               )}
             />
