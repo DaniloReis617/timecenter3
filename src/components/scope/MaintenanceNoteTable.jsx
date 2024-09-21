@@ -30,7 +30,7 @@ const MaintenanceNoteTable = ({ notes, onEdit, onDelete }) => (
           <TableCell>{note.equipmentFamily}</TableCell>
           <TableCell>{note.requester}</TableCell>
           <TableCell>{note.totalHH}</TableCell>
-          <TableCell>R$ {note.totalCost.toFixed(2)}</TableCell>
+          <TableCell>{note.totalCost ? `R$ ${note.totalCost.toFixed(2)}` : 'N/A'}</TableCell>
           <TableCell>{note.scopeType}</TableCell>
           <TableCell>
             <span className={`px-2 py-1 rounded-full text-xs font-semibold ${

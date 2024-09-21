@@ -16,7 +16,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             {filters.notaOptions.map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
@@ -34,7 +34,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             {filters.ordemOptions.map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
@@ -52,7 +52,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             {filters.tagOptions.map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
@@ -70,7 +70,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             {filters.situacaoOptions.map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
