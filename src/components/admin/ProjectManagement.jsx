@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from 'sonner';
 import { useForm, Controller } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2, Plus, Settings } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const ProjectManagement = ({ projects }) => {
@@ -46,6 +46,11 @@ const ProjectManagement = ({ projects }) => {
   const handleDeleteProject = (projectId) => {
     console.log('Delete project clicked for project ID:', projectId);
     // Implement delete functionality here
+  };
+
+  const handleSettingsProject = (projectId) => {
+    console.log('Settings clicked for project ID:', projectId);
+    // Implement settings functionality here
   };
 
   const onSubmit = (data) => {
@@ -88,6 +93,14 @@ const ProjectManagement = ({ projects }) => {
                 <TableCell>{project.startDate}</TableCell>
                 <TableCell>{project.endDate}</TableCell>
                 <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleSettingsProject(project.id)}
+                    className="mr-2 hover:bg-gray-100"
+                  >
+                    <Settings className="h-4 w-4 text-gray-500" />
+                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"
