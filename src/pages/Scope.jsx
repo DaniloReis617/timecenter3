@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllProjects } from '@/utils/api';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -59,6 +59,17 @@ const Scope = () => {
     (filters.situacao === '' || note.status === filters.situacao)
   );
 
+  const handleDownload = () => {
+    const dataStr = JSON.stringify(filteredNotes, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'maintenance_notes.json';
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
   if (isLoading) return <div>Loading...</div>;
 
   if (error) {
@@ -96,7 +107,13 @@ const Scope = () => {
             <ScopeFilters filters={filters} onFilterChange={handleFilterChange} />
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-semibold">Notas de Manutenção</h2>
-              <Button onClick={() => setShowMaintenanceNoteForm(true)}>Cadastrar Nova Nota</Button>
+              <div className="space-x-2">
+                <Button onClick={() => setShowMaintenanceNoteForm(true)}>Cadastrar Nova Nota</Button>
+                <Button onClick={handleDownload} variant="outline">
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+              </div>
             </div>
             <MaintenanceNoteTable
               notes={filteredNotes}
