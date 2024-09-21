@@ -2,9 +2,10 @@ import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
-const FilterBar = ({ filters, onFilterChange, notes }) => {
+const FilterBar = ({ filters, onFilterChange, notes = [] }) => {
   const getUniqueOptions = (field) => {
-    return ['all', ...new Set(notes.map(note => note[field]))].filter(Boolean);
+    if (!Array.isArray(notes)) return ['all'];
+    return ['all', ...new Set(notes.map(note => note[field] || '').filter(Boolean))];
   };
 
   return (
