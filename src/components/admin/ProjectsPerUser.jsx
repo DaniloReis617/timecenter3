@@ -7,7 +7,7 @@ import { Edit, Trash2, UserPlus, UserCog } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const ProjectsPerUser = ({ users, projects }) => {
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState('all');
 
   const handleAddUserProject = () => {
     console.log('Add user to project clicked');
@@ -21,9 +21,9 @@ const ProjectsPerUser = ({ users, projects }) => {
     console.log('Delete user project clicked for project ID:', projectId);
   };
 
-  const filteredProjects = selectedUser
-    ? projects.filter(project => project.users && project.users.includes(selectedUser))
-    : projects;
+  const filteredProjects = selectedUser === 'all'
+    ? projects
+    : projects.filter(project => project.users && project.users.includes(selectedUser));
 
   return (
     <Card className="w-full">
@@ -41,7 +41,7 @@ const ProjectsPerUser = ({ users, projects }) => {
               <SelectValue placeholder="Selecione um usuário" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos os usuários</SelectItem>
+              <SelectItem value="all">Todos os usuários</SelectItem>
               {users.map((user) => (
                 <SelectItem key={user.id} value={user.username}>
                   {user.username}
