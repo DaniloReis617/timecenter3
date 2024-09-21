@@ -25,12 +25,12 @@ const ScopeFilters = ({ filters, onFilterChange }) => {
           {Object.entries(filterOptions).map(([key, options]) => (
             <div key={key}>
               <Label htmlFor={key} className="mb-2 block">{key.charAt(0).toUpperCase() + key.slice(1)}</Label>
-              <Select onValueChange={(value) => onFilterChange(key, value)} value={filters[key]}>
+              <Select onValueChange={(value) => onFilterChange(key, value)} value={filters[key] || ""}>
                 <SelectTrigger id={key}>
                   <SelectValue placeholder={`Filtrar por ${key}`} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   {options.map((option) => (
                     <SelectItem key={option} value={option}>{option}</SelectItem>
                   ))}
