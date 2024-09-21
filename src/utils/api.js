@@ -1,134 +1,104 @@
+import axios from 'axios';
 import { toast } from 'sonner';
 
-// Mock data
-const mockProjects = [
-  { id: 1, name: "Project Alpha", description: "A groundbreaking software development project", status: "In Progress" },
-  { id: 2, name: "Project Beta", description: "An innovative marketing campaign", status: "Planning" },
-  { id: 3, name: "Project Gamma", description: "A cutting-edge research initiative", status: "Completed" },
-];
+const API_BASE_URL = 'http://localhost:3000/api'; // Ajuste para a URL real da sua API
 
-const mockUsers = [
-  { id: 1, username: "john.doe@example.com", name: "John Doe", role: "Manager", avatarUrl: "https://example.com/avatar1.jpg" },
-  { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer", avatarUrl: "https://example.com/avatar2.jpg" },
-];
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-// Mock API functions
-export const login = async (username) => {
-  console.log('Attempting login with username:', username);
-  if (username === 'danilo.reis@timenow.com.br') {
-    console.log('Login successful');
-    return { id: 1, username: username, name: "Danilo Reis", perfil: "Super Usuário", avatarUrl: "https://example.com/danilo.jpg" };
+export const login = async (username, password) => {
+  try {
+    const response = await api.post('/login', { username, password });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao fazer login');
   }
-  throw new Error('Invalid email');
 };
 
 export const getAllProjects = async () => {
-  console.log('Fetching all projects');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  console.log('Projects fetched:', mockProjects);
-  return mockProjects;
+  try {
+    const response = await api.get('/projects');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao buscar projetos');
+  }
 };
 
 export const getUsers = async () => {
-  console.log('Fetching users');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  console.log('Users fetched:', mockUsers);
-  return mockUsers;
+  try {
+    const response = await api.get('/users');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao buscar usuários');
+  }
 };
 
 export const getProjectDetails = async (projectId) => {
-  console.log('Fetching project details for projectId:', projectId);
-  const project = mockProjects.find(p => p.id === projectId);
-  if (project) {
-    console.log('Project details:', project);
-    return project;
+  try {
+    const response = await api.get(`/projects/${projectId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao buscar detalhes do projeto');
   }
-  throw new Error('Project not found');
 };
 
 export const createProject = async (projectData) => {
-  console.log('Creating project with data:', projectData);
-  const newProject = { id: mockProjects.length + 1, ...projectData };
-  mockProjects.push(newProject);
-  console.log('New project created:', newProject);
-  return newProject;
+  try {
+    const response = await api.post('/projects', projectData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao criar projeto');
+  }
 };
 
 export const updateProject = async (projectId, projectData) => {
-  console.log('Updating project:', projectId, 'with data:', projectData);
-  const index = mockProjects.findIndex(p => p.id === projectId);
-  if (index !== -1) {
-    mockProjects[index] = { ...mockProjects[index], ...projectData };
-    console.log('Project updated:', mockProjects[index]);
-    return mockProjects[index];
+  try {
+    const response = await api.put(`/projects/${projectId}`, projectData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao atualizar projeto');
   }
-  throw new Error('Project not found');
 };
 
 export const deleteProject = async (projectId) => {
-  console.log('Deleting project:', projectId);
-  const index = mockProjects.findIndex(p => p.id === projectId);
-  if (index !== -1) {
-    const deletedProject = mockProjects.splice(index, 1)[0];
-    console.log('Project deleted:', deletedProject);
-    return { message: 'Project deleted successfully' };
+  try {
+    await api.delete(`/projects/${projectId}`);
+    return { message: 'Projeto excluído com sucesso' };
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao excluir projeto');
   }
-  throw new Error('Project not found');
 };
 
 export const getUserProfile = async () => {
-  console.log('Fetching user profile');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  const user = mockUsers[0]; // For demonstration, always return the first user
-  console.log('User profile fetched:', user);
-  return user;
-};
-
-export const updateUserProfile = async (userData) => {
-  console.log('Updating user profile with data:', userData);
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  const updatedUser = { ...mockUsers[0], ...userData };
-  mockUsers[0] = updatedUser;
-  console.log('User profile updated:', updatedUser);
-  return updatedUser;
-};
-
-// Simulated API error handling
-const simulateApiCall = async (func) => {
   try {
-    return await func();
+    const response = await api.get('/user/profile');
+    return response.data;
   } catch (error) {
-    console.error('API Error:', error);
-    toast.error(error.message || 'An unexpected error occurred');
-    throw error;
+    throw new Error(error.response?.data?.message || 'Erro ao buscar perfil do usuário');
   }
 };
 
-// Wrap all exported functions with error handling
-const apiFunctions = {
-  login,
-  getAllProjects,
-  getUsers,
-  getProjectDetails,
-  createProject,
-  updateProject,
-  deleteProject,
-  getUserProfile,
-  updateUserProfile
+export const updateUserProfile = async (userData) => {
+  try {
+    const response = await api.put('/user/profile', userData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Erro ao atualizar perfil do usuário');
+  }
 };
 
-Object.keys(apiFunctions).forEach(key => {
-  const originalFunc = apiFunctions[key];
-  apiFunctions[key] = (...args) => simulateApiCall(() => originalFunc(...args));
-});
+// Tratamento de erros global
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error);
+    toast.error(error.response?.data?.message || 'Ocorreu um erro inesperado');
+    return Promise.reject(error);
+  }
+);
 
-export const {
-  getAllProjects: wrappedGetAllProjects,
-  getUsers: wrappedGetUsers,
-  getProjectDetails: wrappedGetProjectDetails,
-  createProject: wrappedCreateProject,
-  updateProject: wrappedUpdateProject,
-  deleteProject: wrappedDeleteProject,
-  getUserProfile: wrappedGetUserProfile,
-  updateUserProfile: wrappedUpdateUserProfile
-} = apiFunctions;
+export default api;
