@@ -53,7 +53,6 @@ const Login = ({ onLogin }) => {
               Logo not found
             </div>
           )}
-          <h2 className="mt-6 text-3xl font-extrabold text-custom-primary">Timenow</h2>
           <p className="mt-2 text-sm text-custom-text">
             Bem-vindo ao Time Center, por favor realize o seu login!
           </p>
