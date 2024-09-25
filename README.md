@@ -18,80 +18,25 @@ project_root/
 │   ├── src/
 │   │   ├── assets/
 │   │   │   └── images/
-│   │   │       └── logo.png  # Logo da aplicação
+│   │   │       └── logo.png
 │   │   │
 │   │   ├── components/
-│   │   │   ├── ui/  (shadcn/ui components)
-│   │   │   ├── admin/  (Admin-specific components)
-│   │   │   │   ├── ProjectConfigForm.jsx  # Formulário de configuração de projetos
-│   │   │   │   ├── ProjectForm.jsx  # Formulário para criar/editar projetos
-│   │   │   │   ├── ProjectManagement.jsx  # Gerenciamento geral de projetos
-│   │   │   │   ├── ProjectsPerUser.jsx  # Associação de projetos a usuários
-│   │   │   │   └── UserDashboard.jsx  # Dashboard de gerenciamento de usuários
-│   │   │   ├── scope/  (Scope-related components)
-│   │   │   │   ├── MaintenanceNoteTable.jsx  # Tabela de notas de manutenção
-│   │   │   │   ├── ScopeFilters.jsx  # Filtros para o escopo do projeto
-│   │   │   │   └── ScopeSummary.jsx  # Resumo do escopo do projeto
-│   │   │   ├── schedules/  (Schedule-related components)
-│   │   │   │   ├── ActivityExecutionForm.jsx  # Formulário de execução de atividades
-│   │   │   │   ├── ActivityForm.jsx  # Formulário para detalhes de atividades
-│   │   │   │   └── PaintingServiceForm.jsx  # Formulário para serviços de pintura
-│   │   │   ├── ApoioForm.jsx  # Formulário para cadastro de apoio
-│   │   │   ├── ApoioTable.jsx  # Tabela de apoios cadastrados
-│   │   │   ├── AreaForm.jsx  # Formulário para cadastro de áreas
-│   │   │   ├── AreaTable.jsx  # Tabela de áreas cadastradas
-│   │   │   ├── EscopoOrigemForm.jsx  # Formulário para origem do escopo
-│   │   │   ├── EscopoOrigemTable.jsx  # Tabela de origens do escopo
-│   │   │   ├── EscopoTipoForm.jsx  # Formulário para tipos de escopo
-│   │   │   ├── EspecialidadeForm.jsx  # Formulário para especialidades
-│   │   │   ├── EspecialidadeTable.jsx  # Tabela de especialidades
-│   │   │   ├── ExecutanteForm.jsx  # Formulário para cadastro de executantes
-│   │   │   ├── ExecutanteTable.jsx  # Tabela de executantes
-│   │   │   ├── FamiliaEquipamentosForm.jsx  # Formulário para famílias de equipamentos
-│   │   │   ├── FamiliaEquipamentosTable.jsx  # Tabela de famílias de equipamentos
-│   │   │   ├── GenericForm.jsx  # Formulário genérico reutilizável
-│   │   │   ├── GenericTable.jsx  # Tabela genérica reutilizável
-│   │   │   ├── Layout.jsx  # Componente de layout principal
-│   │   │   ├── MaintenanceNoteForm.jsx  # Formulário para notas de manutenção
-│   │   │   ├── PlantaForm.jsx  # Formulário para cadastro de plantas
-│   │   │   ├── PlantaTable.jsx  # Tabela de plantas cadastradas
-│   │   │   ├── RecursoForm.jsx  # Formulário para cadastro de recursos
-│   │   │   └── RecursoTable.jsx  # Tabela de recursos cadastrados
-│   │   │
 │   │   ├── pages/
-│   │   │   ├── Admin.jsx  # Página de administração
-│   │   │   ├── CadastroAuxiliar.jsx  # Página de cadastros auxiliares
-│   │   │   ├── Home.jsx  # Página inicial
-│   │   │   ├── Login.jsx  # Página de login
-│   │   │   ├── Scope.jsx  # Página de gerenciamento de escopo
-│   │   │   ├── Schedules.jsx  # Página de cronogramas
-│   │   │   ├── Stakeholders.jsx  # Página de gerenciamento de stakeholders
-│   │   │   ├── Resources.jsx  # Página de recursos
-│   │   │   ├── Costs.jsx  # Página de custos
-│   │   │   ├── Quality.jsx  # Página de qualidade
-│   │   │   ├── Risks.jsx  # Página de riscos
-│   │   │   ├── Acquisitions.jsx  # Página de aquisições
-│   │   │   ├── Integration.jsx  # Página de integração
-│   │   │   └── UserSettings.jsx  # Página de configurações do usuário
-│   │   │
 │   │   ├── utils/
-│   │   │   └── api.js  # Funções de utilidade para chamadas à API
-│   │   │
-│   │   ├── App.jsx  # Componente principal da aplicação
-│   │   ├── index.css  # Estilos globais
-│   │   └── main.jsx  # Ponto de entrada da aplicação React
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
 │   │
 │   ├── package.json
 │   └── vite.config.js
 │
 ├── backend/  (Python Flask backend)
-│   ├── app.py  # Aplicação principal Flask
-│   ├── config.py  # Configurações do backend
-│   ├── database.py  # Operações de banco de dados
-│   └── requirements.txt  # Dependências Python
+│   ├── app.py
+│   ├── config.py
+│   ├── database.py
+│   └── requirements.txt
 │
-└── README.md  # Documentação do projeto
-
+└── README.md
 ```
 
 ## Key Components
@@ -102,19 +47,6 @@ project_root/
 - **UI Components**: Leverages shadcn/ui for consistent and customizable UI elements.
 - **Charting**: Recharts library is available for creating charts and graphs.
 - **Icons**: Uses Lucide React for a comprehensive icon set.
-
-## Main Features
-
-1. **User Authentication**: Secure login system with role-based access control.
-2. **Project Management**: Create, view, and manage multiple projects.
-3. **Stakeholder Management**: Track and manage project stakeholders.
-4. **Scope Management**: Define and track project scope, including maintenance notes.
-5. **Resource Allocation**: Manage and allocate resources across projects.
-6. **Cost Tracking**: Monitor and analyze project costs.
-7. **Schedule Management**: Create and manage project schedules and timelines.
-8. **Quality Control**: Tools for ensuring project quality standards.
-9. **Risk Management**: Identify and track project risks.
-10. **Admin Dashboard**: Comprehensive admin tools for user and project management.
 
 ## Getting Started
 
@@ -127,6 +59,51 @@ To set up the project locally:
 5. Start the backend server with `python app.py`
 
 Ensure you have Node.js, npm, and Python installed on your system.
+
+## Usage Instructions
+
+1. **Login**: Use your provided credentials to log in to the application.
+2. **Dashboard**: After logging in, you'll be directed to the main dashboard where you can see an overview of your projects.
+3. **Navigation**: Use the sidebar to navigate between different sections of the application (e.g., Stakeholders, Scope, Resources, etc.).
+4. **Project Selection**: On the home page, use the project dropdown to select the project you want to work on. This selection will filter information across other screens.
+5. **Data Management**: Each section (e.g., Scope, Resources) allows you to view, add, edit, and delete relevant data.
+6. **Reports**: Use the various tabs in each section to access different reports and data views.
+
+## Maintenance Guide
+
+1. **Frontend Updates**:
+   - To add new components, create a new file in the appropriate subdirectory of `src/components/`.
+   - Update routing in `src/App.jsx` if adding new pages.
+   - Run `npm run build` to build the project for production.
+
+2. **Backend Updates**:
+   - Add new API endpoints in `backend/app.py`.
+   - Update database operations in `backend/database.py` as needed.
+   - Always update `requirements.txt` if new Python packages are added.
+
+3. **Database Maintenance**:
+   - Regularly backup the SQL Server database.
+   - Optimize queries and indexes for performance.
+
+4. **Dependency Management**:
+   - Regularly update npm packages with `npm update` in the frontend directory.
+   - Update Python packages in the backend using `pip install --upgrade -r requirements.txt`.
+
+5. **Testing**:
+   - Write and maintain unit tests for both frontend and backend code.
+   - Perform thorough testing after any significant updates.
+
+6. **Deployment**:
+   - Use a CI/CD pipeline for automated testing and deployment.
+   - Ensure environment variables are properly set in production.
+
+7. **Monitoring and Logging**:
+   - Implement logging in both frontend and backend.
+   - Set up monitoring tools to track application performance and errors.
+
+8. **Security**:
+   - Regularly update all dependencies to patch security vulnerabilities.
+   - Perform security audits periodically.
 
 ## Contributing
 
