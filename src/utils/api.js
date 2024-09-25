@@ -32,6 +32,11 @@ mockData['Área'].forEach(item => {
   item.VL_QUANTIDADE_DIAS_EXECUCAO = Math.random() * 10;
 });
 
+// Add VL_VALOR_CUSTO for Recurso
+mockData['Recurso'].forEach(item => {
+  item.VL_VALOR_CUSTO = Math.random() * 1000;
+});
+
 export const getItems = async (type) => {
   await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
   return mockData[type];
@@ -95,6 +100,39 @@ export const deleteArea = async ({ id }) => {
     return { success: true };
   }
   throw new Error('Área not found');
+};
+
+// Specific functions for Recurso
+export const getRecursos = async () => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  return mockData['Recurso'];
+};
+
+export const createRecurso = async ({ data }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const newRecurso = { ...data, ID: mockData['Recurso'].length + 1 };
+  mockData['Recurso'].push(newRecurso);
+  return newRecurso;
+};
+
+export const updateRecurso = async ({ id, data }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const index = mockData['Recurso'].findIndex(item => item.ID === id);
+  if (index !== -1) {
+    mockData['Recurso'][index] = { ...mockData['Recurso'][index], ...data };
+    return mockData['Recurso'][index];
+  }
+  throw new Error('Recurso not found');
+};
+
+export const deleteRecurso = async ({ id }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const index = mockData['Recurso'].findIndex(item => item.ID === id);
+  if (index !== -1) {
+    mockData['Recurso'].splice(index, 1);
+    return { success: true };
+  }
+  throw new Error('Recurso not found');
 };
 
 // Mock data for projects
@@ -219,7 +257,11 @@ const apiFunctions = {
   getAreas,
   createArea,
   updateArea,
-  deleteArea
+  deleteArea,
+  getRecursos,
+  createRecurso,
+  updateRecurso,
+  deleteRecurso
 };
 
 Object.keys(apiFunctions).forEach(key => {
@@ -243,5 +285,9 @@ export const {
   getAreas: wrappedGetAreas,
   createArea: wrappedCreateArea,
   updateArea: wrappedUpdateArea,
-  deleteArea: wrappedDeleteArea
+  deleteArea: wrappedDeleteArea,
+  getRecursos: wrappedGetRecursos,
+  createRecurso: wrappedCreateRecurso,
+  updateRecurso: wrappedUpdateRecurso,
+  deleteRecurso: wrappedDeleteRecurso
 } = apiFunctions;

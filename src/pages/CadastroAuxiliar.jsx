@@ -7,8 +7,9 @@ import GenericTable from '@/components/GenericTable';
 import GenericForm from '@/components/GenericForm';
 import AreaTable from '@/components/AreaTable';
 import AreaForm from '@/components/AreaForm';
+import RecursoTable from '@/components/RecursoTable';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getItems, createItem, updateItem, deleteItem, getAreas, createArea, updateArea, deleteArea } from '@/utils/api';
+import { getItems, createItem, updateItem, deleteItem, getAreas, createArea, updateArea, deleteArea, getRecursos, createRecurso, updateRecurso, deleteRecurso } from '@/utils/api';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -18,12 +19,20 @@ const CadastroAuxiliar = () => {
 
   const { data: items, isLoading } = useQuery({
     queryKey: [selectedOption],
-    queryFn: () => selectedOption === 'Área' ? getAreas() : getItems(selectedOption),
+    queryFn: () => {
+      if (selectedOption === 'Área') return getAreas();
+      if (selectedOption === 'Recurso') return getRecursos();
+      return getItems(selectedOption);
+    },
     enabled: !!selectedOption,
   });
 
   const createMutation = useMutation({
-    mutationFn: selectedOption === 'Área' ? createArea : createItem,
+    mutationFn: (data) => {
+      if (selectedOption === 'Área') return createArea(data);
+      if (selectedOption === 'Recurso') return createRecurso(data);
+      return createItem({ type: selectedOption, data });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries([selectedOption]);
       toast.success("Item criado com sucesso");
@@ -32,7 +41,11 @@ const CadastroAuxiliar = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: selectedOption === 'Área' ? updateArea : updateItem,
+    mutationFn: (data) => {
+      if (selectedOption === 'Área') return updateArea(data);
+      if (selectedOption === 'Recurso') return updateRecurso(data);
+      return updateItem({ type: selectedOption, ...data });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries([selectedOption]);
       toast.success("Item atualizado com sucesso");
@@ -41,7 +54,11 @@ const CadastroAuxiliar = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: selectedOption === 'Área' ? deleteArea : deleteItem,
+    mutationFn: (id) => {
+      if (selectedOption === 'Área') return deleteArea({ id });
+      if (selectedOption === 'Recurso') return deleteRecurso({ id });
+      return deleteItem({ type: selectedOption, id });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries([selectedOption]);
       toast.success("Item excluído com sucesso");
@@ -58,7 +75,7 @@ const CadastroAuxiliar = () => {
   };
 
   const handleDelete = (id) => {
-    deleteMutation.mutate({ type: selectedOption, id });
+    deleteMutation.mutate(id);
   };
 
   const handleAddNew = () => {
@@ -68,9 +85,9 @@ const CadastroAuxiliar = () => {
 
   const handleFormSubmit = (data) => {
     if (editingItem) {
-      updateMutation.mutate({ type: selectedOption, id: editingItem.ID, data });
+      updateMutation.mutate({ id: editingItem.ID, data });
     } else {
-      createMutation.mutate({ type: selectedOption, data });
+      createMutation.mutate(data);
     }
   };
 
@@ -115,6 +132,13 @@ const CadastroAuxiliar = () => {
                 onDelete={handleDelete}
                 onAddNew={handleAddNew}
               />
+            ) : selectedOption === 'Recurso' ? (
+              <RecursoTable
+                recursos={items}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onAddNew={handleAddNew}
+              />
             ) : (
               <GenericTable
                 items={items}
@@ -137,6 +161,17 @@ const CadastroAuxiliar = () => {
               onSubmit={handleFormSubmit}
               onCancel={() => setShowForm(false)}
               initialData={editingItem}
+            />
+          ) : selectedOption === 'Recurso' ? (
+            <GenericForm
+              onSubmit={handleFormSubmit}
+              onCancel={() => setShowForm(false)}
+              initialData={editingItem}
+              title={selectedOption}
+              fields={[
+                { name: 'TX_DESCRICAO', label: 'Descrição', type: 'text' },
+                { name: 'VL_VALOR_CUSTO', label: 'Valor de Custo', type: 'number' }
+              ]}
             />
           ) : (
             <GenericForm
