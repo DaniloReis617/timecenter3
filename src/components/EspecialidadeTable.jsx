@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getEspecialidades } from '@/utils/api';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown, Trash, Edit, Plus } from "lucide-react";
 
-const EspecialidadeTable = ({ especialidades, onEdit, onDelete, onAddNew }) => {
+const EspecialidadeTable = ({ onEdit, onDelete, onAddNew }) => {
   const [filterText, setFilterText] = useState('');
   const [sortAscending, setSortAscending] = useState(true);
+
+  const { data: especialidades, isLoading, error } = useQuery({
+    queryKey: ['especialidades'],
+    queryFn: getEspecialidades,
+  });
+
+  if (isLoading) return <div>Carregando...</div>;
+  if (error) return <div>Erro ao carregar especialidades: {error.message}</div>;
 
   const filteredEspecialidades = especialidades.filter(especialidade => 
     especialidade.TX_DESCRICAO.toLowerCase().includes(filterText.toLowerCase())
@@ -33,7 +43,7 @@ const EspecialidadeTable = ({ especialidades, onEdit, onDelete, onAddNew }) => {
         />
         <Button onClick={onAddNew} className="bg-green-500 hover:bg-green-600">
           <Plus className="mr-2 h-4 w-4" />
-          Novo Cadastro de Especialidade
+          Novo Cadastro
         </Button>
       </div>
       <Table>

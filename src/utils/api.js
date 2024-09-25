@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-// Mock data
+// Mock data for projects
 const mockProjects = [
   { id: 1, name: "Project Alpha", description: "A groundbreaking software development project", status: "In Progress" },
   { id: 2, name: "Project Beta", description: "An innovative marketing campaign", status: "Planning" },
@@ -10,6 +10,13 @@ const mockProjects = [
 const mockUsers = [
   { id: 1, username: "john.doe@example.com", name: "John Doe", role: "Manager", avatarUrl: "https://example.com/avatar1.jpg" },
   { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer", avatarUrl: "https://example.com/avatar2.jpg" },
+];
+
+// Mock data for especialidades
+const mockEspecialidades = [
+  { ID: 1, TX_DESCRICAO: "Mecânica" },
+  { ID: 2, TX_DESCRICAO: "Elétrica" },
+  { ID: 3, TX_DESCRICAO: "Civil" },
 ];
 
 // Mock API functions
@@ -93,6 +100,44 @@ export const updateUserProfile = async (userData) => {
   return updatedUser;
 };
 
+// Mock API functions for especialidades
+export const getEspecialidades = async () => {
+  console.log('Fetching especialidades');
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+  console.log('Especialidades fetched:', mockEspecialidades);
+  return mockEspecialidades;
+};
+
+export const createEspecialidade = async (especialidadeData) => {
+  console.log('Creating especialidade with data:', especialidadeData);
+  const newEspecialidade = { ID: mockEspecialidades.length + 1, ...especialidadeData };
+  mockEspecialidades.push(newEspecialidade);
+  console.log('New especialidade created:', newEspecialidade);
+  return newEspecialidade;
+};
+
+export const updateEspecialidade = async (especialidadeId, especialidadeData) => {
+  console.log('Updating especialidade:', especialidadeId, 'with data:', especialidadeData);
+  const index = mockEspecialidades.findIndex(e => e.ID === especialidadeId);
+  if (index !== -1) {
+    mockEspecialidades[index] = { ...mockEspecialidades[index], ...especialidadeData };
+    console.log('Especialidade updated:', mockEspecialidades[index]);
+    return mockEspecialidades[index];
+  }
+  throw new Error('Especialidade not found');
+};
+
+export const deleteEspecialidade = async (especialidadeId) => {
+  console.log('Deleting especialidade:', especialidadeId);
+  const index = mockEspecialidades.findIndex(e => e.ID === especialidadeId);
+  if (index !== -1) {
+    const deletedEspecialidade = mockEspecialidades.splice(index, 1)[0];
+    console.log('Especialidade deleted:', deletedEspecialidade);
+    return { message: 'Especialidade deleted successfully' };
+  }
+  throw new Error('Especialidade not found');
+};
+
 // Simulated API error handling
 const simulateApiCall = async (func) => {
   try {
@@ -114,7 +159,11 @@ const apiFunctions = {
   updateProject,
   deleteProject,
   getUserProfile,
-  updateUserProfile
+  updateUserProfile,
+  getEspecialidades,
+  createEspecialidade,
+  updateEspecialidade,
+  deleteEspecialidade
 };
 
 Object.keys(apiFunctions).forEach(key => {
@@ -130,5 +179,9 @@ export const {
   updateProject: wrappedUpdateProject,
   deleteProject: wrappedDeleteProject,
   getUserProfile: wrappedGetUserProfile,
-  updateUserProfile: wrappedUpdateUserProfile
+  updateUserProfile: wrappedUpdateUserProfile,
+  getEspecialidades: wrappedGetEspecialidades,
+  createEspecialidade: wrappedCreateEspecialidade,
+  updateEspecialidade: wrappedUpdateEspecialidade,
+  deleteEspecialidade: wrappedDeleteEspecialidade
 } = apiFunctions;
