@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ChevronUp, ChevronDown, Trash, Edit } from "lucide-react";
+import { ChevronUp, ChevronDown, Trash, Edit, Plus } from "lucide-react";
 
-const AreaTable = ({ areas, onEdit, onDelete }) => {
+const AreaTable = ({ areas, onEdit, onDelete, onAddNew }) => {
   const [filterText, setFilterText] = useState('');
   const [sortAscending, setSortAscending] = useState(true);
 
@@ -24,12 +24,18 @@ const AreaTable = ({ areas, onEdit, onDelete }) => {
 
   return (
     <div className="space-y-4">
-      <Input
-        placeholder="Filtrar por descrição"
-        value={filterText}
-        onChange={(e) => setFilterText(e.target.value)}
-        className="max-w-sm"
-      />
+      <div className="flex justify-between items-center">
+        <Input
+          placeholder="Filtrar por descrição"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          className="max-w-sm"
+        />
+        <Button onClick={onAddNew} className="bg-green-500 hover:bg-green-600">
+          <Plus className="mr-2 h-4 w-4" />
+          Novos Cadastros de Áreas
+        </Button>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>

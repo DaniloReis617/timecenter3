@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from 'sonner';
 import AreaTable from '@/components/AreaTable';
+import AreaForm from '@/components/AreaForm';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -11,9 +12,10 @@ const CadastroAuxiliar = () => {
     { ID: 2, TX_DESCRICAO: "Área 2", VL_QUANTIDADE_DIAS_EXECUCAO: 15 },
     { ID: 3, TX_DESCRICAO: "Área 3", VL_QUANTIDADE_DIAS_EXECUCAO: 20 },
   ]);
+  const [showAreaForm, setShowAreaForm] = useState(false);
+  const [editingArea, setEditingArea] = useState(null);
 
   const handleButtonClick = (action) => {
-    // Simulating user role check. In a real app, you'd use actual user data.
     const userRole = "Administrador"; // This should come from your auth system
     if (!["Gestor", "Administrador", "Super Usuário"].includes(userRole)) {
       toast.warning("Usuário sem permissão!", { duration: 2000 });
@@ -23,15 +25,31 @@ const CadastroAuxiliar = () => {
   };
 
   const handleEditArea = (area) => {
-    // Implement edit logic here
-    console.log("Edit area:", area);
-    toast.info("Função de edição não implementada");
+    setEditingArea(area);
+    setShowAreaForm(true);
   };
 
   const handleDeleteArea = (areaId) => {
-    // Implement delete logic here
-    console.log("Delete area:", areaId);
-    toast.info("Função de exclusão não implementada");
+    setAreas(areas.filter(area => area.ID !== areaId));
+    toast.success("Área excluída com sucesso");
+  };
+
+  const handleAddNewArea = () => {
+    setEditingArea(null);
+    setShowAreaForm(true);
+  };
+
+  const handleAreaFormSubmit = (data) => {
+    if (editingArea) {
+      setAreas(areas.map(area => area.ID === editingArea.ID ? { ...area, ...data } : area));
+      toast.success("Área atualizada com sucesso");
+    } else {
+      const newArea = { ...data, ID: areas.length + 1 };
+      setAreas([...areas, newArea]);
+      toast.success("Nova área adicionada com sucesso");
+    }
+    setShowAreaForm(false);
+    setEditingArea(null);
   };
 
   const buttons = [
@@ -66,11 +84,20 @@ const CadastroAuxiliar = () => {
             <CardTitle>Áreas</CardTitle>
           </CardHeader>
           <CardContent>
-            <AreaTable
-              areas={areas}
-              onEdit={handleEditArea}
-              onDelete={handleDeleteArea}
-            />
+            {showAreaForm ? (
+              <AreaForm
+                onSubmit={handleAreaFormSubmit}
+                onCancel={() => setShowAreaForm(false)}
+                initialData={editingArea}
+              />
+            ) : (
+              <AreaTable
+                areas={areas}
+                onEdit={handleEditArea}
+                onDelete={handleDeleteArea}
+                onAddNew={handleAddNewArea}
+              />
+            )}
           </CardContent>
         </Card>
       )}
