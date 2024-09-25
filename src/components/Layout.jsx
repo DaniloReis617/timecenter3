@@ -36,7 +36,7 @@ const Layout = ({ children, user, onLogout }) => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <nav className={`bg-white shadow-lg transition-all duration-300 ${isExpanded ? 'w-64' : 'w-20'} flex flex-col`}>
+      <nav className={`bg-white shadow-lg transition-all duration-300 flex flex-col ${isExpanded ? 'w-64' : 'w-20'}`}>
         <div className="p-4 flex justify-between items-center border-b border-gray-200">
           {isExpanded && <h1 className="text-2xl font-bold text-primary">TimeCenter</h1>}
           <Button variant="ghost" size="icon" onClick={toggleSidebar} className="p-2 rounded-full hover:bg-gray-200">
@@ -60,6 +60,19 @@ const Layout = ({ children, user, onLogout }) => {
             </li>
           ))}
         </ul>
+        <div className="mt-auto p-4 border-t border-gray-200">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" onClick={handleLogout} className="w-full flex justify-start items-center p-2 rounded-full hover:bg-gray-200">
+                <LogOut size={20} className="text-gray-600" />
+                {isExpanded && <span className="ml-4">Logout</span>}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Logout</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </nav>
       <main className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-white shadow-md p-4 flex justify-between items-center">
@@ -68,16 +81,6 @@ const Layout = ({ children, user, onLogout }) => {
           </h2>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-600">{format(currentTime, 'dd/MM/yyyy HH:mm:ss')}</span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={handleLogout} className="p-2 rounded-full hover:bg-gray-200">
-                  <LogOut size={20} className="text-gray-600" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Logout</p>
-              </TooltipContent>
-            </Tooltip>
             <div className="flex items-center space-x-2">
               <Avatar>
                 <AvatarImage src={user?.avatarUrl} alt={user?.nome} />
