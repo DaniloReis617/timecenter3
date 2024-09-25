@@ -6,6 +6,8 @@ import AreaTable from '@/components/AreaTable';
 import AreaForm from '@/components/AreaForm';
 import EscopoOrigemTable from '@/components/EscopoOrigemTable';
 import EscopoOrigemForm from '@/components/EscopoOrigemForm';
+import EscopoTipoTable from '@/components/EscopoTipoTable';
+import EscopoTipoForm from '@/components/EscopoTipoForm';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -19,10 +21,17 @@ const CadastroAuxiliar = () => {
     { ID: 2, TX_DESCRICAO: "Escopo Origem 2" },
     { ID: 3, TX_DESCRICAO: "Escopo Origem 3" },
   ]);
+  const [escopoTipos, setEscopoTipos] = useState([
+    { ID: 1, TX_DESCRICAO: "Escopo Tipo 1" },
+    { ID: 2, TX_DESCRICAO: "Escopo Tipo 2" },
+    { ID: 3, TX_DESCRICAO: "Escopo Tipo 3" },
+  ]);
   const [showAreaForm, setShowAreaForm] = useState(false);
   const [showEscopoOrigemForm, setShowEscopoOrigemForm] = useState(false);
+  const [showEscopoTipoForm, setShowEscopoTipoForm] = useState(false);
   const [editingArea, setEditingArea] = useState(null);
   const [editingEscopoOrigem, setEditingEscopoOrigem] = useState(null);
+  const [editingEscopoTipo, setEditingEscopoTipo] = useState(null);
 
   const handleButtonClick = (action) => {
     const userRole = "Administrador"; // This should come from your auth system
@@ -87,6 +96,34 @@ const CadastroAuxiliar = () => {
     }
     setShowEscopoOrigemForm(false);
     setEditingEscopoOrigem(null);
+  };
+
+  const handleEditEscopoTipo = (escopoTipo) => {
+    setEditingEscopoTipo(escopoTipo);
+    setShowEscopoTipoForm(true);
+  };
+
+  const handleDeleteEscopoTipo = (escopoTipoId) => {
+    setEscopoTipos(escopoTipos.filter(escopo => escopo.ID !== escopoTipoId));
+    toast.success("Escopo Tipo excluído com sucesso");
+  };
+
+  const handleAddNewEscopoTipo = () => {
+    setEditingEscopoTipo(null);
+    setShowEscopoTipoForm(true);
+  };
+
+  const handleEscopoTipoFormSubmit = (data) => {
+    if (editingEscopoTipo) {
+      setEscopoTipos(escopoTipos.map(escopo => escopo.ID === editingEscopoTipo.ID ? { ...escopo, ...data } : escopo));
+      toast.success("Escopo Tipo atualizado com sucesso");
+    } else {
+      const newEscopoTipo = { ...data, ID: escopoTipos.length + 1 };
+      setEscopoTipos([...escopoTipos, newEscopoTipo]);
+      toast.success("Novo Escopo Tipo adicionado com sucesso");
+    }
+    setShowEscopoTipoForm(false);
+    setEditingEscopoTipo(null);
   };
 
   const buttons = [
@@ -156,6 +193,29 @@ const CadastroAuxiliar = () => {
                 onEdit={handleEditEscopoOrigem}
                 onDelete={handleDeleteEscopoOrigem}
                 onAddNew={handleAddNewEscopoOrigem}
+              />
+            )}
+          </CardContent>
+        </Card>
+      )}
+      {selectedOption === "Escopo Tipo" && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle>Escopo Tipo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {showEscopoTipoForm ? (
+              <EscopoTipoForm
+                onSubmit={handleEscopoTipoFormSubmit}
+                onCancel={() => setShowEscopoTipoForm(false)}
+                initialData={editingEscopoTipo}
+              />
+            ) : (
+              <EscopoTipoTable
+                escopoTipos={escopoTipos}
+                onEdit={handleEditEscopoTipo}
+                onDelete={handleDeleteEscopoTipo}
+                onAddNew={handleAddNewEscopoTipo}
               />
             )}
           </CardContent>
