@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from 'sonner';
+import AreaTable from '@/components/AreaTable';
 
 const CadastroAuxiliar = () => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [areas, setAreas] = useState([
+    { ID: 1, TX_DESCRICAO: "Área 1", VL_QUANTIDADE_DIAS_EXECUCAO: 10 },
+    { ID: 2, TX_DESCRICAO: "Área 2", VL_QUANTIDADE_DIAS_EXECUCAO: 15 },
+    { ID: 3, TX_DESCRICAO: "Área 3", VL_QUANTIDADE_DIAS_EXECUCAO: 20 },
+  ]);
+
   const handleButtonClick = (action) => {
     // Simulating user role check. In a real app, you'd use actual user data.
     const userRole = "Administrador"; // This should come from your auth system
     if (!["Gestor", "Administrador", "Super Usuário"].includes(userRole)) {
       toast.warning("Usuário sem permissão!", { duration: 2000 });
     } else {
-      toast.success(`Navegando para ${action}`, { duration: 2000 });
-      // Here you would normally use navigation logic, e.g., navigate(`/cadastro-${action.toLowerCase()}`)
+      setSelectedOption(action);
     }
+  };
+
+  const handleEditArea = (area) => {
+    // Implement edit logic here
+    console.log("Edit area:", area);
+    toast.info("Função de edição não implementada");
+  };
+
+  const handleDeleteArea = (areaId) => {
+    // Implement delete logic here
+    console.log("Delete area:", areaId);
+    toast.info("Função de exclusão não implementada");
   };
 
   const buttons = [
@@ -41,6 +60,20 @@ const CadastroAuxiliar = () => {
           ))}
         </CardContent>
       </Card>
+      {selectedOption === "Área" && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle>Áreas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AreaTable
+              areas={areas}
+              onEdit={handleEditArea}
+              onDelete={handleDeleteArea}
+            />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
