@@ -8,6 +8,7 @@ import GenericForm from '@/components/GenericForm';
 import AreaTable from '@/components/AreaTable';
 import AreaForm from '@/components/AreaForm';
 import RecursoTable from '@/components/RecursoTable';
+import RecursoForm from '@/components/RecursoForm';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getItems, createItem, updateItem, deleteItem, getAreas, createArea, updateArea, deleteArea, getRecursos, createRecurso, updateRecurso, deleteRecurso } from '@/utils/api';
 
@@ -163,15 +164,10 @@ const CadastroAuxiliar = () => {
               initialData={editingItem}
             />
           ) : selectedOption === 'Recurso' ? (
-            <GenericForm
+            <RecursoForm
               onSubmit={handleFormSubmit}
               onCancel={() => setShowForm(false)}
               initialData={editingItem}
-              title={selectedOption}
-              fields={[
-                { name: 'TX_DESCRICAO', label: 'Descrição', type: 'text' },
-                { name: 'VL_VALOR_CUSTO', label: 'Valor de Custo', type: 'number' }
-              ]}
             />
           ) : (
             <GenericForm
