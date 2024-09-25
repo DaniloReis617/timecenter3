@@ -10,6 +10,8 @@ import EscopoTipoTable from '@/components/EscopoTipoTable';
 import EscopoTipoForm from '@/components/EscopoTipoForm';
 import EspecialidadeTable from '@/components/EspecialidadeTable';
 import EspecialidadeForm from '@/components/EspecialidadeForm';
+import ExecutanteTable from '@/components/ExecutanteTable';
+import ExecutanteForm from '@/components/ExecutanteForm';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -33,14 +35,21 @@ const CadastroAuxiliar = () => {
     { ID: 2, TX_DESCRICAO: "Especialidade 2" },
     { ID: 3, TX_DESCRICAO: "Especialidade 3" },
   ]);
+  const [executantes, setExecutantes] = useState([
+    { ID: 1, TX_DESCRICAO: "Executante 1" },
+    { ID: 2, TX_DESCRICAO: "Executante 2" },
+    { ID: 3, TX_DESCRICAO: "Executante 3" },
+  ]);
   const [showAreaForm, setShowAreaForm] = useState(false);
   const [showEscopoOrigemForm, setShowEscopoOrigemForm] = useState(false);
   const [showEscopoTipoForm, setShowEscopoTipoForm] = useState(false);
   const [showEspecialidadeForm, setShowEspecialidadeForm] = useState(false);
+  const [showExecutanteForm, setShowExecutanteForm] = useState(false);
   const [editingArea, setEditingArea] = useState(null);
   const [editingEscopoOrigem, setEditingEscopoOrigem] = useState(null);
   const [editingEscopoTipo, setEditingEscopoTipo] = useState(null);
   const [editingEspecialidade, setEditingEspecialidade] = useState(null);
+  const [editingExecutante, setEditingExecutante] = useState(null);
 
   const handleButtonClick = (action) => {
     const userRole = "Administrador"; // This should come from your auth system
@@ -167,6 +176,35 @@ const CadastroAuxiliar = () => {
     setEditingEspecialidade(null);
   };
 
+  // Executante handlers
+  const handleEditExecutante = (executante) => {
+    setEditingExecutante(executante);
+    setShowExecutanteForm(true);
+  };
+
+  const handleDeleteExecutante = (executanteId) => {
+    setExecutantes(executantes.filter(exec => exec.ID !== executanteId));
+    toast.success("Executante excluído com sucesso");
+  };
+
+  const handleAddNewExecutante = () => {
+    setEditingExecutante(null);
+    setShowExecutanteForm(true);
+  };
+
+  const handleExecutanteFormSubmit = (data) => {
+    if (editingExecutante) {
+      setExecutantes(executantes.map(exec => exec.ID === editingExecutante.ID ? { ...exec, ...data } : exec));
+      toast.success("Executante atualizado com sucesso");
+    } else {
+      const newExecutante = { ...data, ID: executantes.length + 1 };
+      setExecutantes([...executantes, newExecutante]);
+      toast.success("Novo Executante adicionado com sucesso");
+    }
+    setShowExecutanteForm(false);
+    setEditingExecutante(null);
+  };
+
   const buttons = [
     "Despesa", "Sist. Operacional", "Situação Motivo", "Setor Solicitante", "Setor Responsável",
     "Serviço", "Recurso", "Planta", "Informativo", "Familia Equip.", "Executante", "Especialidade",
@@ -280,6 +318,29 @@ const CadastroAuxiliar = () => {
                 onEdit={handleEditEspecialidade}
                 onDelete={handleDeleteEspecialidade}
                 onAddNew={handleAddNewEspecialidade}
+              />
+            )}
+          </CardContent>
+        </Card>
+      )}
+      {selectedOption === "Executante" && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle>Executante</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {showExecutanteForm ? (
+              <ExecutanteForm
+                onSubmit={handleExecutanteFormSubmit}
+                onCancel={() => setShowExecutanteForm(false)}
+                initialData={editingExecutante}
+              />
+            ) : (
+              <ExecutanteTable
+                executantes={executantes}
+                onEdit={handleEditExecutante}
+                onDelete={handleDeleteExecutante}
+                onAddNew={handleAddNewExecutante}
               />
             )}
           </CardContent>
