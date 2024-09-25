@@ -1,4 +1,4 @@
-# Welcome to TimeCenter - Streamlined Stakeholder Management
+# TimeCenter - Streamlined Stakeholder Management
 
 ## Project Overview
 
@@ -8,9 +8,6 @@ TimeCenter is a comprehensive project management application designed to streaml
 
 ```
 src/
-├── assets/
-│   └── images/
-│       └── logo.png                 # Application logo
 ├── components/
 │   ├── admin/
 │   │   ├── ProjectConfigForm.jsx    # Form for project configuration
@@ -26,18 +23,15 @@ src/
 │   │   ├── MaintenanceNoteTable.jsx # Table for maintenance notes
 │   │   ├── ScopeFilters.jsx         # Filters for scope management
 │   │   └── ScopeSummary.jsx         # Summary of project scope
-│   ├── ui/
-│   │   └── [various UI components]  # Reusable UI components
+│   ├── ui/                          # Reusable UI components
 │   ├── Layout.jsx                   # Main layout component
 │   └── MaintenanceNoteForm.jsx      # Form for maintenance notes
-├── lib/
-│   └── utils.js                     # Utility functions
 ├── pages/
 │   ├── Acquisitions.jsx             # Acquisitions management page
 │   ├── Admin.jsx                    # Admin dashboard page
+│   ├── CadastroAuxiliar.jsx         # Auxiliary registration page
 │   ├── Costs.jsx                    # Cost management page
 │   ├── Home.jsx                     # Home page
-│   ├── Index.jsx                    # Main entry point
 │   ├── Integration.jsx              # Integration management page
 │   ├── Login.jsx                    # Login page
 │   ├── Quality.jsx                  # Quality management page
@@ -52,72 +46,49 @@ src/
 ├── App.jsx                          # Main application component
 ├── index.css                        # Global styles
 └── main.jsx                         # Application entry point
+
 ```
 
-## Key Features
+## Application Logic and Functionality
 
-- User Authentication and Authorization
-- Project Management Dashboard
-- Stakeholder Communication Tools
-- Scope Definition and Management
-- Resource Allocation and Tracking
-- Cost Management and Budgeting
-- Quality Control Measures
-- Risk Assessment and Mitigation
-- Schedule Management
-- Integration with External Systems
+TimeCenter is built using React and follows a component-based architecture. Here's a summary of its functionality and logic:
 
-## How to Edit This Code
+1. Authentication: Users log in through the Login page, which sets up the user context for the entire application.
 
-There are several ways to edit your application:
+2. Navigation: The Layout component provides a consistent structure across all pages, including the main navigation menu.
 
-### Use GPT Engineer
+3. Project Management: 
+   - The Home page allows users to select a project, which is then stored in local storage for use across the application.
+   - The Admin page provides interfaces for managing users, projects, and user-project associations.
 
-Visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve) and start prompting. Changes made via gptengineer.app will be committed automatically to this repo.
+4. Project Modules:
+   - Scope: Manages project scope, including maintenance notes and scope changes.
+   - Costs: Handles budget tracking and cost management.
+   - Resources: Manages resource allocation and utilization.
+   - Schedules: Deals with project timelines and activity scheduling.
+   - Quality: Manages quality control measures and inspections.
+   - Risks: Handles risk assessment and mitigation strategies.
+   - Acquisitions: Manages procurement and contract management.
+   - Integration: Provides overall project integration and dashboard views.
 
-### Use Your Preferred IDE
+5. Data Management: The application uses React Query for data fetching and state management, with API calls simulated in the api.js file.
 
-To work locally using your own IDE:
+6. Auxiliary Data: The CadastroAuxiliar page allows management of various auxiliary data used throughout the project.
 
-1. Clone the repository:
-   ```sh
-   git clone <YOUR_GIT_URL>
-   ```
-2. Navigate to the project directory:
-   ```sh
-   cd <YOUR_PROJECT_NAME>
-   ```
-3. Install dependencies:
-   ```sh
-   npm i
-   ```
-4. Start the development server:
-   ```sh
-   npm run dev
-   ```
+## Making Modifications
 
-### Edit Directly in GitHub
+To modify the application:
 
-Navigate to the desired file(s), click the "Edit" button, make your changes, and commit them.
+1. Component Updates: To change the behavior or appearance of a specific feature, locate the relevant component in the `src/components` directory and modify it directly.
 
-### Use GitHub Codespaces
+2. Adding New Features: Create new components in the appropriate subdirectory of `src/components`. If adding a new page, create it in the `src/pages` directory and update the routing in `App.jsx`.
 
-1. Go to the main page of your repository.
-2. Click on the "Code" button and select the "Codespaces" tab.
-3. Click on "New codespace" to launch a new Codespace environment.
-4. Edit files and commit your changes.
+3. API Changes: To modify data fetching or update mock data, edit the `src/utils/api.js` file.
 
-## Technologies Used
+4. Styling: The application uses Tailwind CSS. Modify styles by changing Tailwind classes in the components.
 
-- Vite
-- React
-- shadcn-ui
-- Tailwind CSS
+5. Dependencies: The project uses various libraries like React Query and shadcn/ui. To add or update dependencies, use the package manager (npm or yarn) and update imports as necessary.
 
-## Deployment
+6. Testing: Ensure to test any modifications thoroughly across different parts of the application to maintain overall functionality.
 
-All GPT Engineer projects can be deployed directly via the GPT Engineer app. Visit your project at [GPT Engineer](https://gptengineer.app/projects/1a2d1b37-30b8-4a2b-a423-1cd10e9b7a19/improve) and click on Share -> Publish.
-
-## Custom Domains
-
-Custom domains are not directly supported. For custom domain deployment, we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+Remember to follow React best practices, keep components small and focused, and maintain consistent coding styles throughout the project.
