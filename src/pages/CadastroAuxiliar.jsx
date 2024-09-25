@@ -8,6 +8,8 @@ import EscopoOrigemTable from '@/components/EscopoOrigemTable';
 import EscopoOrigemForm from '@/components/EscopoOrigemForm';
 import EscopoTipoTable from '@/components/EscopoTipoTable';
 import EscopoTipoForm from '@/components/EscopoTipoForm';
+import EspecialidadeTable from '@/components/EspecialidadeTable';
+import EspecialidadeForm from '@/components/EspecialidadeForm';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -26,12 +28,19 @@ const CadastroAuxiliar = () => {
     { ID: 2, TX_DESCRICAO: "Escopo Tipo 2" },
     { ID: 3, TX_DESCRICAO: "Escopo Tipo 3" },
   ]);
+  const [especialidades, setEspecialidades] = useState([
+    { ID: 1, TX_DESCRICAO: "Especialidade 1" },
+    { ID: 2, TX_DESCRICAO: "Especialidade 2" },
+    { ID: 3, TX_DESCRICAO: "Especialidade 3" },
+  ]);
   const [showAreaForm, setShowAreaForm] = useState(false);
   const [showEscopoOrigemForm, setShowEscopoOrigemForm] = useState(false);
   const [showEscopoTipoForm, setShowEscopoTipoForm] = useState(false);
+  const [showEspecialidadeForm, setShowEspecialidadeForm] = useState(false);
   const [editingArea, setEditingArea] = useState(null);
   const [editingEscopoOrigem, setEditingEscopoOrigem] = useState(null);
   const [editingEscopoTipo, setEditingEscopoTipo] = useState(null);
+  const [editingEspecialidade, setEditingEspecialidade] = useState(null);
 
   const handleButtonClick = (action) => {
     const userRole = "Administrador"; // This should come from your auth system
@@ -42,6 +51,7 @@ const CadastroAuxiliar = () => {
     }
   };
 
+  // Area handlers
   const handleEditArea = (area) => {
     setEditingArea(area);
     setShowAreaForm(true);
@@ -70,6 +80,7 @@ const CadastroAuxiliar = () => {
     setEditingArea(null);
   };
 
+  // Escopo Origem handlers
   const handleEditEscopoOrigem = (escopoOrigem) => {
     setEditingEscopoOrigem(escopoOrigem);
     setShowEscopoOrigemForm(true);
@@ -98,6 +109,7 @@ const CadastroAuxiliar = () => {
     setEditingEscopoOrigem(null);
   };
 
+  // Escopo Tipo handlers
   const handleEditEscopoTipo = (escopoTipo) => {
     setEditingEscopoTipo(escopoTipo);
     setShowEscopoTipoForm(true);
@@ -124,6 +136,35 @@ const CadastroAuxiliar = () => {
     }
     setShowEscopoTipoForm(false);
     setEditingEscopoTipo(null);
+  };
+
+  // Especialidade handlers
+  const handleEditEspecialidade = (especialidade) => {
+    setEditingEspecialidade(especialidade);
+    setShowEspecialidadeForm(true);
+  };
+
+  const handleDeleteEspecialidade = (especialidadeId) => {
+    setEspecialidades(especialidades.filter(esp => esp.ID !== especialidadeId));
+    toast.success("Especialidade excluída com sucesso");
+  };
+
+  const handleAddNewEspecialidade = () => {
+    setEditingEspecialidade(null);
+    setShowEspecialidadeForm(true);
+  };
+
+  const handleEspecialidadeFormSubmit = (data) => {
+    if (editingEspecialidade) {
+      setEspecialidades(especialidades.map(esp => esp.ID === editingEspecialidade.ID ? { ...esp, ...data } : esp));
+      toast.success("Especialidade atualizada com sucesso");
+    } else {
+      const newEspecialidade = { ...data, ID: especialidades.length + 1 };
+      setEspecialidades([...especialidades, newEspecialidade]);
+      toast.success("Nova Especialidade adicionada com sucesso");
+    }
+    setShowEspecialidadeForm(false);
+    setEditingEspecialidade(null);
   };
 
   const buttons = [
@@ -216,6 +257,29 @@ const CadastroAuxiliar = () => {
                 onEdit={handleEditEscopoTipo}
                 onDelete={handleDeleteEscopoTipo}
                 onAddNew={handleAddNewEscopoTipo}
+              />
+            )}
+          </CardContent>
+        </Card>
+      )}
+      {selectedOption === "Especialidade" && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle>Especialidade</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {showEspecialidadeForm ? (
+              <EspecialidadeForm
+                onSubmit={handleEspecialidadeFormSubmit}
+                onCancel={() => setShowEspecialidadeForm(false)}
+                initialData={editingEspecialidade}
+              />
+            ) : (
+              <EspecialidadeTable
+                especialidades={especialidades}
+                onEdit={handleEditEspecialidade}
+                onDelete={handleDeleteEspecialidade}
+                onAddNew={handleAddNewEspecialidade}
               />
             )}
           </CardContent>
