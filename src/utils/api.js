@@ -27,6 +27,11 @@ Object.keys(mockData).forEach(key => {
   }
 });
 
+// Add VL_QUANTIDADE_DIAS_EXECUCAO for Área
+mockData['Área'].forEach(item => {
+  item.VL_QUANTIDADE_DIAS_EXECUCAO = Math.random() * 10;
+});
+
 export const getItems = async (type) => {
   await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
   return mockData[type];
@@ -59,6 +64,39 @@ export const deleteItem = async ({ type, id }) => {
   throw new Error('Item not found');
 };
 
+// Specific functions for Área
+export const getAreas = async () => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  return mockData['Área'];
+};
+
+export const createArea = async ({ data }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const newArea = { ...data, ID: mockData['Área'].length + 1 };
+  mockData['Área'].push(newArea);
+  return newArea;
+};
+
+export const updateArea = async ({ id, data }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const index = mockData['Área'].findIndex(item => item.ID === id);
+  if (index !== -1) {
+    mockData['Área'][index] = { ...mockData['Área'][index], ...data };
+    return mockData['Área'][index];
+  }
+  throw new Error('Área not found');
+};
+
+export const deleteArea = async ({ id }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const index = mockData['Área'].findIndex(item => item.ID === id);
+  if (index !== -1) {
+    mockData['Área'].splice(index, 1);
+    return { success: true };
+  }
+  throw new Error('Área not found');
+};
+
 // Mock data for projects
 const mockProjects = [
   { id: 1, name: "Project Alpha", description: "A groundbreaking software development project", status: "In Progress" },
@@ -69,13 +107,6 @@ const mockProjects = [
 const mockUsers = [
   { id: 1, username: "john.doe@example.com", name: "John Doe", role: "Manager", avatarUrl: "https://example.com/avatar1.jpg" },
   { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer", avatarUrl: "https://example.com/avatar2.jpg" },
-];
-
-// Mock data for especialidades
-const mockEspecialidades = [
-  { ID: 1, TX_DESCRICAO: "Mecânica" },
-  { ID: 2, TX_DESCRICAO: "Elétrica" },
-  { ID: 3, TX_DESCRICAO: "Civil" },
 ];
 
 // Mock API functions
@@ -159,44 +190,6 @@ export const updateUserProfile = async (userData) => {
   return updatedUser;
 };
 
-// Mock API functions for especialidades
-export const getEspecialidades = async () => {
-  console.log('Fetching especialidades');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  console.log('Especialidades fetched:', mockEspecialidades);
-  return mockEspecialidades;
-};
-
-export const createEspecialidade = async (especialidadeData) => {
-  console.log('Creating especialidade with data:', especialidadeData);
-  const newEspecialidade = { ID: mockEspecialidades.length + 1, ...especialidadeData };
-  mockEspecialidades.push(newEspecialidade);
-  console.log('New especialidade created:', newEspecialidade);
-  return newEspecialidade;
-};
-
-export const updateEspecialidade = async (especialidadeId, especialidadeData) => {
-  console.log('Updating especialidade:', especialidadeId, 'with data:', especialidadeData);
-  const index = mockEspecialidades.findIndex(e => e.ID === especialidadeId);
-  if (index !== -1) {
-    mockEspecialidades[index] = { ...mockEspecialidades[index], ...especialidadeData };
-    console.log('Especialidade updated:', mockEspecialidades[index]);
-    return mockEspecialidades[index];
-  }
-  throw new Error('Especialidade not found');
-};
-
-export const deleteEspecialidade = async (especialidadeId) => {
-  console.log('Deleting especialidade:', especialidadeId);
-  const index = mockEspecialidades.findIndex(e => e.ID === especialidadeId);
-  if (index !== -1) {
-    const deletedEspecialidade = mockEspecialidades.splice(index, 1)[0];
-    console.log('Especialidade deleted:', deletedEspecialidade);
-    return { message: 'Especialidade deleted successfully' };
-  }
-  throw new Error('Especialidade not found');
-};
-
 // Simulated API error handling
 const simulateApiCall = async (func) => {
   try {
@@ -219,14 +212,14 @@ const apiFunctions = {
   deleteProject,
   getUserProfile,
   updateUserProfile,
-  getEspecialidades,
-  createEspecialidade,
-  updateEspecialidade,
-  deleteEspecialidade,
   getItems,
   createItem,
   updateItem,
-  deleteItem
+  deleteItem,
+  getAreas,
+  createArea,
+  updateArea,
+  deleteArea
 };
 
 Object.keys(apiFunctions).forEach(key => {
@@ -243,12 +236,12 @@ export const {
   deleteProject: wrappedDeleteProject,
   getUserProfile: wrappedGetUserProfile,
   updateUserProfile: wrappedUpdateUserProfile,
-  getEspecialidades: wrappedGetEspecialidades,
-  createEspecialidade: wrappedCreateEspecialidade,
-  updateEspecialidade: wrappedUpdateEspecialidade,
-  deleteEspecialidade: wrappedDeleteEspecialidade,
   getItems: wrappedGetItems,
   createItem: wrappedCreateItem,
   updateItem: wrappedUpdateItem,
-  deleteItem: wrappedDeleteItem
+  deleteItem: wrappedDeleteItem,
+  getAreas: wrappedGetAreas,
+  createArea: wrappedCreateArea,
+  updateArea: wrappedUpdateArea,
+  deleteArea: wrappedDeleteArea
 } = apiFunctions;

@@ -5,8 +5,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { toast } from 'sonner';
 import GenericTable from '@/components/GenericTable';
 import GenericForm from '@/components/GenericForm';
+import AreaTable from '@/components/AreaTable';
+import AreaForm from '@/components/AreaForm';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getItems, createItem, updateItem, deleteItem } from '@/utils/api';
+import { getItems, createItem, updateItem, deleteItem, getAreas, createArea, updateArea, deleteArea } from '@/utils/api';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -16,12 +18,12 @@ const CadastroAuxiliar = () => {
 
   const { data: items, isLoading } = useQuery({
     queryKey: [selectedOption],
-    queryFn: () => getItems(selectedOption),
+    queryFn: () => selectedOption === 'Área' ? getAreas() : getItems(selectedOption),
     enabled: !!selectedOption,
   });
 
   const createMutation = useMutation({
-    mutationFn: createItem,
+    mutationFn: selectedOption === 'Área' ? createArea : createItem,
     onSuccess: () => {
       queryClient.invalidateQueries([selectedOption]);
       toast.success("Item criado com sucesso");
@@ -30,7 +32,7 @@ const CadastroAuxiliar = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateItem,
+    mutationFn: selectedOption === 'Área' ? updateArea : updateItem,
     onSuccess: () => {
       queryClient.invalidateQueries([selectedOption]);
       toast.success("Item atualizado com sucesso");
@@ -39,7 +41,7 @@ const CadastroAuxiliar = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteItem,
+    mutationFn: selectedOption === 'Área' ? deleteArea : deleteItem,
     onSuccess: () => {
       queryClient.invalidateQueries([selectedOption]);
       toast.success("Item excluído com sucesso");
@@ -106,6 +108,13 @@ const CadastroAuxiliar = () => {
           <CardContent>
             {isLoading ? (
               <p>Carregando...</p>
+            ) : selectedOption === 'Área' ? (
+              <AreaTable
+                areas={items}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onAddNew={handleAddNew}
+              />
             ) : (
               <GenericTable
                 items={items}
@@ -123,12 +132,20 @@ const CadastroAuxiliar = () => {
           <DialogHeader>
             <DialogTitle>{editingItem ? 'Editar' : 'Novo'} {selectedOption}</DialogTitle>
           </DialogHeader>
-          <GenericForm
-            onSubmit={handleFormSubmit}
-            onCancel={() => setShowForm(false)}
-            initialData={editingItem}
-            title={selectedOption}
-          />
+          {selectedOption === 'Área' ? (
+            <AreaForm
+              onSubmit={handleFormSubmit}
+              onCancel={() => setShowForm(false)}
+              initialData={editingItem}
+            />
+          ) : (
+            <GenericForm
+              onSubmit={handleFormSubmit}
+              onCancel={() => setShowForm(false)}
+              initialData={editingItem}
+              title={selectedOption}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
