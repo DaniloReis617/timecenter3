@@ -1,4 +1,4 @@
-import { HomeIcon, UsersIcon, FileTextIcon, DollarSignIcon, BriefcaseIcon, AwardIcon, CalendarIcon, AlertTriangleIcon, ShoppingCartIcon, GitMergeIcon, SettingsIcon, DatabaseIcon } from "lucide-react";
+import { HomeIcon, UsersIcon, FileTextIcon, DollarSignIcon, BriefcaseIcon, AwardIcon, CalendarIcon, AlertTriangleIcon, ShoppingCartIcon, GitMergeIcon, SettingsIcon, DatabaseIcon, ListIcon } from "lucide-react";
 import Home from "./pages/Home.jsx";
 import Stakeholders from "./pages/Stakeholders.jsx";
 import Scope from "./pages/Scope.jsx";
@@ -76,7 +76,7 @@ export const navItems = [
   {
     title: "Cadastro Auxiliar",
     to: "/cadastro-auxiliar",
-    icon: <DatabaseIcon className="h-4 w-4" />,
+    icon: <ListIcon className="h-4 w-4" />,
     page: <CadastroAuxiliar />,
   },
   {
