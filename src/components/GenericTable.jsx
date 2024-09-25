@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown, Trash, Edit, Plus } from "lucide-react";
 
-const GenericTable = ({ items, onEdit, onDelete, onAddNew, filterKey }) => {
+const GenericTable = ({ items = [], onEdit, onDelete, onAddNew, filterKey }) => {
   const [filterText, setFilterText] = useState('');
   const [sortAscending, setSortAscending] = useState(true);
 

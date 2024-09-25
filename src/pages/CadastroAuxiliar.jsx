@@ -136,7 +136,7 @@ const CadastroAuxiliar = () => {
               />
             ) : (
               <GenericTable
-                items={items[selectedOption]}
+                items={items[selectedOption] || []}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onAddNew={handleAddNew}
