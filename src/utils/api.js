@@ -1,5 +1,64 @@
 import { toast } from 'sonner';
 
+// Mock data for each type of cadastro
+const mockData = {
+  Despesa: [],
+  "Sist. Operacional": [],
+  "Situação Motivo": [],
+  "Setor Solicitante": [],
+  "Setor Responsável": [],
+  Serviço: [],
+  Recurso: [],
+  Planta: [],
+  Informativo: [],
+  "Familia Equip.": [],
+  Executante: [],
+  Especialidade: [],
+  "Escopo Tipo": [],
+  "Escopo Origem": [],
+  Área: [],
+  Apoio: [],
+};
+
+// Generate some initial data for each type
+Object.keys(mockData).forEach(key => {
+  for (let i = 1; i <= 5; i++) {
+    mockData[key].push({ ID: i, TX_DESCRICAO: `${key} ${i}` });
+  }
+});
+
+export const getItems = async (type) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  return mockData[type];
+};
+
+export const createItem = async ({ type, data }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const newItem = { ...data, ID: mockData[type].length + 1 };
+  mockData[type].push(newItem);
+  return newItem;
+};
+
+export const updateItem = async ({ type, id, data }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const index = mockData[type].findIndex(item => item.ID === id);
+  if (index !== -1) {
+    mockData[type][index] = { ...mockData[type][index], ...data };
+    return mockData[type][index];
+  }
+  throw new Error('Item not found');
+};
+
+export const deleteItem = async ({ type, id }) => {
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  const index = mockData[type].findIndex(item => item.ID === id);
+  if (index !== -1) {
+    mockData[type].splice(index, 1);
+    return { success: true };
+  }
+  throw new Error('Item not found');
+};
+
 // Mock data for projects
 const mockProjects = [
   { id: 1, name: "Project Alpha", description: "A groundbreaking software development project", status: "In Progress" },
@@ -163,7 +222,11 @@ const apiFunctions = {
   getEspecialidades,
   createEspecialidade,
   updateEspecialidade,
-  deleteEspecialidade
+  deleteEspecialidade,
+  getItems,
+  createItem,
+  updateItem,
+  deleteItem
 };
 
 Object.keys(apiFunctions).forEach(key => {
@@ -183,5 +246,9 @@ export const {
   getEspecialidades: wrappedGetEspecialidades,
   createEspecialidade: wrappedCreateEspecialidade,
   updateEspecialidade: wrappedUpdateEspecialidade,
-  deleteEspecialidade: wrappedDeleteEspecialidade
+  deleteEspecialidade: wrappedDeleteEspecialidade,
+  getItems: wrappedGetItems,
+  createItem: wrappedCreateItem,
+  updateItem: wrappedUpdateItem,
+  deleteItem: wrappedDeleteItem
 } = apiFunctions;

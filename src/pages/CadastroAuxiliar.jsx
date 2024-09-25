@@ -1,49 +1,75 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from 'sonner';
-import EspecialidadeTable from '@/components/EspecialidadeTable';
-import EspecialidadeForm from '@/components/EspecialidadeForm';
+import GenericTable from '@/components/GenericTable';
+import GenericForm from '@/components/GenericForm';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getItems, createItem, updateItem, deleteItem } from '@/utils/api';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [showEspecialidadeForm, setShowEspecialidadeForm] = useState(false);
-  const [editingEspecialidade, setEditingEspecialidade] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const queryClient = useQueryClient();
 
-  const handleButtonClick = (action) => {
-    const userRole = "Administrador"; // This should come from your auth system
-    if (!["Gestor", "Administrador", "Super Usuário"].includes(userRole)) {
-      toast.warning("Usuário sem permissão!", { duration: 2000 });
+  const { data: items, isLoading } = useQuery({
+    queryKey: [selectedOption],
+    queryFn: () => getItems(selectedOption),
+    enabled: !!selectedOption,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries([selectedOption]);
+      toast.success("Item criado com sucesso");
+      setShowForm(false);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries([selectedOption]);
+      toast.success("Item atualizado com sucesso");
+      setShowForm(false);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries([selectedOption]);
+      toast.success("Item excluído com sucesso");
+    },
+  });
+
+  const handleButtonClick = (option) => {
+    setSelectedOption(option);
+  };
+
+  const handleEdit = (item) => {
+    setEditingItem(item);
+    setShowForm(true);
+  };
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate({ type: selectedOption, id });
+  };
+
+  const handleAddNew = () => {
+    setEditingItem(null);
+    setShowForm(true);
+  };
+
+  const handleFormSubmit = (data) => {
+    if (editingItem) {
+      updateMutation.mutate({ type: selectedOption, id: editingItem.ID, data });
     } else {
-      setSelectedOption(action);
+      createMutation.mutate({ type: selectedOption, data });
     }
-  };
-
-  const handleEditEspecialidade = (especialidade) => {
-    setEditingEspecialidade(especialidade);
-    setShowEspecialidadeForm(true);
-  };
-
-  const handleDeleteEspecialidade = (especialidadeId) => {
-    // Implement delete logic here
-    toast.success("Especialidade excluída com sucesso");
-  };
-
-  const handleAddNewEspecialidade = () => {
-    setEditingEspecialidade(null);
-    setShowEspecialidadeForm(true);
-  };
-
-  const handleEspecialidadeFormSubmit = (data) => {
-    if (editingEspecialidade) {
-      // Implement update logic here
-      toast.success("Especialidade atualizada com sucesso");
-    } else {
-      // Implement create logic here
-      toast.success("Nova especialidade adicionada com sucesso");
-    }
-    setShowEspecialidadeForm(false);
-    setEditingEspecialidade(null);
   };
 
   const buttons = [
@@ -72,28 +98,39 @@ const CadastroAuxiliar = () => {
           ))}
         </CardContent>
       </Card>
-      {selectedOption === "Especialidade" && (
+      {selectedOption && (
         <Card className="mt-4">
           <CardHeader>
-            <CardTitle>Especialidades</CardTitle>
+            <CardTitle>{selectedOption}</CardTitle>
           </CardHeader>
           <CardContent>
-            {showEspecialidadeForm ? (
-              <EspecialidadeForm
-                onSubmit={handleEspecialidadeFormSubmit}
-                onCancel={() => setShowEspecialidadeForm(false)}
-                initialData={editingEspecialidade}
-              />
+            {isLoading ? (
+              <p>Carregando...</p>
             ) : (
-              <EspecialidadeTable
-                onEdit={handleEditEspecialidade}
-                onDelete={handleDeleteEspecialidade}
-                onAddNew={handleAddNewEspecialidade}
+              <GenericTable
+                items={items}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onAddNew={handleAddNew}
+                filterKey="TX_DESCRICAO"
               />
             )}
           </CardContent>
         </Card>
       )}
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingItem ? 'Editar' : 'Novo'} {selectedOption}</DialogTitle>
+          </DialogHeader>
+          <GenericForm
+            onSubmit={handleFormSubmit}
+            onCancel={() => setShowForm(false)}
+            initialData={editingItem}
+            title={selectedOption}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
