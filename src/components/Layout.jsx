@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Home, Users, FileText, DollarSign, Briefcase, 
-  Award, Calendar, AlertTriangle, ShoppingCart, 
-  GitMerge, Settings, LogOut, Menu, ChevronLeft, User
-} from 'lucide-react';
+import { LogOut, Menu, ChevronLeft, User } from 'lucide-react';
 import { format } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getNavItems } from '@/nav-items';
 
 const Layout = ({ children, user, onLogout }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -35,32 +32,7 @@ const Layout = ({ children, user, onLogout }) => {
     navigate('/login');
   };
 
-  const getAccessibleNavItems = (userProfile) => {
-    const allNavItems = [
-      { to: "/", icon: <Home size={20} />, title: "Home" },
-      { to: "/stakeholders", icon: <Users size={20} />, title: "Stakeholders" },
-      { to: "/scope", icon: <FileText size={20} />, title: "Escopo" },
-      { to: "/costs", icon: <DollarSign size={20} />, title: "Custos" },
-      { to: "/resources", icon: <Briefcase size={20} />, title: "Recursos" },
-      { to: "/quality", icon: <Award size={20} />, title: "Qualidade" },
-      { to: "/schedules", icon: <Calendar size={20} />, title: "Cronogramas" },
-      { to: "/risks", icon: <AlertTriangle size={20} />, title: "Riscos" },
-      { to: "/acquisitions", icon: <ShoppingCart size={20} />, title: "Aquisições" },
-      { to: "/integration", icon: <GitMerge size={20} />, title: "Integração" },
-      { to: "/admin", icon: <Settings size={20} />, title: "Administração" },
-      { to: "/user-settings", icon: <User size={20} />, title: "User Settings" },
-    ];
-
-    if (userProfile === "Super Usuário" || userProfile === "Administrador") {
-      return allNavItems;
-    } else if (userProfile === "Gestor") {
-      return allNavItems.filter(item => !["quality", "risks", "acquisitions", "integration", "admin"].includes(item.to.slice(1)));
-    } else { // Visualizador
-      return allNavItems.filter(item => ["", "stakeholders", "user-settings"].includes(item.to.slice(1)));
-    }
-  };
-
-  const navItems = getAccessibleNavItems(user?.perfil);
+  const navItems = getNavItems(user?.perfil);
 
   return (
     <div className="flex h-screen bg-gray-100">
