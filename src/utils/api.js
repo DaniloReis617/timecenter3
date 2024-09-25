@@ -23,7 +23,17 @@ const mockData = {
 // Generate some initial data for each type
 Object.keys(mockData).forEach(key => {
   for (let i = 1; i <= 5; i++) {
-    mockData[key].push({ ID: i, TX_DESCRICAO: `${key} ${i}` });
+    if (key === 'Apoio') {
+      mockData[key].push({
+        ID: i,
+        TX_DESCRICAO: `Apoio ${i}`,
+        TX_TIPO: `Tipo ${i % 3 + 1}`,
+        VL_VALOR_CUSTO: Math.random() * 1000,
+        VL_PERCENTUAL_CUSTO: Math.random() * 100
+      });
+    } else {
+      mockData[key].push({ ID: i, TX_DESCRICAO: `${key} ${i}` });
+    }
   }
 });
 

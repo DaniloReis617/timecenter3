@@ -9,6 +9,8 @@ import AreaTable from '@/components/AreaTable';
 import AreaForm from '@/components/AreaForm';
 import RecursoTable from '@/components/RecursoTable';
 import RecursoForm from '@/components/RecursoForm';
+import ApoioTable from '@/components/ApoioTable';
+import ApoioForm from '@/components/ApoioForm';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getItems, createItem, updateItem, deleteItem, getAreas, createArea, updateArea, deleteArea, getRecursos, createRecurso, updateRecurso, deleteRecurso } from '@/utils/api';
 
@@ -140,6 +142,13 @@ const CadastroAuxiliar = () => {
                 onDelete={handleDelete}
                 onAddNew={handleAddNew}
               />
+            ) : selectedOption === 'Apoio' ? (
+              <ApoioTable
+                apoios={items}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onAddNew={handleAddNew}
+              />
             ) : (
               <GenericTable
                 items={items}
@@ -165,6 +174,12 @@ const CadastroAuxiliar = () => {
             />
           ) : selectedOption === 'Recurso' ? (
             <RecursoForm
+              onSubmit={handleFormSubmit}
+              onCancel={() => setShowForm(false)}
+              initialData={editingItem}
+            />
+          ) : selectedOption === 'Apoio' ? (
+            <ApoioForm
               onSubmit={handleFormSubmit}
               onCancel={() => setShowForm(false)}
               initialData={editingItem}
