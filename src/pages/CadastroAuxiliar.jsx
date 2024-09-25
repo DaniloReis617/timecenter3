@@ -2,50 +2,36 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from 'sonner';
-import GenericTable from '@/components/GenericTable';
-import GenericForm from '@/components/GenericForm';
+import AreaTable from '@/components/AreaTable';
+import AreaForm from '@/components/AreaForm';
+import EscopoOrigemTable from '@/components/EscopoOrigemTable';
+import EscopoOrigemForm from '@/components/EscopoOrigemForm';
+import EscopoTipoTable from '@/components/EscopoTipoTable';
+import EscopoTipoForm from '@/components/EscopoTipoForm';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-  const [items, setItems] = useState({
-    area: [
-      { ID: 1, TX_DESCRICAO: "Área 1", VL_QUANTIDADE_DIAS_EXECUCAO: 10 },
-      { ID: 2, TX_DESCRICAO: "Área 2", VL_QUANTIDADE_DIAS_EXECUCAO: 15 },
-      { ID: 3, TX_DESCRICAO: "Área 3", VL_QUANTIDADE_DIAS_EXECUCAO: 20 },
-    ],
-    escopoOrigem: [
-      { ID: 1, TX_DESCRICAO: "Escopo Origem 1" },
-      { ID: 2, TX_DESCRICAO: "Escopo Origem 2" },
-      { ID: 3, TX_DESCRICAO: "Escopo Origem 3" },
-    ],
-    escopoTipo: [
-      { ID: 1, TX_DESCRICAO: "Escopo Tipo 1" },
-      { ID: 2, TX_DESCRICAO: "Escopo Tipo 2" },
-      { ID: 3, TX_DESCRICAO: "Escopo Tipo 3" },
-    ],
-    especialidade: [
-      { ID: 1, TX_DESCRICAO: "Especialidade 1" },
-      { ID: 2, TX_DESCRICAO: "Especialidade 2" },
-      { ID: 3, TX_DESCRICAO: "Especialidade 3" },
-    ],
-    executante: [
-      { ID: 1, TX_DESCRICAO: "Executante 1" },
-      { ID: 2, TX_DESCRICAO: "Executante 2" },
-      { ID: 3, TX_DESCRICAO: "Executante 3" },
-    ],
-    familiaEquipamentos: [
-      { ID: 1, TX_DESCRICAO: "Família de Equipamentos 1" },
-      { ID: 2, TX_DESCRICAO: "Família de Equipamentos 2" },
-      { ID: 3, TX_DESCRICAO: "Família de Equipamentos 3" },
-    ],
-    planta: [
-      { ID: 1, TX_DESCRICAO: "Planta 1" },
-      { ID: 2, TX_DESCRICAO: "Planta 2" },
-      { ID: 3, TX_DESCRICAO: "Planta 3" },
-    ],
-  });
+  const [areas, setAreas] = useState([
+    { ID: 1, TX_DESCRICAO: "Área 1", VL_QUANTIDADE_DIAS_EXECUCAO: 10 },
+    { ID: 2, TX_DESCRICAO: "Área 2", VL_QUANTIDADE_DIAS_EXECUCAO: 15 },
+    { ID: 3, TX_DESCRICAO: "Área 3", VL_QUANTIDADE_DIAS_EXECUCAO: 20 },
+  ]);
+  const [escopoOrigens, setEscopoOrigens] = useState([
+    { ID: 1, TX_DESCRICAO: "Escopo Origem 1" },
+    { ID: 2, TX_DESCRICAO: "Escopo Origem 2" },
+    { ID: 3, TX_DESCRICAO: "Escopo Origem 3" },
+  ]);
+  const [escopoTipos, setEscopoTipos] = useState([
+    { ID: 1, TX_DESCRICAO: "Escopo Tipo 1" },
+    { ID: 2, TX_DESCRICAO: "Escopo Tipo 2" },
+    { ID: 3, TX_DESCRICAO: "Escopo Tipo 3" },
+  ]);
+  const [showAreaForm, setShowAreaForm] = useState(false);
+  const [showEscopoOrigemForm, setShowEscopoOrigemForm] = useState(false);
+  const [showEscopoTipoForm, setShowEscopoTipoForm] = useState(false);
+  const [editingArea, setEditingArea] = useState(null);
+  const [editingEscopoOrigem, setEditingEscopoOrigem] = useState(null);
+  const [editingEscopoTipo, setEditingEscopoTipo] = useState(null);
 
   const handleButtonClick = (action) => {
     const userRole = "Administrador"; // This should come from your auth system
@@ -56,49 +42,94 @@ const CadastroAuxiliar = () => {
     }
   };
 
-  const handleEdit = (item) => {
-    setEditingItem(item);
-    setShowForm(true);
+  const handleEditArea = (area) => {
+    setEditingArea(area);
+    setShowAreaForm(true);
   };
 
-  const handleDelete = (id) => {
-    setItems(prevItems => ({
-      ...prevItems,
-      [selectedOption]: prevItems[selectedOption].filter(item => item.ID !== id)
-    }));
-    toast.success(`${selectedOption} excluído com sucesso`);
+  const handleDeleteArea = (areaId) => {
+    setAreas(areas.filter(area => area.ID !== areaId));
+    toast.success("Área excluída com sucesso");
   };
 
-  const handleAddNew = () => {
-    setEditingItem(null);
-    setShowForm(true);
+  const handleAddNewArea = () => {
+    setEditingArea(null);
+    setShowAreaForm(true);
   };
 
-  const handleFormSubmit = (data) => {
-    if (editingItem) {
-      setItems(prevItems => ({
-        ...prevItems,
-        [selectedOption]: prevItems[selectedOption].map(item => 
-          item.ID === editingItem.ID ? { ...item, ...data } : item
-        )
-      }));
-      toast.success(`${selectedOption} atualizado com sucesso`);
+  const handleAreaFormSubmit = (data) => {
+    if (editingArea) {
+      setAreas(areas.map(area => area.ID === editingArea.ID ? { ...area, ...data } : area));
+      toast.success("Área atualizada com sucesso");
     } else {
-      const newItem = { ...data, ID: items[selectedOption].length + 1 };
-      setItems(prevItems => ({
-        ...prevItems,
-        [selectedOption]: [...prevItems[selectedOption], newItem]
-      }));
-      toast.success(`Novo ${selectedOption} adicionado com sucesso`);
+      const newArea = { ...data, ID: areas.length + 1 };
+      setAreas([...areas, newArea]);
+      toast.success("Nova área adicionada com sucesso");
     }
-    setShowForm(false);
-    setEditingItem(null);
+    setShowAreaForm(false);
+    setEditingArea(null);
+  };
+
+  const handleEditEscopoOrigem = (escopoOrigem) => {
+    setEditingEscopoOrigem(escopoOrigem);
+    setShowEscopoOrigemForm(true);
+  };
+
+  const handleDeleteEscopoOrigem = (escopoOrigemId) => {
+    setEscopoOrigens(escopoOrigens.filter(escopo => escopo.ID !== escopoOrigemId));
+    toast.success("Escopo Origem excluído com sucesso");
+  };
+
+  const handleAddNewEscopoOrigem = () => {
+    setEditingEscopoOrigem(null);
+    setShowEscopoOrigemForm(true);
+  };
+
+  const handleEscopoOrigemFormSubmit = (data) => {
+    if (editingEscopoOrigem) {
+      setEscopoOrigens(escopoOrigens.map(escopo => escopo.ID === editingEscopoOrigem.ID ? { ...escopo, ...data } : escopo));
+      toast.success("Escopo Origem atualizado com sucesso");
+    } else {
+      const newEscopoOrigem = { ...data, ID: escopoOrigens.length + 1 };
+      setEscopoOrigens([...escopoOrigens, newEscopoOrigem]);
+      toast.success("Novo Escopo Origem adicionado com sucesso");
+    }
+    setShowEscopoOrigemForm(false);
+    setEditingEscopoOrigem(null);
+  };
+
+  const handleEditEscopoTipo = (escopoTipo) => {
+    setEditingEscopoTipo(escopoTipo);
+    setShowEscopoTipoForm(true);
+  };
+
+  const handleDeleteEscopoTipo = (escopoTipoId) => {
+    setEscopoTipos(escopoTipos.filter(escopo => escopo.ID !== escopoTipoId));
+    toast.success("Escopo Tipo excluído com sucesso");
+  };
+
+  const handleAddNewEscopoTipo = () => {
+    setEditingEscopoTipo(null);
+    setShowEscopoTipoForm(true);
+  };
+
+  const handleEscopoTipoFormSubmit = (data) => {
+    if (editingEscopoTipo) {
+      setEscopoTipos(escopoTipos.map(escopo => escopo.ID === editingEscopoTipo.ID ? { ...escopo, ...data } : escopo));
+      toast.success("Escopo Tipo atualizado com sucesso");
+    } else {
+      const newEscopoTipo = { ...data, ID: escopoTipos.length + 1 };
+      setEscopoTipos([...escopoTipos, newEscopoTipo]);
+      toast.success("Novo Escopo Tipo adicionado com sucesso");
+    }
+    setShowEscopoTipoForm(false);
+    setEditingEscopoTipo(null);
   };
 
   const buttons = [
     "Despesa", "Sist. Operacional", "Situação Motivo", "Setor Solicitante", "Setor Responsável",
-    "Serviço", "Planta", "Informativo", "Familia Equip.", "Executante", "Especialidade",
-    "Escopo Tipo", "Escopo Origem", "Área"
+    "Serviço", "Recurso", "Planta", "Informativo", "Familia Equip.", "Executante", "Especialidade",
+    "Escopo Tipo", "Escopo Origem", "Área", "Apoio"
   ];
 
   return (
@@ -112,7 +143,7 @@ const CadastroAuxiliar = () => {
           {buttons.map((button, index) => (
             <Button
               key={index}
-              onClick={() => handleButtonClick(button.toLowerCase().replace(/\s+/g, ''))}
+              onClick={() => handleButtonClick(button)}
               variant="outline"
               className="w-full"
             >
@@ -121,26 +152,70 @@ const CadastroAuxiliar = () => {
           ))}
         </CardContent>
       </Card>
-      {selectedOption && (
+      {selectedOption === "Área" && (
         <Card className="mt-4">
           <CardHeader>
-            <CardTitle>{selectedOption}</CardTitle>
+            <CardTitle>Áreas</CardTitle>
           </CardHeader>
           <CardContent>
-            {showForm ? (
-              <GenericForm
-                onSubmit={handleFormSubmit}
-                onCancel={() => setShowForm(false)}
-                initialData={editingItem}
-                title={selectedOption}
+            {showAreaForm ? (
+              <AreaForm
+                onSubmit={handleAreaFormSubmit}
+                onCancel={() => setShowAreaForm(false)}
+                initialData={editingArea}
               />
             ) : (
-              <GenericTable
-                items={items[selectedOption] || []}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onAddNew={handleAddNew}
-                filterKey="TX_DESCRICAO"
+              <AreaTable
+                areas={areas}
+                onEdit={handleEditArea}
+                onDelete={handleDeleteArea}
+                onAddNew={handleAddNewArea}
+              />
+            )}
+          </CardContent>
+        </Card>
+      )}
+      {selectedOption === "Escopo Origem" && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle>Escopo Origem</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {showEscopoOrigemForm ? (
+              <EscopoOrigemForm
+                onSubmit={handleEscopoOrigemFormSubmit}
+                onCancel={() => setShowEscopoOrigemForm(false)}
+                initialData={editingEscopoOrigem}
+              />
+            ) : (
+              <EscopoOrigemTable
+                escopoOrigens={escopoOrigens}
+                onEdit={handleEditEscopoOrigem}
+                onDelete={handleDeleteEscopoOrigem}
+                onAddNew={handleAddNewEscopoOrigem}
+              />
+            )}
+          </CardContent>
+        </Card>
+      )}
+      {selectedOption === "Escopo Tipo" && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle>Escopo Tipo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {showEscopoTipoForm ? (
+              <EscopoTipoForm
+                onSubmit={handleEscopoTipoFormSubmit}
+                onCancel={() => setShowEscopoTipoForm(false)}
+                initialData={editingEscopoTipo}
+              />
+            ) : (
+              <EscopoTipoTable
+                escopoTipos={escopoTipos}
+                onEdit={handleEditEscopoTipo}
+                onDelete={handleDeleteEscopoTipo}
+                onAddNew={handleAddNewEscopoTipo}
               />
             )}
           </CardContent>
