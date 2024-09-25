@@ -12,6 +12,8 @@ import EspecialidadeTable from '@/components/EspecialidadeTable';
 import EspecialidadeForm from '@/components/EspecialidadeForm';
 import ExecutanteTable from '@/components/ExecutanteTable';
 import ExecutanteForm from '@/components/ExecutanteForm';
+import FamiliaEquipamentosTable from '@/components/FamiliaEquipamentosTable';
+import FamiliaEquipamentosForm from '@/components/FamiliaEquipamentosForm';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -40,16 +42,23 @@ const CadastroAuxiliar = () => {
     { ID: 2, TX_DESCRICAO: "Executante 2" },
     { ID: 3, TX_DESCRICAO: "Executante 3" },
   ]);
+  const [familiaEquipamentos, setFamiliaEquipamentos] = useState([
+    { ID: 1, TX_DESCRICAO: "Família de Equipamentos 1" },
+    { ID: 2, TX_DESCRICAO: "Família de Equipamentos 2" },
+    { ID: 3, TX_DESCRICAO: "Família de Equipamentos 3" },
+  ]);
   const [showAreaForm, setShowAreaForm] = useState(false);
   const [showEscopoOrigemForm, setShowEscopoOrigemForm] = useState(false);
   const [showEscopoTipoForm, setShowEscopoTipoForm] = useState(false);
   const [showEspecialidadeForm, setShowEspecialidadeForm] = useState(false);
   const [showExecutanteForm, setShowExecutanteForm] = useState(false);
+  const [showFamiliaEquipamentosForm, setShowFamiliaEquipamentosForm] = useState(false);
   const [editingArea, setEditingArea] = useState(null);
   const [editingEscopoOrigem, setEditingEscopoOrigem] = useState(null);
   const [editingEscopoTipo, setEditingEscopoTipo] = useState(null);
   const [editingEspecialidade, setEditingEspecialidade] = useState(null);
   const [editingExecutante, setEditingExecutante] = useState(null);
+  const [editingFamiliaEquipamentos, setEditingFamiliaEquipamentos] = useState(null);
 
   const handleButtonClick = (action) => {
     const userRole = "Administrador"; // This should come from your auth system
@@ -205,6 +214,35 @@ const CadastroAuxiliar = () => {
     setEditingExecutante(null);
   };
 
+  // Familia Equipamentos handlers
+  const handleEditFamiliaEquipamentos = (familia) => {
+    setEditingFamiliaEquipamentos(familia);
+    setShowFamiliaEquipamentosForm(true);
+  };
+
+  const handleDeleteFamiliaEquipamentos = (familiaId) => {
+    setFamiliaEquipamentos(familiaEquipamentos.filter(fam => fam.ID !== familiaId));
+    toast.success("Família de Equipamentos excluída com sucesso");
+  };
+
+  const handleAddNewFamiliaEquipamentos = () => {
+    setEditingFamiliaEquipamentos(null);
+    setShowFamiliaEquipamentosForm(true);
+  };
+
+  const handleFamiliaEquipamentosFormSubmit = (data) => {
+    if (editingFamiliaEquipamentos) {
+      setFamiliaEquipamentos(familiaEquipamentos.map(fam => fam.ID === editingFamiliaEquipamentos.ID ? { ...fam, ...data } : fam));
+      toast.success("Família de Equipamentos atualizada com sucesso");
+    } else {
+      const newFamiliaEquipamentos = { ...data, ID: familiaEquipamentos.length + 1 };
+      setFamiliaEquipamentos([...familiaEquipamentos, newFamiliaEquipamentos]);
+      toast.success("Nova Família de Equipamentos adicionada com sucesso");
+    }
+    setShowFamiliaEquipamentosForm(false);
+    setEditingFamiliaEquipamentos(null);
+  };
+
   const buttons = [
     "Despesa", "Sist. Operacional", "Situação Motivo", "Setor Solicitante", "Setor Responsável",
     "Serviço", "Recurso", "Planta", "Informativo", "Familia Equip.", "Executante", "Especialidade",
@@ -341,6 +379,29 @@ const CadastroAuxiliar = () => {
                 onEdit={handleEditExecutante}
                 onDelete={handleDeleteExecutante}
                 onAddNew={handleAddNewExecutante}
+              />
+            )}
+          </CardContent>
+        </Card>
+      )}
+      {selectedOption === "Familia Equip." && (
+        <Card className="mt-4">
+          <CardHeader>
+            <CardTitle>Família de Equipamentos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {showFamiliaEquipamentosForm ? (
+              <FamiliaEquipamentosForm
+                onSubmit={handleFamiliaEquipamentosFormSubmit}
+                onCancel={() => setShowFamiliaEquipamentosForm(false)}
+                initialData={editingFamiliaEquipamentos}
+              />
+            ) : (
+              <FamiliaEquipamentosTable
+                familiaEquipamentos={familiaEquipamentos}
+                onEdit={handleEditFamiliaEquipamentos}
+                onDelete={handleDeleteFamiliaEquipamentos}
+                onAddNew={handleAddNewFamiliaEquipamentos}
               />
             )}
           </CardContent>
