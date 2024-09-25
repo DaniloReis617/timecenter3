@@ -15,6 +15,7 @@ import Schedules from './pages/Schedules';
 import Risks from './pages/Risks';
 import Acquisitions from './pages/Acquisitions';
 import Integration from './pages/Integration';
+import CadastroAuxiliar from './pages/CadastroAuxiliar';
 import Admin from './pages/Admin';
 import UserSettings from './pages/UserSettings';
 
@@ -57,6 +58,7 @@ const App = () => {
         { path: "/risks", element: <Risks /> },
         { path: "/acquisitions", element: <Acquisitions /> },
         { path: "/integration", element: <Integration /> },
+        { path: "/cadastro-auxiliar", element: <CadastroAuxiliar /> },
         { path: "/admin", element: <Admin /> },
         { path: "/user-settings", element: <UserSettings /> },
       ];
