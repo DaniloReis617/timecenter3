@@ -28,6 +28,16 @@ def execute_read_query(query, params=None):
         print(f"Erro ao executar a consulta: {e}")
         return pd.DataFrame()
 
+def test_database_connection():
+    try:
+        with get_db_connection() as conn:
+            if conn:
+                return True, "Conexão com o banco de dados estabelecida com sucesso."
+            else:
+                return False, "Não foi possível estabelecer conexão com o banco de dados."
+    except Exception as e:
+        return False, f"Erro ao conectar com o banco de dados: {str(e)}"
+
 # Implementação das funções do arquivo original
 def validate_login(username):
     query = """

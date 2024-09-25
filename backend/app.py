@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from database import (
     validate_login, get_projetos_por_usuario, get_usuarios_df,
-    get_descricao_projetos, get_all_projetos, get_vw_nota_manutencao_hh_data
+    get_descricao_projetos, get_all_projetos, get_vw_nota_manutencao_hh_data,
+    test_database_connection
 )
 
 app = Flask(__name__)
@@ -36,6 +37,11 @@ def get_projetos():
 def get_notas_manutencao():
     notas = get_vw_nota_manutencao_hh_data()
     return jsonify(notas.to_dict(orient='records'))
+
+@app.route('/test-connection', methods=['GET'])
+def test_connection():
+    success, message = test_database_connection()
+    return jsonify({"success": success, "message": message})
 
 if __name__ == '__main__':
     app.run(debug=True)
