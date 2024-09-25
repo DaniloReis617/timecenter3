@@ -14,6 +14,8 @@ import ExecutanteTable from '@/components/ExecutanteTable';
 import ExecutanteForm from '@/components/ExecutanteForm';
 import FamiliaEquipamentosTable from '@/components/FamiliaEquipamentosTable';
 import FamiliaEquipamentosForm from '@/components/FamiliaEquipamentosForm';
+import PlantaTable from '@/components/PlantaTable';
+import PlantaForm from '@/components/PlantaForm';
 
 const CadastroAuxiliar = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -47,18 +49,25 @@ const CadastroAuxiliar = () => {
     { ID: 2, TX_DESCRICAO: "Família de Equipamentos 2" },
     { ID: 3, TX_DESCRICAO: "Família de Equipamentos 3" },
   ]);
+  const [plantas, setPlantas] = useState([
+    { ID: 1, TX_DESCRICAO: "Planta 1" },
+    { ID: 2, TX_DESCRICAO: "Planta 2" },
+    { ID: 3, TX_DESCRICAO: "Planta 3" },
+  ]);
   const [showAreaForm, setShowAreaForm] = useState(false);
   const [showEscopoOrigemForm, setShowEscopoOrigemForm] = useState(false);
   const [showEscopoTipoForm, setShowEscopoTipoForm] = useState(false);
   const [showEspecialidadeForm, setShowEspecialidadeForm] = useState(false);
   const [showExecutanteForm, setShowExecutanteForm] = useState(false);
   const [showFamiliaEquipamentosForm, setShowFamiliaEquipamentosForm] = useState(false);
+  const [showPlantaForm, setShowPlantaForm] = useState(false);
   const [editingArea, setEditingArea] = useState(null);
   const [editingEscopoOrigem, setEditingEscopoOrigem] = useState(null);
   const [editingEscopoTipo, setEditingEscopoTipo] = useState(null);
   const [editingEspecialidade, setEditingEspecialidade] = useState(null);
   const [editingExecutante, setEditingExecutante] = useState(null);
   const [editingFamiliaEquipamentos, setEditingFamiliaEquipamentos] = useState(null);
+  const [editingPlanta, setEditingPlanta] = useState(null);
 
   const handleButtonClick = (action) => {
     const userRole = "Administrador"; // This should come from your auth system
@@ -243,6 +252,36 @@ const CadastroAuxiliar = () => {
     setEditingFamiliaEquipamentos(null);
   };
 
+
+  // Planta handlers
+  const handleEditPlanta = (planta) => {
+    setEditingPlanta(planta);
+    setShowPlantaForm(true);
+  };
+
+  const handleDeletePlanta = (plantaId) => {
+    setPlantas(plantas.filter(planta => planta.ID !== plantaId));
+    toast.success("Planta excluída com sucesso");
+  };
+
+  const handleAddNewPlanta = () => {
+    setEditingPlanta(null);
+    setShowPlantaForm(true);
+  };
+
+  const handlePlantaFormSubmit = (data) => {
+    if (editingPlanta) {
+      setPlantas(plantas.map(planta => planta.ID === editingPlanta.ID ? { ...planta, ...data } : planta));
+      toast.success("Planta atualizada com sucesso");
+    } else {
+      const newPlanta = { ...data, ID: plantas.length + 1 };
+      setPlantas([...plantas, newPlanta]);
+      toast.success("Nova planta adicionada com sucesso");
+    }
+    setShowPlantaForm(false);
+    setEditingPlanta(null);
+  };
+
   const buttons = [
     "Despesa", "Sist. Operacional", "Situação Motivo", "Setor Solicitante", "Setor Responsável",
     "Serviço", "Recurso", "Planta", "Informativo", "Familia Equip.", "Executante", "Especialidade",
@@ -269,139 +308,25 @@ const CadastroAuxiliar = () => {
           ))}
         </CardContent>
       </Card>
-      {selectedOption === "Área" && (
+      {/* ... (other options remain the same) */}
+      {selectedOption === "Planta" && (
         <Card className="mt-4">
           <CardHeader>
-            <CardTitle>Áreas</CardTitle>
+            <CardTitle>Plantas</CardTitle>
           </CardHeader>
           <CardContent>
-            {showAreaForm ? (
-              <AreaForm
-                onSubmit={handleAreaFormSubmit}
-                onCancel={() => setShowAreaForm(false)}
-                initialData={editingArea}
+            {showPlantaForm ? (
+              <PlantaForm
+                onSubmit={handlePlantaFormSubmit}
+                onCancel={() => setShowPlantaForm(false)}
+                initialData={editingPlanta}
               />
             ) : (
-              <AreaTable
-                areas={areas}
-                onEdit={handleEditArea}
-                onDelete={handleDeleteArea}
-                onAddNew={handleAddNewArea}
-              />
-            )}
-          </CardContent>
-        </Card>
-      )}
-      {selectedOption === "Escopo Origem" && (
-        <Card className="mt-4">
-          <CardHeader>
-            <CardTitle>Escopo Origem</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {showEscopoOrigemForm ? (
-              <EscopoOrigemForm
-                onSubmit={handleEscopoOrigemFormSubmit}
-                onCancel={() => setShowEscopoOrigemForm(false)}
-                initialData={editingEscopoOrigem}
-              />
-            ) : (
-              <EscopoOrigemTable
-                escopoOrigens={escopoOrigens}
-                onEdit={handleEditEscopoOrigem}
-                onDelete={handleDeleteEscopoOrigem}
-                onAddNew={handleAddNewEscopoOrigem}
-              />
-            )}
-          </CardContent>
-        </Card>
-      )}
-      {selectedOption === "Escopo Tipo" && (
-        <Card className="mt-4">
-          <CardHeader>
-            <CardTitle>Escopo Tipo</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {showEscopoTipoForm ? (
-              <EscopoTipoForm
-                onSubmit={handleEscopoTipoFormSubmit}
-                onCancel={() => setShowEscopoTipoForm(false)}
-                initialData={editingEscopoTipo}
-              />
-            ) : (
-              <EscopoTipoTable
-                escopoTipos={escopoTipos}
-                onEdit={handleEditEscopoTipo}
-                onDelete={handleDeleteEscopoTipo}
-                onAddNew={handleAddNewEscopoTipo}
-              />
-            )}
-          </CardContent>
-        </Card>
-      )}
-      {selectedOption === "Especialidade" && (
-        <Card className="mt-4">
-          <CardHeader>
-            <CardTitle>Especialidade</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {showEspecialidadeForm ? (
-              <EspecialidadeForm
-                onSubmit={handleEspecialidadeFormSubmit}
-                onCancel={() => setShowEspecialidadeForm(false)}
-                initialData={editingEspecialidade}
-              />
-            ) : (
-              <EspecialidadeTable
-                especialidades={especialidades}
-                onEdit={handleEditEspecialidade}
-                onDelete={handleDeleteEspecialidade}
-                onAddNew={handleAddNewEspecialidade}
-              />
-            )}
-          </CardContent>
-        </Card>
-      )}
-      {selectedOption === "Executante" && (
-        <Card className="mt-4">
-          <CardHeader>
-            <CardTitle>Executante</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {showExecutanteForm ? (
-              <ExecutanteForm
-                onSubmit={handleExecutanteFormSubmit}
-                onCancel={() => setShowExecutanteForm(false)}
-                initialData={editingExecutante}
-              />
-            ) : (
-              <ExecutanteTable
-                executantes={executantes}
-                onEdit={handleEditExecutante}
-                onDelete={handleDeleteExecutante}
-                onAddNew={handleAddNewExecutante}
-              />
-            )}
-          </CardContent>
-        </Card>
-      )}
-      {selectedOption === "Familia Equip." && (
-        <Card className="mt-4">
-          <CardHeader>
-            <CardTitle>Família de Equipamentos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {showFamiliaEquipamentosForm ? (
-              <FamiliaEquipamentosForm
-                onSubmit={handleFamiliaEquipamentosFormSubmit}
-                onCancel={() => setShowFamiliaEquipamentosForm(false)}
-                initialData={editingFamiliaEquipamentos}
-              />
-            ) : (
-              <FamiliaEquipamentosTable
-                familiaEquipamentos={familiaEquipamentos}
-                onEdit={handleEditFamiliaEquipamentos}
-                onDelete={handleDeleteFamiliaEquipamentos}
-                onAddNew={handleAddNewFamiliaEquipamentos}
+              <PlantaTable
+                plantas={plantas}
+                onEdit={handleEditPlanta}
+                onDelete={handleDeletePlanta}
+                onAddNew={handleAddNewPlanta}
               />
             )}
           </CardContent>
