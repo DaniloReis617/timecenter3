@@ -46,7 +46,7 @@ const App = () => {
   };
 
   const getAccessiblePages = (userProfile) => {
-    if (userProfile === "Super Usuário" || userProfile === "Administrador") {
+    if (userProfile === "Super Usuário" || userProfile === "Administrador" || userProfile === "Gestor") {
       return [
         { path: "/", element: <Home /> },
         { path: "/stakeholders", element: <Stakeholders /> },
@@ -60,16 +60,6 @@ const App = () => {
         { path: "/integration", element: <Integration /> },
         { path: "/cadastro-auxiliar", element: <CadastroAuxiliar /> },
         { path: "/admin", element: <Admin /> },
-        { path: "/user-settings", element: <UserSettings /> },
-      ];
-    } else if (userProfile === "Gestor") {
-      return [
-        { path: "/", element: <Home /> },
-        { path: "/stakeholders", element: <Stakeholders /> },
-        { path: "/scope", element: <Scope /> },
-        { path: "/costs", element: <Costs /> },
-        { path: "/resources", element: <Resources /> },
-        { path: "/schedules", element: <Schedules /> },
         { path: "/user-settings", element: <UserSettings /> },
       ];
     } else { // Visualizador

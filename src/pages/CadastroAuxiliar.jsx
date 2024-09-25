@@ -7,7 +7,7 @@ const CadastroAuxiliar = () => {
   const handleButtonClick = (action) => {
     // Simulating user role check. In a real app, you'd use actual user data.
     const userRole = "Administrador"; // This should come from your auth system
-    if (userRole !== "Administrador") {
+    if (!["Gestor", "Administrador", "Super Usuário"].includes(userRole)) {
       toast.warning("Usuário sem permissão!", { duration: 2000 });
     } else {
       toast.success(`Navegando para ${action}`, { duration: 2000 });
