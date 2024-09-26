@@ -180,28 +180,20 @@ export const createItem = async ({ type, data }) => {
   }
 };
 
-// Make sure all functions are exported
-export {
-  login,
-  getAllProjects,
-  getUsers,
-  getProjectDetails,
-  createProject,
-  updateProject,
-  deleteProject,
-  getUserProfile,
-  updateUserProfile,
-  getAreas,
-  createArea,
-  updateArea,
-  deleteArea,
-  getRecursos,
-  createRecurso,
-  updateRecurso,
-  deleteRecurso,
-  getItems,
-  updateItem,
-  deleteItem,
-  // Add createItem to the list of exports
-  createItem,
+export const updateItem = async ({ type, id, data }) => {
+  try {
+    const response = await api.put(`/${type}/${id}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Failed to update ${type}`);
+  }
+};
+
+export const deleteItem = async ({ type, id }) => {
+  try {
+    await api.delete(`/${type}/${id}`);
+    return { success: true };
+  } catch (error) {
+    throw new Error(`Failed to delete ${type}`);
+  }
 };
