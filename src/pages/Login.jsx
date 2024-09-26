@@ -20,7 +20,7 @@ const Login = ({ onLogin }) => {
     onSuccess: (userData) => {
       console.log('Login successful:', userData);
       onLogin(userData);
-      toast.success(`Login bem-sucedido! Bem-vindo, ${userData.name}!`);
+      toast.success(`Login bem-sucedido! Bem-vindo, ${userData.TX_LOGIN}!`);
       navigate('/');
     },
     onError: (error) => {

@@ -1,303 +1,182 @@
-import { toast } from 'sonner';
+import axios from 'axios';
 
-// Mock data for each type of cadastro
-const mockData = {
-  Despesa: [],
-  "Sist. Operacional": [],
-  "Situação Motivo": [],
-  "Setor Solicitante": [],
-  "Setor Responsável": [],
-  Serviço: [],
-  Recurso: [],
-  Planta: [],
-  Informativo: [],
-  "Familia Equip.": [],
-  Executante: [],
-  Especialidade: [],
-  "Escopo Tipo": [],
-  "Escopo Origem": [],
-  Área: [],
-  Apoio: [],
-};
+const API_BASE_URL = 'http://localhost:5000'; // Ajuste conforme necessário
 
-// Generate some initial data for each type
-Object.keys(mockData).forEach(key => {
-  for (let i = 1; i <= 5; i++) {
-    if (key === 'Apoio') {
-      mockData[key].push({
-        ID: i,
-        TX_DESCRICAO: `Apoio ${i}`,
-        TX_TIPO: `Tipo ${i % 3 + 1}`,
-        VL_VALOR_CUSTO: Math.random() * 1000,
-        VL_PERCENTUAL_CUSTO: Math.random() * 100
-      });
-    } else {
-      mockData[key].push({ ID: i, TX_DESCRICAO: `${key} ${i}` });
-    }
-  }
+const api = axios.create({
+  baseURL: API_BASE_URL,
 });
 
-// Add VL_QUANTIDADE_DIAS_EXECUCAO for Área
-mockData['Área'].forEach(item => {
-  item.VL_QUANTIDADE_DIAS_EXECUCAO = Math.random() * 10;
-});
-
-// Add VL_VALOR_CUSTO for Recurso
-mockData['Recurso'].forEach(item => {
-  item.VL_VALOR_CUSTO = Math.random() * 1000;
-});
-
-export const getItems = async (type) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  return mockData[type];
-};
-
-export const createItem = async ({ type, data }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const newItem = { ...data, ID: mockData[type].length + 1 };
-  mockData[type].push(newItem);
-  return newItem;
-};
-
-export const updateItem = async ({ type, id, data }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const index = mockData[type].findIndex(item => item.ID === id);
-  if (index !== -1) {
-    mockData[type][index] = { ...mockData[type][index], ...data };
-    return mockData[type][index];
-  }
-  throw new Error('Item not found');
-};
-
-export const deleteItem = async ({ type, id }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const index = mockData[type].findIndex(item => item.ID === id);
-  if (index !== -1) {
-    mockData[type].splice(index, 1);
-    return { success: true };
-  }
-  throw new Error('Item not found');
-};
-
-// Specific functions for Área
-export const getAreas = async () => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  return mockData['Área'];
-};
-
-export const createArea = async ({ data }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const newArea = { ...data, ID: mockData['Área'].length + 1 };
-  mockData['Área'].push(newArea);
-  return newArea;
-};
-
-export const updateArea = async ({ id, data }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const index = mockData['Área'].findIndex(item => item.ID === id);
-  if (index !== -1) {
-    mockData['Área'][index] = { ...mockData['Área'][index], ...data };
-    return mockData['Área'][index];
-  }
-  throw new Error('Área not found');
-};
-
-export const deleteArea = async ({ id }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const index = mockData['Área'].findIndex(item => item.ID === id);
-  if (index !== -1) {
-    mockData['Área'].splice(index, 1);
-    return { success: true };
-  }
-  throw new Error('Área not found');
-};
-
-// Specific functions for Recurso
-export const getRecursos = async () => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  return mockData['Recurso'];
-};
-
-export const createRecurso = async ({ data }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const newRecurso = { ...data, ID: mockData['Recurso'].length + 1 };
-  mockData['Recurso'].push(newRecurso);
-  return newRecurso;
-};
-
-export const updateRecurso = async ({ id, data }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const index = mockData['Recurso'].findIndex(item => item.ID === id);
-  if (index !== -1) {
-    mockData['Recurso'][index] = { ...mockData['Recurso'][index], ...data };
-    return mockData['Recurso'][index];
-  }
-  throw new Error('Recurso not found');
-};
-
-export const deleteRecurso = async ({ id }) => {
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-  const index = mockData['Recurso'].findIndex(item => item.ID === id);
-  if (index !== -1) {
-    mockData['Recurso'].splice(index, 1);
-    return { success: true };
-  }
-  throw new Error('Recurso not found');
-};
-
-// Mock data for projects
-const mockProjects = [
-  { id: 1, name: "Project Alpha", description: "A groundbreaking software development project", status: "In Progress" },
-  { id: 2, name: "Project Beta", description: "An innovative marketing campaign", status: "Planning" },
-  { id: 3, name: "Project Gamma", description: "A cutting-edge research initiative", status: "Completed" },
-];
-
-const mockUsers = [
-  { id: 1, username: "john.doe@example.com", name: "John Doe", role: "Manager", avatarUrl: "https://example.com/avatar1.jpg" },
-  { id: 2, username: "jane.smith@example.com", name: "Jane Smith", role: "Developer", avatarUrl: "https://example.com/avatar2.jpg" },
-];
-
-// Mock API functions
 export const login = async (username) => {
-  console.log('Attempting login with username:', username);
-  if (username === 'danilo.reis@timenow.com.br') {
-    console.log('Login successful');
-    return { id: 1, username: username, name: "Danilo Reis", perfil: "Super Usuário", avatarUrl: "https://example.com/danilo.jpg" };
+  try {
+    const response = await api.post('/login', { username });
+    return response.data;
+  } catch (error) {
+    throw new Error('Login failed');
   }
-  throw new Error('Invalid email');
 };
 
 export const getAllProjects = async () => {
-  console.log('Fetching all projects');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  console.log('Projects fetched:', mockProjects);
-  return mockProjects;
+  try {
+    const response = await api.get('/projetos');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch projects');
+  }
 };
 
 export const getUsers = async () => {
-  console.log('Fetching users');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  console.log('Users fetched:', mockUsers);
-  return mockUsers;
+  try {
+    const response = await api.get('/usuarios');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch users');
+  }
 };
 
 export const getProjectDetails = async (projectId) => {
-  console.log('Fetching project details for projectId:', projectId);
-  const project = mockProjects.find(p => p.id === projectId);
-  if (project) {
-    console.log('Project details:', project);
-    return project;
+  try {
+    const response = await api.get(`/projetos/${projectId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch project details');
   }
-  throw new Error('Project not found');
 };
 
 export const createProject = async (projectData) => {
-  console.log('Creating project with data:', projectData);
-  const newProject = { id: mockProjects.length + 1, ...projectData };
-  mockProjects.push(newProject);
-  console.log('New project created:', newProject);
-  return newProject;
+  try {
+    const response = await api.post('/projetos', projectData);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to create project');
+  }
 };
 
 export const updateProject = async (projectId, projectData) => {
-  console.log('Updating project:', projectId, 'with data:', projectData);
-  const index = mockProjects.findIndex(p => p.id === projectId);
-  if (index !== -1) {
-    mockProjects[index] = { ...mockProjects[index], ...projectData };
-    console.log('Project updated:', mockProjects[index]);
-    return mockProjects[index];
+  try {
+    const response = await api.put(`/projetos/${projectId}`, projectData);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to update project');
   }
-  throw new Error('Project not found');
 };
 
 export const deleteProject = async (projectId) => {
-  console.log('Deleting project:', projectId);
-  const index = mockProjects.findIndex(p => p.id === projectId);
-  if (index !== -1) {
-    const deletedProject = mockProjects.splice(index, 1)[0];
-    console.log('Project deleted:', deletedProject);
+  try {
+    await api.delete(`/projetos/${projectId}`);
     return { message: 'Project deleted successfully' };
+  } catch (error) {
+    throw new Error('Failed to delete project');
   }
-  throw new Error('Project not found');
 };
 
 export const getUserProfile = async () => {
-  console.log('Fetching user profile');
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  const user = mockUsers[0]; // For demonstration, always return the first user
-  console.log('User profile fetched:', user);
-  return user;
-};
-
-export const updateUserProfile = async (userData) => {
-  console.log('Updating user profile with data:', userData);
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-  const updatedUser = { ...mockUsers[0], ...userData };
-  mockUsers[0] = updatedUser;
-  console.log('User profile updated:', updatedUser);
-  return updatedUser;
-};
-
-// Simulated API error handling
-const simulateApiCall = async (func) => {
   try {
-    return await func();
+    const response = await api.get('/user-profile');
+    return response.data;
   } catch (error) {
-    console.error('API Error:', error);
-    toast.error(error.message || 'An unexpected error occurred');
-    throw error;
+    throw new Error('Failed to fetch user profile');
   }
 };
 
-// Wrap all exported functions with error handling
-const apiFunctions = {
-  login,
-  getAllProjects,
-  getUsers,
-  getProjectDetails,
-  createProject,
-  updateProject,
-  deleteProject,
-  getUserProfile,
-  updateUserProfile,
-  getItems,
-  createItem,
-  updateItem,
-  deleteItem,
-  getAreas,
-  createArea,
-  updateArea,
-  deleteArea,
-  getRecursos,
-  createRecurso,
-  updateRecurso,
-  deleteRecurso
+export const updateUserProfile = async (userData) => {
+  try {
+    const response = await api.put('/user-profile', userData);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to update user profile');
+  }
 };
 
-Object.keys(apiFunctions).forEach(key => {
-  const originalFunc = apiFunctions[key];
-  apiFunctions[key] = (...args) => simulateApiCall(() => originalFunc(...args));
-});
+// Funções específicas para Área, Recurso, etc.
+export const getAreas = async () => {
+  try {
+    const response = await api.get('/areas');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch areas');
+  }
+};
 
-export const {
-  getAllProjects: wrappedGetAllProjects,
-  getUsers: wrappedGetUsers,
-  getProjectDetails: wrappedGetProjectDetails,
-  createProject: wrappedCreateProject,
-  updateProject: wrappedUpdateProject,
-  deleteProject: wrappedDeleteProject,
-  getUserProfile: wrappedGetUserProfile,
-  updateUserProfile: wrappedUpdateUserProfile,
-  getItems: wrappedGetItems,
-  createItem: wrappedCreateItem,
-  updateItem: wrappedUpdateItem,
-  deleteItem: wrappedDeleteItem,
-  getAreas: wrappedGetAreas,
-  createArea: wrappedCreateArea,
-  updateArea: wrappedUpdateArea,
-  deleteArea: wrappedDeleteArea,
-  getRecursos: wrappedGetRecursos,
-  createRecurso: wrappedCreateRecurso,
-  updateRecurso: wrappedUpdateRecurso,
-  deleteRecurso: wrappedDeleteRecurso
-} = apiFunctions;
+export const createArea = async (data) => {
+  try {
+    const response = await api.post('/areas', data);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to create area');
+  }
+};
+
+export const updateArea = async (id, data) => {
+  try {
+    const response = await api.put(`/areas/${id}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to update area');
+  }
+};
+
+export const deleteArea = async (id) => {
+  try {
+    await api.delete(`/areas/${id}`);
+    return { success: true };
+  } catch (error) {
+    throw new Error('Failed to delete area');
+  }
+};
+
+// Funções similares para Recursos, Apoios, etc.
+export const getRecursos = async () => {
+  try {
+    const response = await api.get('/recursos');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch recursos');
+  }
+};
+
+export const createRecurso = async (data) => {
+  try {
+    const response = await api.post('/recursos', data);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to create recurso');
+  }
+};
+
+export const updateRecurso = async (id, data) => {
+  try {
+    const response = await api.put(`/recursos/${id}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to update recurso');
+  }
+};
+
+export const deleteRecurso = async (id) => {
+  try {
+    await api.delete(`/recursos/${id}`);
+    return { success: true };
+  } catch (error) {
+    throw new Error('Failed to delete recurso');
+  }
+};
+
+// Exporte todas as funções
+export {
+  getAllProjects as wrappedGetAllProjects,
+  getUsers as wrappedGetUsers,
+  getProjectDetails as wrappedGetProjectDetails,
+  createProject as wrappedCreateProject,
+  updateProject as wrappedUpdateProject,
+  deleteProject as wrappedDeleteProject,
+  getUserProfile as wrappedGetUserProfile,
+  updateUserProfile as wrappedUpdateUserProfile,
+  getAreas as wrappedGetAreas,
+  createArea as wrappedCreateArea,
+  updateArea as wrappedUpdateArea,
+  deleteArea as wrappedDeleteArea,
+  getRecursos as wrappedGetRecursos,
+  createRecurso as wrappedCreateRecurso,
+  updateRecurso as wrappedUpdateRecurso,
+  deleteRecurso as wrappedDeleteRecurso
+};

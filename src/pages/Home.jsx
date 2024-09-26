@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getAllProjects } from '@/utils/api';
+import { wrappedGetAllProjects } from '@/utils/api';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -13,7 +13,7 @@ const Home = () => {
 
   const { data: projects, isLoading, error } = useQuery({
     queryKey: ['projects'],
-    queryFn: getAllProjects,
+    queryFn: wrappedGetAllProjects,
   });
 
   useEffect(() => {
@@ -83,8 +83,8 @@ const Home = () => {
             </SelectTrigger>
             <SelectContent>
               {projects.map((project) => (
-                <SelectItem key={project.id} value={JSON.stringify(project)}>
-                  {project.name}
+                <SelectItem key={project.GID} value={JSON.stringify(project)}>
+                  {project.TX_DESCRICAO}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -92,11 +92,11 @@ const Home = () => {
           {selectedProject && (
             <Card>
               <CardHeader>
-                <CardTitle>Selected Project: {selectedProject.name}</CardTitle>
+                <CardTitle>Selected Project: {selectedProject.TX_DESCRICAO}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p><strong>Description:</strong> {selectedProject.description}</p>
-                <p><strong>Status:</strong> {selectedProject.status}</p>
+                <p><strong>GID:</strong> {selectedProject.GID}</p>
+                <p><strong>Status:</strong> {selectedProject.FL_STATUS === 'A' ? 'Active' : 'Inactive'}</p>
               </CardContent>
             </Card>
           )}
