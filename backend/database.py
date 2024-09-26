@@ -2,9 +2,15 @@ import pyodbc
 import pandas as pd
 from dotenv import load_dotenv
 import os
+import logging
 
+# Configuração do logging
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Carrega as variáveis do arquivo .env
 load_dotenv()
 
+# Configurações do banco de dados
 DATABASE_CONFIG = {
     'driver': os.getenv('DB_DRIVER'),
     'server': os.getenv('DB_SERVER'),
@@ -13,6 +19,7 @@ DATABASE_CONFIG = {
     'password': os.getenv('DB_PASSWORD')
 }
 
+# Função para obter a conexão com o banco de dados
 def get_db_connection():
     try:
         conn = pyodbc.connect(
@@ -25,43 +32,55 @@ def get_db_connection():
         )
         return conn
     except pyodbc.Error as e:
-        print(f"Erro ao conectar ao banco de dados: {e}")
+        logging.error(f"Erro ao conectar ao banco de dados: {e}")
         return None
 
+# Função para executar consultas de leitura
 def execute_read_query(query, params=None):
-    try:
-        with get_db_connection() as conn:
-            if conn is None:
-                raise Exception("Conexão com o banco de dados não estabelecida.")
-            df = pd.read_sql(query, conn, params=params)
-            return df
-    except Exception as e:
-        print(f"Erro ao executar a consulta: {e}")
+    conn = get_db_connection()
+    if conn is None:
+        logging.error("Conexão com o banco de dados não estabelecida.")
         return pd.DataFrame()
 
-def execute_write_query(query, params=None):
     try:
-        with get_db_connection() as conn:
-            if conn is None:
-                raise Exception("Conexão com o banco de dados não estabelecida.")
-            cursor = conn.cursor()
-            cursor.execute(query, params)
-            conn.commit()
-            return True
+        df = pd.read_sql(query, conn, params=params)
+        return df
     except Exception as e:
-        print(f"Erro ao executar a consulta de escrita: {e}")
+        logging.error(f"Erro ao executar a consulta: {e}")
+        return pd.DataFrame()
+    finally:
+        conn.close()
+
+# Função para executar consultas de escrita (inserção/atualização)
+def execute_write_query(query, params=None):
+    conn = get_db_connection()
+    if conn is None:
+        logging.error("Conexão com o banco de dados não estabelecida.")
         return False
 
-def test_database_connection():
     try:
-        with get_db_connection() as conn:
-            if conn:
-                return True, "Conexão com o banco de dados estabelecida com sucesso."
-            else:
-                return False, "Não foi possível estabelecer conexão com o banco de dados."
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        conn.commit()
+        return True
     except Exception as e:
-        return False, f"Erro ao conectar com o banco de dados: {str(e)}"
+        logging.error(f"Erro ao executar a consulta de escrita: {e}")
+        return False
+    finally:
+        conn.close()
 
+# Função para testar a conexão com o banco de dados
+def test_database_connection():
+    conn = get_db_connection()
+    if conn is None:
+        return False, "Não foi possível estabelecer conexão com o banco de dados."
+
+    try:
+        return True, "Conexão com o banco de dados estabelecida com sucesso."
+    finally:
+        conn.close()
+
+# Função para validar o login
 def validate_login(username):
     query = """
     SELECT TX_LOGIN, GID, ID, FL_STATUS, NR_NIVEL 
@@ -83,10 +102,12 @@ def validate_login(username):
     else:
         return False, None
 
+# Função para obter projetos por usuário
 def get_projetos_por_usuario(gid_usuario):
     query = "SELECT * FROM timecenter.TB_USUARIO_PROJETO WHERE CD_USUARIO = ?"
     return execute_read_query(query, params=[gid_usuario])
 
+# Função para obter todos os usuários
 def get_usuarios_df():
     query = """
     SELECT TX_LOGIN, GID, ID, FL_STATUS, NR_NIVEL 
@@ -94,7 +115,10 @@ def get_usuarios_df():
     """
     return execute_read_query(query)
 
+# Função para obter descrições de projetos por lista de IDs
 def get_descricao_projetos(cd_projetos_list):
+    if not cd_projetos_list:
+        return pd.DataFrame()  # Retorna DataFrame vazio se a lista estiver vazia
     placeholders = ','.join(['?'] * len(cd_projetos_list))
     query = f"""
     SELECT GID, TX_DESCRICAO 
@@ -103,6 +127,7 @@ def get_descricao_projetos(cd_projetos_list):
     """
     return execute_read_query(query, params=cd_projetos_list)
 
+# Função para obter todos os projetos ativos
 def get_all_projetos():
     query = """
     SELECT ID, GID, TX_DESCRICAO, FL_STATUS, DT_INICIO, DT_TERMINO
@@ -111,6 +136,7 @@ def get_all_projetos():
     """
     return execute_read_query(query)
 
+# Função para obter dados da view de notas de manutenção
 def get_vw_nota_manutencao_hh_data():
     query = """
     SELECT GID_PROJETO, ID_NOTA_MANUTENCAO, TX_NOTA, TX_ORDEM, TX_TAG, TX_FAMILIA_EQUIPAMENTOS, 
