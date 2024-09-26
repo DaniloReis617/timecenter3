@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000'; // Ajuste conforme necessário
+const API_BASE_URL = 'http://localhost:5000'; // Adjust as necessary
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -161,22 +161,60 @@ export const deleteRecurso = async (id) => {
   }
 };
 
-// Exporte todas as funções
+// Add these new functions
+export const getItems = async (type) => {
+  try {
+    const response = await api.get(`/${type}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch ${type}`);
+  }
+};
+
+export const createItem = async ({ type, data }) => {
+  try {
+    const response = await api.post(`/${type}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Failed to create ${type}`);
+  }
+};
+
+export const updateItem = async ({ type, id, data }) => {
+  try {
+    const response = await api.put(`/${type}/${id}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Failed to update ${type}`);
+  }
+};
+
+export const deleteItem = async ({ type, id }) => {
+  try {
+    await api.delete(`/${type}/${id}`);
+    return { success: true };
+  } catch (error) {
+    throw new Error(`Failed to delete ${type}`);
+  }
+};
+
+// Make sure all functions are exported
 export {
-  getAllProjects as wrappedGetAllProjects,
-  getUsers as wrappedGetUsers,
-  getProjectDetails as wrappedGetProjectDetails,
-  createProject as wrappedCreateProject,
-  updateProject as wrappedUpdateProject,
-  deleteProject as wrappedDeleteProject,
-  getUserProfile as wrappedGetUserProfile,
-  updateUserProfile as wrappedUpdateUserProfile,
-  getAreas as wrappedGetAreas,
-  createArea as wrappedCreateArea,
-  updateArea as wrappedUpdateArea,
-  deleteArea as wrappedDeleteArea,
-  getRecursos as wrappedGetRecursos,
-  createRecurso as wrappedCreateRecurso,
-  updateRecurso as wrappedUpdateRecurso,
-  deleteRecurso as wrappedDeleteRecurso
+  login,
+  getAllProjects,
+  getUsers,
+  getProjectDetails,
+  createProject,
+  updateProject,
+  deleteProject,
+  getUserProfile,
+  updateUserProfile,
+  getAreas,
+  createArea,
+  updateArea,
+  deleteArea,
+  getRecursos,
+  createRecurso,
+  updateRecurso,
+  deleteRecurso,
 };
