@@ -1,6 +1,17 @@
 import pyodbc
 import pandas as pd
-from config import DATABASE_CONFIG
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DATABASE_CONFIG = {
+    'driver': os.getenv('DB_DRIVER'),
+    'server': os.getenv('DB_SERVER'),
+    'database': os.getenv('DB_NAME'),
+    'username': os.getenv('DB_USERNAME'),
+    'password': os.getenv('DB_PASSWORD')
+}
 
 def get_db_connection():
     try:
@@ -28,6 +39,19 @@ def execute_read_query(query, params=None):
         print(f"Erro ao executar a consulta: {e}")
         return pd.DataFrame()
 
+def execute_write_query(query, params=None):
+    try:
+        with get_db_connection() as conn:
+            if conn is None:
+                raise Exception("Conexão com o banco de dados não estabelecida.")
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            conn.commit()
+            return True
+    except Exception as e:
+        print(f"Erro ao executar a consulta de escrita: {e}")
+        return False
+
 def test_database_connection():
     try:
         with get_db_connection() as conn:
@@ -38,7 +62,6 @@ def test_database_connection():
     except Exception as e:
         return False, f"Erro ao conectar com o banco de dados: {str(e)}"
 
-# Implementação das funções do arquivo original
 def validate_login(username):
     query = """
     SELECT TX_LOGIN, GID, ID, FL_STATUS, NR_NIVEL 

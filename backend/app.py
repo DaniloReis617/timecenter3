@@ -5,9 +5,17 @@ from database import (
     get_descricao_projetos, get_all_projetos, get_vw_nota_manutencao_hh_data,
     test_database_connection
 )
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    return jsonify(error=str(e)), 500
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -44,4 +52,4 @@ def test_connection():
     return jsonify({"success": success, "message": message})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.getenv('FLASK_DEBUG', 'False') == 'True')
