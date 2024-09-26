@@ -24,6 +24,21 @@ export const getAllProjects = async () => {
   }
 };
 
+// Add this new function
+export const wrappedGetAllProjects = async () => {
+  try {
+    const projects = await getAllProjects();
+    return projects.map(project => ({
+      ...project,
+      name: project.TX_DESCRICAO // Ensure the 'name' property is set for compatibility
+    }));
+  } catch (error) {
+    throw new Error('Failed to fetch and process projects');
+  }
+};
+
+
+
 export const getUsers = async () => {
   try {
     const response = await api.get('/usuarios');
@@ -87,7 +102,6 @@ export const updateUserProfile = async (userData) => {
   }
 };
 
-// Funções específicas para Área, Recurso, etc.
 export const getAreas = async () => {
   try {
     const response = await api.get('/areas');
@@ -124,7 +138,6 @@ export const deleteArea = async (id) => {
   }
 };
 
-// Funções similares para Recursos, Apoios, etc.
 export const getRecursos = async () => {
   try {
     const response = await api.get('/recursos');
@@ -161,7 +174,6 @@ export const deleteRecurso = async (id) => {
   }
 };
 
-// Add these new functions
 export const getItems = async (type) => {
   try {
     const response = await api.get(`/${type}`);
