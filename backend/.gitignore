@@ -1,4 +1,14 @@
-.env
+# Ambiente virtual
+backend/myenv/
+
+# Arquivos de cache Python
 __pycache__/
 *.pyc
-backend/myenv/
+
+# Arquivos de ambiente
+.env
+
+# Outros arquivos e diretórios comumente ignorados
+.DS_Store
+.vscode/
+*.log
