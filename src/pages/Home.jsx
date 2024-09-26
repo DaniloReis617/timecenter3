@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { wrappedGetAllProjects } from '@/utils/api';
+import { wrappedGetAllProjects, testDatabaseConnection } from '@/utils/api';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, InfoIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 const Home = () => {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
 
   const { data: projects, isLoading, error } = useQuery({
@@ -21,6 +23,15 @@ const Home = () => {
       localStorage.setItem('selectedProject', JSON.stringify(selectedProject));
     }
   }, [selectedProject]);
+
+  const handleTestConnection = async () => {
+    try {
+      const result = await testDatabaseConnection();
+      setConnectionStatus(result);
+    } catch (error) {
+      setConnectionStatus({ success: false, message: error.message });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -110,6 +121,22 @@ const Home = () => {
           </AlertDescription>
         </Alert>
       )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Database Connection Test</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={handleTestConnection}>Test Database Connection</Button>
+          {connectionStatus && (
+            <Alert variant={connectionStatus.success ? "default" : "destructive"} className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>{connectionStatus.success ? "Success" : "Error"}</AlertTitle>
+              <AlertDescription>{connectionStatus.message}</AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

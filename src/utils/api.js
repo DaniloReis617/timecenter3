@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000'; // Adjust as necessary
+const API_BASE_URL = 'http://localhost:5000'; // Ajuste conforme necessário
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -8,19 +8,25 @@ const api = axios.create({
 
 export const login = async (username) => {
   try {
+    console.log(`Tentando fazer login com o usuário: ${username}`);
     const response = await api.post('/login', { username });
+    console.log('Resposta do login:', response.data);
     return response.data;
   } catch (error) {
-    throw new Error('Login failed');
+    console.error('Erro no login:', error.response ? error.response.data : error.message);
+    throw new Error('Falha no login');
   }
 };
 
 export const getAllProjects = async () => {
   try {
+    console.log('Buscando todos os projetos');
     const response = await api.get('/projetos');
+    console.log('Projetos recebidos:', response.data);
     return response.data;
   } catch (error) {
-    throw new Error('Failed to fetch projects');
+    console.error('Erro ao buscar projetos:', error.response ? error.response.data : error.message);
+    throw new Error('Falha ao buscar projetos');
   }
 };
 
@@ -29,14 +35,13 @@ export const wrappedGetAllProjects = async () => {
     const projects = await getAllProjects();
     return projects.map(project => ({
       ...project,
-      name: project.TX_DESCRICAO // Ensure the 'name' property is set for compatibility
+      name: project.TX_DESCRICAO // Garantir que a propriedade 'name' está definida para compatibilidade
     }));
   } catch (error) {
-    throw new Error('Failed to fetch and process projects');
+    console.error('Erro ao buscar e processar projetos:', error);
+    throw new Error('Falha ao buscar e processar projetos');
   }
 };
-
-
 
 export const getUsers = async () => {
   try {
@@ -206,5 +211,18 @@ export const deleteItem = async ({ type, id }) => {
     return { success: true };
   } catch (error) {
     throw new Error(`Failed to delete ${type}`);
+  }
+};
+
+
+// Adicionando uma nova função de teste de conexão
+export const testDatabaseConnection = async () => {
+  try {
+    const response = await api.get('/test-connection');
+    console.log('Resultado do teste de conexão:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao testar conexão com o banco de dados:', error.response ? error.response.data : error.message);
+    throw new Error('Falha ao testar conexão com o banco de dados');
   }
 };
