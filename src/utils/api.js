@@ -24,7 +24,6 @@ export const getAllProjects = async () => {
   }
 };
 
-// Add this new function
 export const wrappedGetAllProjects = async () => {
   try {
     const projects = await getAllProjects();
